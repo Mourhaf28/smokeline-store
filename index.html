@@ -113,7 +113,100 @@
     <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
     <p style="font-size:15px; color:#ccc;">جميع الأسعار بالدرهم الإماراتي (AED) – تشمل 5 بوكس لكل صنف</p>
   </header>
+<!-- START: شريط عروض مخصص -->
+<style>
+  /* شريط العروض العام */
+  .offers-bar {
+    display:flex;
+    gap:8px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding:8px;
+    align-items:center;
+    border-radius:10px;
+    background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+    -webkit-overflow-scrolling:touch;
+    margin-top:8px;
+  }
+  .offers-bar::-webkit-scrollbar{ height:8px; }
+  .offer-btn{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    color:var(--muted, #efe9d2);
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.03);
+    font-weight:700;
+    white-space:nowrap;
+    transition:transform .12s, box-shadow .12s, background .12s;
+  }
+  .offer-btn:active{ transform:translateY(1px); }
+  .offer-btn:hover{ box-shadow:0 8px 20px rgba(0,0,0,.45); }
+  .offer-btn .badge{
+    background:var(--gold, #d9b86a);
+    color:#081015;
+    padding:2px 8px;
+    border-radius:999px;
+    font-weight:800;
+    font-size:12px;
+  }
+  .offer-btn.active{
+    background:linear-gradient(90deg, rgba(217,184,106,0.12), rgba(217,184,106,0.06));
+    color:var(--gold, #d9b86a);
+    border-color:rgba(217,184,106,0.12);
+    box-shadow:0 12px 28px rgba(217,184,106,0.06);
+  }
+  @media (max-width:560px){
+    .offer-btn{ padding:10px 14px; font-size:14px; }
+  }
+</style>
 
+<!-- ضع هذا البلوك داخل header أو مباشرة بعده -->
+<div class="offers-bar" aria-label="أشرطة العروض">
+  <a class="offer-btn" href="index.html#offer-1" data-offer="1"><span class="badge">1</span> عرض 1</a>
+  <a class="offer-btn" href="offer2.html" data-offer="2"><span class="badge">2</span> عرض 2</a>
+  <a class="offer-btn" href="offer3.html" data-offer="3"><span class="badge">3</span> عرض 3</a>
+  <a class="offer-btn" href="offer4.html" data-offer="4"><span class="badge">4</span> عرض 4</a>
+  <a class="offer-btn" href="offer5.html" data-offer="5"><span class="badge">5</span> عرض 5</a>
+  <a class="offer-btn" href="offer6.html" data-offer="6"><span class="badge">6</span> عرض 6</a>
+</div>
+
+<script>
+  // يضبط الزر النشط بحسب مسار الصفحة أو الهاش
+  (function(){
+    const buttons = document.querySelectorAll('.offer-btn');
+    const path = window.location.pathname.split('/').pop().toLowerCase();
+    const hash = window.location.hash.replace('#','').toLowerCase();
+
+    buttons.forEach(btn=>{
+      const target = btn.getAttribute('href') || '';
+      const offerId = btn.dataset.offer;
+      // حالة نشطة لو الصفحة الحالية تطابق اسم الملف offerN.html
+      if(path === `offer${offerId}.html` || hash === `offer-${offerId}` || path === 'index.html' && offerId === '1'){
+        btn.classList.add('active');
+      }
+      // Accessibility: فتح بنفس التبويب واضح بالattribute
+      btn.setAttribute('role','link');
+      btn.setAttribute('aria-label', `فتح عرض ${offerId}`);
+    });
+
+    // تحسين تجربة التمرير للـ RTL: عند تحميل الصفحة حرك العنصر النشط إلى بداية الشريط
+    const active = document.querySelector('.offer-btn.active');
+    if(active){
+      // اجعل العنصر في منتصف الشريط قدر الإمكان
+      const bar = document.querySelector('.offers-bar');
+      const rect = active.getBoundingClientRect();
+      const barRect = bar.getBoundingClientRect();
+      const scrollTo = active.offsetLeft - (barRect.width/2) + (rect.width/2);
+      bar.scrollLeft = scrollTo;
+    }
+  })();
+</script>
+<!-- END: شريط عروض مخصص -->
   <section class="card">
     <h2>🚀 الطلب السريع</h2>
     <p>إذا كنت تعرف نوعك المفضل، تواصل معنا مباشرة أو املأ النموذج:</p>
