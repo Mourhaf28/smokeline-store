@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmokeLine Store</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#111;
+      --muted:#eee;
+      --gold:#e0c080;
+      --accent:#25D366;
+      --card:#222;
+    }
+    body {
+      background: var(--bg);
+      color: var(--muted);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      padding: 18px;
+      margin: 0;
+      font-size: 18px;
+    }
+    header, section, footer { margin-bottom: 36px; }
+    h1 { color: var(--gold); font-size: 34px; margin-bottom: 8px; }
+    h2 { color: var(--gold); font-size: 24px; margin-bottom: 12px; }
+    p { font-size: 18px; line-height: 1.6; color: #e9e6db; }
+    .order-btn, .whatsapp-btn, .spin-btn {
+      display:inline-block;
+      background: var(--accent);
+      color:#fff;
+      padding:14px 22px;
+      border-radius:8px;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      font-size:18px;
+      transition: filter .15s, box-shadow .15s, transform .08s;
+      box-shadow: 0 4px 14px rgba(37,211,102,0.12);
+      margin-top:14px;
+    }
+    .order-btn:hover, .whatsapp-btn:hover, .spin-btn:hover{ filter:brightness(.95); transform:translateY(-1px); }
+    .whatsapp-btn { background: #128C7E; margin-left:10px; }
+    .spin-btn[disabled] { background:#444; cursor:default; box-shadow:none; color:#aaa; }
+    .card { background: var(--card); padding:20px; border-radius:12px; }
+    .wheel-wrap { display:flex; gap:18px; align-items:center; flex-wrap:wrap; }
+    .wheel {
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      position:relative;
+      overflow:hidden;
+      border:6px solid rgba(224,192,128,.06);
+      box-shadow: 0 8px 30px rgba(0,0,0,.6), inset 0 2px 10px rgba(0,0,0,.4);
+      background: conic-gradient(
+        #c79b4a 0deg 60deg,
+        #b07f3f 60deg 120deg,
+        #c79b4a 120deg 180deg,
+        #8f6a32 180deg 240deg,
+        #c79b4a 240deg 300deg,
+        #8f6a32 300deg 360deg
+      );
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:6px;
+    }
+    .wheel::after{
+      content:"";
+      position:absolute;
+      width:42%;
+      height:42%;
+      border-radius:50%;
+      background:linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.5));
+      z-index:2;
+    }
+    .wheel .pointer {
+      position:absolute;
+      top:-12px; left:50%;
+      transform:translateX(-50%);
+      width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:22px solid var(--gold);
+      z-index:6;
+    }
+    .wheel .labels {
+      position:absolute;
+      width:100%;
+      height:100%;
+      transform-origin:50% 50%;
+      z-index:3;
+    }
+    .wheel .center {
+      position:relative; z-index:4;
+      text-align:center;
+      color:#0b0b0b;
+      font-weight:800;
+      background:var(--gold);
+      width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;
+      box-shadow:0 6px 16px rgba(0,0,0,.4);
+    }
+    #luck-result { margin-top:12px; font-size:18px; color:var(--gold); min-height:28px; }
+    @media (max-width:480px){
+      .wheel { width:180px; height:180px; }
+      .order-btn, .whatsapp-btn, .spin-btn { width:100%; box-sizing:border-box; text-align:center; }
+      .wheel-wrap{ justify-content:center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="smokeline-logo-gold.png" alt="SmokeLine Logo" style="width:140px;" />
+    <h1>SmokeLine Store</h1>
+    <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
+    <p style="font-size:15px; color:#ccc;">جميع الأسعار بالدرهم الإماراتي (AED) – تشمل 5 بوكس لكل صنف</p>
+  </header>
+
+  <section class="card">
+    <h2>🚀 الطلب السريع</h2>
+    <p>إذا كنت تعرف نوعك المفضل، تواصل معنا مباشرة أو املأ النموذج:</p>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+      <a class="order-btn" href="order.html?product=طلب سريع" target="_blank">طلب سريع عبر النموذج</a>
+      <!-- WhatsApp button with official formal message (encoded) -->
+      <a class="whatsapp-btn" id="whatsappBtn" href="https://wa.me/963934511391?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A9%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%AA%D9%82%D8%AF%D9%8A%D9%85%20%D8%B7%D9%84%D8%A8%20%D9%85%D9%86%20SmokeLine.%20%D8%A7%D9%84%D8%B1%D8%AC%D8%A7%D8%A1%20%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%84%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D9%88%D8%A7%D9%84%D8%B4%D8%AD%D9%86.%20%D8%B4%D9%83%D8%B1%D8%A7%D9%8B" target="_blank" rel="noopener">أطلب بالواتساب</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🎲 لعبة الحظ</h2>
+    <p>كل طلب يحمل فرصة واحدة. اضغط لتدور العجلة وتكشف النتيجة:</p>
+
+    <div class="wheel-wrap">
+      <div class="wheel" aria-hidden="true">
+        <div class="pointer" aria-hidden="true"></div>
+        <div class="labels" id="wheelLabels" style="transform:rotate(0deg);">
+          <svg width="100%" height="100%" viewBox="0 0 200 200" style="transform:rotate(0deg);">
+            <g transform="translate(100,100)">
+              <text transform="rotate(30) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">خصم 5</text>
+              <text transform="rotate(90) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">هدية</text>
+              <text transform="rotate(150) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">لا شيء</text>
+              <text transform="rotate(210) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">خصم 5</text>
+              <text transform="rotate(270) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">هدية</text>
+              <text transform="rotate(330) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">لا شيء</text>
+            </g>
+          </svg>
+        </div>
+        <div class="center" aria-hidden="true">لعبة الحظ</div>
+      </div>
+
+      <div style="flex:1; min-width:200px;">
+        <button class="spin-btn" id="spinBtn" onclick="spinWheel(this)">دور العجلة</button>
+        <p id="luck-result" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
+    <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
+    <p>رمزية 303: بوابة التغيير، والانتقال من العادة إلى الهوية.</p>
+    <p>© 2025 SmokeLine UAE – جميع الحقوق محفوظة</p>
+  </footer>
+
+  <script>
+    (function(){
+      const labels = document.getElementById('wheelLabels');
+      const spinBtn = document.getElementById('spinBtn');
+      const resultEl = document.getElementById('luck-result');
+      let spinning = false;
+      const outcomes = ["✅ مبروك! خصم 5 دراهم","🎁 هدية إضافية مع الطلب","❌ لا شيء هذه المرة","✅ مبروك! خصم 5 دراهم","🎁 هدية خفية","❌ لا شيء"];
+      function randomInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+      window.spinWheel = function(btn){
+        if(spinning) return;
+        spinning = true;
+        btn.disabled = true;
+        resultEl.textContent = "جاري الدوران...";
+        const chosen = randomInt(0,5);
+        const sliceAngles = [30,90,150,210,270,330];
+        const targetAngle = sliceAngles[chosen];
+        const fullSpins = 5 + randomInt(0,4);
+        const finalDeg = -(fullSpins*360 + targetAngle - 90);
+        const anim = labels.animate([
+          { transform: getComputedStyle(labels).transform || "rotate(0deg)" },
+          { transform: `rotate(${finalDeg}deg)` }
+        ], {
+          duration: 4200,
+          easing: 'cubic-bezier(.18,.9,.3,1)',
+          fill: 'forwards'
+        });
+        anim.onfinish = function(){
+          labels.style.transform = `rotate(${finalDeg}deg)`;
+          resultEl.textContent = outcomes[chosen];
+          spinning = false;
+        };
+        anim.onerror = function(){
+          labels.style.transform = `rotate(${finalDeg}deg)`;
+          resultEl.textContent = outcomes[chosen];
+          spinning = false;
+        };
+      };
+
+      // Enforce official WhatsApp message (in case link is changed elsewhere)
+      (function(){
+        const phone = '963934511391';
+        const btn = document.getElementById('whatsappBtn');
+        if(!btn) return;
+        const official = 'مرحبًا، أود تقديم طلب من SmokeLine. الرجاء التواصل لتأكيد التفاصيل والشحن. شكرًا.';
+        btn.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(official);
+      })();
+
+    })();
+  </script>
+
+</body>
+</html>
