@@ -1,76 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <title>SmokeLine Store</title>
-  <style>
-    body { background:#111; color:#eee; font-family:Tahoma; padding:20px; margin:0; }
-    header, section, footer { margin-bottom:30px; }
-    h1, h2 { color:#e0c080; }
-    nav a { margin:0 10px; color:#e0c080; text-decoration:none; font-weight:bold; }
-    .order-btn, button { display:inline-block; background:#25D366; color:#fff; padding:10px 15px; border-radius:5px; text-decoration:none; margin-top:10px; border:none; cursor:pointer; font-weight:bold; }
-    button:disabled { background:#222; color:#888; }
-    footer p { font-size:14px; color:#aaa; line-height:1.6; }
-  </style>
-</head>
-<body>
-
-  <!-- شعار SmokeLine -->
-  <header>
-    <img src="smokeline-logo-gold.png" alt="SmokeLine Logo" style="width:140px;" />
-    <h1>SmokeLine Store</h1>
-    <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
-    <p style="font-size:14px; color:#ccc;">جميع الأسعار بالدرهم الإماراتي (AED) – تشمل 5 بوكس لكل صنف</p>
-  </header>
-
-  <!-- الطلب السريع -->
-  <section style="background:#222; padding:20px; border-radius:10px;">
-    <h2>🚀 الطلب السريع</h2>
-    <p>إذا كنت تعرف نوعك المفضل، تواصل معنا مباشرة أو املأ النموذج:</p>
-    <a class="order-btn" href="order.html?product=طلب سريع" target="_blank">طلب سريع عبر النموذج</a>
-  </section>
-
-  <!-- لعبة الحظ -->
-  <section>
-    <h2>🎲 لعبة الحظ – فرصة واحدة لكل طلب</h2>
-    <button onclick="playLuck(this)">اضغط للعب</button>
-    <p id="luck-result" style="margin-top:10px;"></p>
-  </section>
-
-  <!-- روابط العروض -->
-  <section>
-    <h2>🧩 العروض المتوفرة</h2>
-    <nav>
-      <a href="offer1.html" target="_blank">عرض 1</a>
-      <a href="offer2.html" target="_blank">عرض 2</a>
-      <a href="offer3.html" target="_blank">عرض 3</a>
-      <a href="offer4.html" target="_blank">عرض 4</a>
-      <a href="offer5.html" target="_blank">عرض 5</a>
-      <a href="offer6.html" target="_blank">عرض 6</a>
-    </nav>
-  </section>
-
-  <!-- ختام رمزي -->
-  <footer>
-    <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
-    <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
-    <p>رمزية 303: بوابة التغيير، والانتقال من العادة إلى الهوية.</p>
-    <p>© 2025 SmokeLine UAE – جميع الحقوق محفوظة</p>
-  </footer>
-
-  <!-- سكريبت لعبة الحظ -->
-  <script>
-    function playLuck(btn) {
-      const outcomes = [
-        "✅ مبروك! خصم 5 دراهم على طلبك",
-        "🎁 هدية إضافية مع الطلب",
-        "❌ لا شيء هذه المرة، حظًا أوفر"
-      ];
-      const result = outcomes[Math.floor(Math.random() * outcomes.length)];
-      document.getElementById("luck-result").innerText = result;
-      btn.disabled = true;
-    }
-  </script>
-
-</body>
-        </html>
