@@ -1,0 +1,28 @@
+<!-- ملف logo.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="56" viewBox="0 0 300 56" role="img" aria-label="Smokeline store">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#d9b86a"/>
+      <stop offset="1" stop-color="#f6e8a8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- رمز الدخان المبسّط -->
+  <g transform="translate(8,6)" stroke="url(#g)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M2 30c6-14 18-18 28-14s18 12 10 22" opacity="0.95"/>
+    <path d="M18 22c6-10 16-12 24-9s12 8 8 16" opacity="0.7"/>
+  </g>
+
+  <!-- النص الأساسي باللاتيني -->
+  <text x="92" y="28" font-family="Segoe UI, Tahoma, Arial" font-weight="800" font-size="18" fill="url(#g)" letter-spacing="0.2">
+    Smokeline
+  </text>
+  <text x="92" y="44" font-family="Segoe UI, Tahoma, Arial" font-weight="600" font-size="11" fill="#cfc6a3">
+    store
+  </text>
+
+  <!-- النص العربي المصغر -->
+  <text x="220" y="36" font-family="Tahoma, Arial, Noto Naskh Arabic" font-weight="600" font-size="12" fill="#cfc6a3">
+    سموك لاين ستور
+  </text>
+</svg>
