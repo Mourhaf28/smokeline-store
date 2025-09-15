@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>طلب سريع — SmokeLine</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0f0f10;
+      --card:#161616;
+      --muted:#e6dfc8;
+      --gold:#d9b86a;
+      --accent:#25D366;
+      --danger:#e05b4f;
+      --input-bg:#111;
+    }
+    body{
+      margin:0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(180deg,#0a0a0a,#141414);
+      color:var(--muted);
+      padding:20px;
+      -webkit-font-smoothing:antialiased;
+    }
+    header{ text-align:center; margin-bottom:18px; }
+    h1{ margin:6px 0; color:var(--gold); font-size:24px; }
+    p.lead{ margin:0; color:#cfc6a3; font-size:14px; }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.6);
+      max-width:760px;
+      margin:0 auto 20px;
+    }
+    label{ display:block; margin:12px 0 6px; font-weight:700; color:#e9e3c5; }
+    input[type="text"], input[type="tel"], input[type="number"], textarea, select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:var(--input-bg);
+      color:var(--muted);
+      font-size:16px;
+      box-sizing:border-box;
+    }
+    textarea{ min-height:90px; resize:vertical; }
+    .row{ display:flex; gap:12px; }
+    .row .col{ flex:1; }
+    .actions{ display:flex; gap:10px; align-items:center; margin-top:14px; flex-wrap:wrap; }
+    .btn{
+      display:inline-block;
+      padding:12px 18px;
+      border-radius:10px;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+      border:none;
+    }
+    .btn-primary{ background:var(--gold); color:#0b0b0b; box-shadow:0 8px 18px rgba(217,184,106,0.12); }
+    .btn-ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
+    .btn-ws{ background:#128C7E; color:#fff; }
+    .note{ font-size:13px; color:#cfc6a3; margin-top:8px; }
+    .error{ color:var(--danger); font-size:13px; margin-top:6px; }
+    .success-box{ background:#0d2b12; border:1px solid rgba(37,211,102,0.08); padding:12px; border-radius:10px; color:#a6e6bf; }
+    @media (max-width:640px){
+      .row{ flex-direction:column; }
+      .actions{ flex-direction:column; }
+      .btn{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>طلب سريع — SmokeLine</h1>
+    <p class="lead">املأ البيانات أدناه ثم اضغط إرسال ثم أكمل عبر واتساب لتأكيد الطلب والشحن.</p>
+  </header>
+
+  <main class="card" role="main">
+    <form id="orderForm" novalidate>
+      <label for="product">المنتج</label>
+      <input type="text" id="product" name="product" placeholder="اكتب اسم المنتج أو اتركه افتراضي" />
+
+      <div class="row">
+        <div class="col">
+          <label for="name">الاسم الكامل <span aria-hidden="true">*</span></label>
+          <input type="text" id="name" name="name" placeholder="مثال: محمد الأحمد" required />
+          <div id="err-name" class="error" style="display:none"></div>
+        </div>
+        <div class="col">
+          <label for="phone">رقم الجوال (دولي) <span aria-hidden="true">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="مثال: 9639xxxxxxxx" required />
+          <div id="err-phone" class="error" style="display:none"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="quantity">الكمية</label>
+          <input type="number" id="quantity" name="quantity" min="1" value="1" />
+        </div>
+        <div class="col">
+          <label for="area">منطقة التوصيل (اختياري)</label>
+          <input type="text" id="area" name="area" placeholder="مثل: طرطوس / دمشق / دبي" />
+        </div>
+      </div>
+
+      <label for="notes">ملاحظات إضافية</label>
+      <textarea id="notes" name="notes" placeholder="تفاصيل إضافية أو تفضيلات"></textarea>
+
+      <div class="note">بعد الضغط إرسال ستظهر صفحة تأكيد تحتوي زر فتح واتساب مع رسالة مُعدّة رسمياً.</div>
+
+      <div class="actions">
+        <button type="button" id="sendBtn" class="btn btn-primary">إرسال الطلب</button>
+        <button type="button" id="clearBtn" class="btn btn-ghost">إعادة تعيين النموذج</button>
+        <a id="whatsappFallback" class="btn btn-ws" href="#" style="display:none" target="_blank" rel="noopener">أكمل عبر واتساب</a>
+      </div>
+    </form>
+  </main>
+
+  <main id="confirmation" class="card" style="display:none; max-width:760px; margin:0 auto;">
+    <div class="success-box">
+      <strong>تم تحضير الطلب.</strong>
+      <p style="margin:8px 0 0;">راجع التفاصيل أدناه ثم اضغط الزر لإكمال الطلب عبر واتساب وإرسال الرسالة الرسمية.</p>
+    </div>
+
+    <div style="margin-top:14px;">
+      <p id="summary" style="white-space:pre-line; color:#efe9d2;"></p>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a id="wsBtn" class="btn btn-ws" href="#" target="_blank" rel="noopener">أكمل عبر واتساب</a>
+      <button id="editBtn" class="btn btn-ghost">تعديل الطلب</button>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const phone = '963934511391'; // رقمك الدولي بدون +
+      const form = document.getElementById('orderForm');
+      const sendBtn = document.getElementById('sendBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const confirmation = document.getElementById('confirmation');
+      const summary = document.getElementById('summary');
+      const wsBtn = document.getElementById('wsBtn');
+      const editBtn = document.getElementById('editBtn');
+      const whatsappFallback = document.getElementById('whatsappFallback');
+
+      // Fill product from query string if present
+      (function fillProductFromQuery(){
+        try{
+          const params = new URLSearchParams(location.search);
+          const product = params.get('product');
+          if(product){
+            const p = document.getElementById('product');
+            p.value = decodeURIComponent(product);
+          }
+        }catch(e){}
+      })();
+
+      function validate(){
+        let ok = true;
+        const name = document.getElementById('name').value.trim();
+        const phoneVal = document.getElementById('phone').value.trim();
+        const errName = document.getElementById('err-name');
+        const errPhone = document.getElementById('err-phone');
+        errName.style.display = 'none'; errPhone.style.display = 'none';
+        if(name.length < 2){
+          errName.textContent = 'الرجاء إدخال اسم صحيح';
+          errName.style.display = 'block';
+          ok = false;
+        }
+        // simple phone validation: digits and length between 8 and 15
+        const digits = phoneVal.replace(/[^\d]/g,'');
+        if(digits.length < 8 || digits.length > 15){
+          errPhone.textContent = 'الرجاء إدخال رقم جوال صالح (بدون حرف +)';
+          errPhone.style.display = 'block';
+          ok = false;
+        }
+        return ok;
+      }
+
+      function buildMessage(data){
+        // Official formal message
+        // Include only non-empty fields
+        const lines = [];
+        lines.push('مرحبًا، أود تقديم طلب من SmokeLine.');
+        if(data.product) lines.push('المنتج: ' + data.product);
+        lines.push('الاسم: ' + data.name);
+        lines.push('الجوال: ' + data.phone);
+        lines.push('الكمية: ' + data.quantity);
+        if(data.area) lines.push('منطقة التوصيل: ' + data.area);
+        if(data.notes) lines.push('ملاحظات: ' + data.notes);
+        lines.push('الرجاء التواصل لتأكيد التفاصيل والشحن. شكرًا.');
+        return lines.join('\n');
+      }
+
+      function encodeWaHref(message){
+        return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message);
+      }
+
+      sendBtn.addEventListener('click', function(){
+        if(!validate()) return;
+        // collect data
+        const data = {
+          product: document.getElementById('product').value.trim(),
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          quantity: document.getElementById('quantity').value || '1',
+          area: document.getElementById('area').value.trim(),
+          notes: document.getElementById('notes').value.trim()
+        };
+        const message = buildMessage(data);
+        // show summary and WhatsApp button
+        summary.textContent = message;
+        wsBtn.href = encodeWaHref(message);
+        whatsappFallback.href = wsBtn.href;
+        // show confirmation area
+        form.style.display = 'none';
+        confirmation.style.display = 'block';
+        // Scroll into view on mobile
+        setTimeout(()=>{ confirmation.scrollIntoView({behavior:'smooth'}); }, 120);
+      });
+
+      editBtn.addEventListener('click', function(){
+        confirmation.style.display = 'none';
+        form.style.display = 'block';
+        form.scrollIntoView({behavior:'smooth'});
+      });
+
+      clearBtn.addEventListener('click', function(){
+        form.reset();
+        document.getElementById('err-name').style.display = 'none';
+        document.getElementById('err-phone').style.display = 'none';
+      });
+
+      // Optional: show fallback WhatsApp quick link while filling form
+      // (useful if user wants immediate chat)
+      // Make it visible and keep href updated on input changes
+      whatsappFallback.style.display = 'inline-block';
+      function updateFallback(){
+        const data = {
+          product: document.getElementById('product').value.trim(),
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          quantity: document.getElementById('quantity').value || '1',
+          area: document.getElementById('area').value.trim(),
+          notes: document.getElementById('notes').value.trim()
+        };
+        const message = buildMessage(data);
+        whatsappFallback.href = encodeWaHref(message);
+      }
+      // update on important inputs
+      ['product','name','phone','quantity','area','notes'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('input', updateFallback);
+      });
+      updateFallback();
+
+    })();
+  </script>
+</body>
+</html>
