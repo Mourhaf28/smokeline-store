@@ -1,670 +1,136 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SmokeLine Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Fonts for Modern Look -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Favicon -->
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/825/825413.png" type="image/png">
   <style>
     body {
+      background: #111;
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      padding: 20px;
       margin: 0;
-      font-family: 'Cairo', Arial, sans-serif;
-      background: #191919;
-      color: #f5f5f5;
-      min-height: 100vh;
-      direction: rtl;
+      font-size: 18px;
     }
-    .header {
-      background: #222;
-      display: flex;
-      align-items: center;
-      padding: 16px 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    header, section, footer {
+      margin-bottom: 40px;
     }
-    .logo-img {
-      height: 56px;
-      width: 56px;
-      margin-left: 18px;
-      border-radius: 50%;
-      background: #fff1;
-      box-shadow: 0 1px 6px #0004;
-      object-fit: contain;
+    h1 {
+      color: #e0c080;
+      font-size: 32px;
+      margin-bottom: 10px;
     }
-    .store-title {
-      font-size: 2.1rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-      color: #ffd700;
-      margin: 0;
-      text-shadow: 0 1px 10px #0005;
-      flex: 1;
+    h2 {
+      color: #e0c080;
+      font-size: 24px;
+      margin-bottom: 15px;
     }
-    .nav-btns {
-      display: flex;
-      gap: 8px;
+    p {
+      font-size: 18px;
+      line-height: 1.6;
     }
-    .nav-btn {
-      background: #292929;
-      color: #ffd700;
-      border: none;
-      font-size: 1.05rem;
-      padding: 7px 17px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background .2s;
-      font-weight: bold;
-    }
-    .nav-btn.active, .nav-btn:hover {
-      background: #ffd700;
-      color: #222;
-    }
-    main {
-      max-width: 900px;
-      margin: 28px auto 0;
-      padding: 20px 10px 80px;
-      background: #191919;
-      border-radius: 16px;
-      box-shadow: 0 2px 16px #0003;
-      min-height: 500px;
-    }
-    .section-title {
-      font-size: 1.8rem;
-      color: #ffd700;
-      margin-bottom: 20px;
-      text-align: right;
-      letter-spacing: 1px;
-    }
-    /* Order Form */
-    .order-form {
-      background: #232323;
-      border-radius: 8px;
-      padding: 18px 16px;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 8px #0002;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px 22px;
-      align-items: end;
-    }
-    .order-form label {
-      font-size: 1rem;
-      color: #ffd700;
-      margin-bottom: 5px;
-      display: block;
-    }
-    .order-form input, .order-form select {
-      font-size: 1.05rem;
-      padding: 8px 8px;
-      border-radius: 5px;
-      border: none;
-      background: #191919;
-      color: #fff;
-      width: 210px;
-      margin-bottom: 6px;
-      outline: none;
-      border-bottom: 2px solid #ffd70055;
-      transition: border .2s;
-    }
-    .order-form input:focus, .order-form select:focus {
-      border-bottom: 2px solid #ffd700;
-    }
-    .order-form .order-btn {
-      background: #ffd700;
-      color: #232323;
-      font-weight: bold;
-      font-size: 1.08rem;
-      border: none;
-      padding: 9px 25px;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: background .2s;
-    }
-    .order-form .order-btn:hover {
-      background: #ffe066;
-    }
-    /* Products & Offers */
-    .card-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      justify-content: flex-start;
-    }
-    .card {
-      background: #232323;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px #0003;
-      width: 220px;
-      padding: 18px 12px 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform .14s;
-      cursor: pointer;
-      position: relative;
-      border: 2px solid transparent;
-    }
-    .card:hover {
-      transform: translateY(-7px) scale(1.015);
-      border-color: #ffd70088;
-    }
-    .card-img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      margin-bottom: 9px;
-      background: #fff1;
-      border-radius: 50%;
-      box-shadow: 0 1px 6px #0002;
-    }
-    .card-title {
-      color: #ffd700;
-      font-size: 1.14rem;
-      font-weight: bold;
-      margin-bottom: 7px;
-      text-align: center;
-    }
-    .card-desc {
-      color: #fff;
-      font-size: .98rem;
-      margin-bottom: 8px;
-      text-align: center;
-      min-height: 40px;
-    }
-    .card-price {
-      color: #ffe066;
-      font-size: 1.12rem;
-      font-weight: bold;
-      margin-bottom: 2px;
-    }
-    /* Offer badge */
-    .offer-badge {
-      position: absolute;
-      left: 12px; top: 12px;
-      background: #ffd700;
-      color: #232323;
-      font-size: .92rem;
-      font-weight: bold;
+    nav a {
+      display: inline-block;
+      margin: 10px 8px;
+      padding: 10px 18px;
+      background: #333;
+      color: #e0c080;
+      text-decoration: none;
       border-radius: 6px;
-      padding: 3px 12px;
-      box-shadow: 0 1px 4px #0003;
-      letter-spacing: 1px;
+      font-size: 18px;
+      font-weight: bold;
+      transition: background 0.3s;
     }
-    /* Modal */
-    .modal-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #0008;
-      z-index: 4444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn .3s;
+    nav a:hover {
+      background: #444;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .modal {
-      background: #232323;
-      border-radius: 12px;
-      max-width: 97vw;
-      width: 360px;
-      padding: 28px 20px 22px;
-      box-shadow: 0 2px 22px #0006;
-      position: relative;
-      text-align: center;
-      animation: popIn .3s;
-    }
-    @keyframes popIn { from { transform: scale(.88); opacity:0; } to { transform: scale(1); opacity:1; } }
-    .modal .close-btn {
-      position: absolute;
-      top: 8px; right: 12px;
-      background: none;
+    .order-btn, button {
+      display: inline-block;
+      background: #25D366;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 15px;
       border: none;
-      color: #ffd700;
-      font-size: 1.8rem;
       cursor: pointer;
-      line-height: 1;
       font-weight: bold;
-      padding: 0;
-      z-index: 2;
+      font-size: 18px;
+      transition: background 0.3s;
     }
-    .modal .modal-title {
-      font-size: 1.2rem;
-      color: #ffd700;
-      margin-bottom: 12px;
-      font-weight: bold;
+    .order-btn:hover, button:hover {
+      background: #1ebc5c;
     }
-    /* Lottery Game */
-    .lottery-section {
-      background: #232323;
-      border-radius: 10px;
-      padding: 18px 14px 20px;
-      margin-bottom: 26px;
-      box-shadow: 0 1px 8px #0002;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+    button:disabled {
+      background: #222;
+      color: #888;
+      cursor: default;
     }
-    .lottery-btn {
-      background: #ffd700;
-      color: #232323;
-      font-weight: bold;
-      border: none;
-      font-size: 1.05rem;
-      padding: 8px 22px;
-      border-radius: 7px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background .2s;
-      align-self: flex-end;
+    footer p {
+      font-size: 16px;
+      color: #aaa;
+      line-height: 1.6;
     }
-    .lottery-btn:disabled {
-      background: #555;
-      color: #ccc;
-      cursor: not-allowed;
-    }
-    .lottery-result {
-      font-size: 1.05rem;
-      margin-top: 10px;
-      color: #ffe066;
-      font-weight: bold;
-      white-space: pre-line;
-    }
-    /* Responsive */
-    @media (max-width: 600px) {
-      .header { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px; }
-      .store-title { font-size: 1.25rem; }
-      .nav-btns { flex-wrap: wrap; }
-      main { padding: 6px 2vw 45px; }
-      .card-list { justify-content: center; }
-      .card { width: 96vw; max-width: 320px; }
-      .order-form input, .order-form select { width: 98vw; max-width: 320px; }
-    }
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 7px; background: #191919; }
-    ::-webkit-scrollbar-thumb { background: #ffd70077; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <!-- Header and Navigation -->
-  <header class="header">
-    <img class="logo-img" src="https://cdn-icons-png.flaticon.com/512/825/825413.png" alt="SmokeLine Logo">
-    <span class="store-title">SmokeLine Store</span>
-    <nav class="nav-btns">
-      <button class="nav-btn active" data-page="home">الرئيسية</button>
-      <button class="nav-btn" data-page="offers">العروض</button>
-      <button class="nav-btn" data-page="lottery">لعبة الحظ</button>
-      <button class="nav-btn" data-page="about">من نحن؟</button>
-    </nav>
+
+  <!-- شعار SmokeLine -->
+  <header>
+    <img src="smokeline-logo-gold.png" alt="SmokeLine Logo" style="width:140px;" />
+    <h1>SmokeLine Store</h1>
+    <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
+    <p style="font-size:16px; color:#ccc;">جميع الأسعار بالدرهم الإماراتي (AED) – تشمل 5 بوكس لكل صنف</p>
   </header>
-  <main id="main-content">
-    <!-- المحتوى الديناميكي هنا -->
-  </main>
 
-  <!-- Modal for Order Forms and Product Details -->
-  <div id="modal-root"></div>
+  <!-- الطلب السريع -->
+  <section style="background:#222; padding:20px; border-radius:10px;">
+    <h2>🚀 الطلب السريع</h2>
+    <p>إذا كنت تعرف نوعك المفضل، تواصل معنا مباشرة أو املأ النموذج:</p>
+    <a class="order-btn" href="order.html?product=طلب سريع" target="_blank">طلب سريع عبر النموذج</a>
+  </section>
 
+  <!-- لعبة الحظ -->
+  <section>
+    <h2>🎲 لعبة الحظ – فرصة واحدة لكل طلب</h2>
+    <button onclick="playLuck(this)">اضغط للعب</button>
+    <p id="luck-result" style="margin-top:10px; font-size:18px;"></p>
+  </section>
+
+  <!-- روابط العروض -->
+  <section>
+    <h2>🧩 العروض المتوفرة</h2>
+    <nav>
+      <a href="offer1.html" target="_blank">عرض 1</a>
+      <a href="offer2.html" target="_blank">عرض 2</a>
+      <a href="offer3.html" target="_blank">عرض 3</a>
+      <a href="offer4.html" target="_blank">عرض 4</a>
+      <a href="offer5.html" target="_blank">عرض 5</a>
+      <a href="offer6.html" target="_blank">عرض 6</a>
+    </nav>
+  </section>
+
+  <!-- ختام رمزي -->
+  <footer>
+    <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
+    <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
+    <p>رمزية 303: بوابة التغيير، والانتقال من العادة إلى الهوية.</p>
+    <p>© 2025 SmokeLine UAE – جميع الحقوق محفوظة</p>
+  </footer>
+
+  <!-- سكريبت لعبة الحظ -->
   <script>
-    // بيانات المنتجات والعروض (يمكنك تعديل الصور والأسعار بحرية)
-    const products = [
-      {
-        id: "malboro-gold",
-        name: "مارلبورو جولد",
-        desc: "علبة سجائر مارلبورو جولد الشهيرة بطعمها الخفيف.",
-        price: 31,
-        img: "https://upload.wikimedia.org/wikipedia/commons/8/86/Marlboro_Gold_cigarette_pack.jpg"
-      },
-      {
-        id: "malboro-red",
-        name: "مارلبورو ريد",
-        desc: "مارلبورو ريد بنكهته القوية والغنية.",
-        price: 31,
-        img: "https://www.cigarety.by/uploads/2017/10/pack_cigarettes_marlboro_red.png"
-      },
-      {
-        id: "kent-blue",
-        name: "كنت أزرق",
-        desc: "سجائر كنت أزرق بتقنية الفلتر الفريدة.",
-        price: 30,
-        img: "https://kafow.com/uploads/photos/2022/04/12/1b4c3b1a74e9.png"
-      },
-      {
-        id: "kent-switch",
-        name: "كنت سويتش",
-        desc: "كنت سويتش بنكهات قابلة للتغيير.",
-        price: 30,
-        img: "https://static.wikia.nocookie.net/logopedia/images/a/ab/Kent-cigs.jpg"
-      },
-      {
-        id: "davidoff-black",
-        name: "دافيدوف بلاك",
-        desc: "دافيدوف بلاك الفاخر بطعمه السلس.",
-        price: 32,
-        img: "https://www.davidoff.com/media/catalog/product/cache/1/image/600x/040ec09b1e35df139433887a97daa66f/b/l/black-label-cigarettes.jpg"
-      },
-      {
-        id: "davidoff-white",
-        name: "دافيدوف وايت",
-        desc: "دافيدوف وايت بنكهة خفيفة وفاخرة.",
-        price: 32,
-        img: "https://www.davidoff.com/media/catalog/product/cache/1/image/600x/040ec09b1e35df139433887a97daa66f/w/h/white-label-cigarettes.jpg"
-      },
-      {
-        id: "cigar-cuban",
-        name: "سيجار كوبي فاخر",
-        desc: "سيجار كوبي يدوي الصنع من أجود أوراق التبغ.",
-        price: null,
-        img: "https://www.cubancigarwebsite.com/sites/default/files/styles/large/public/2019-06/romeo-y-julieta-churchill-2006.jpg"
-      },
-      {
-        id: "cigar-romeo",
-        name: "سيجار روميو وجولييت",
-        desc: "سيجار روميو وجولييت، تجربة غنية لعشاق السيجار.",
-        price: null,
-        img: "https://www.cigarcountry.com/wp-content/uploads/2021/02/Romeo-y-Julieta-1875-Bully.jpg"
-      }
-    ];
-
-    const offers = [
-      {
-        id: "offer1",
-        title: "عرض 1: مارلبورو جولد + كنت أزرق",
-        desc: "اشتري علبة مارلبورو جولد مع علبة كنت أزرق بسعر خاص.",
-        products: ["malboro-gold", "kent-blue"],
-        price: 59,
-        badge: "توفير"
-      },
-      {
-        id: "offer2",
-        title: "عرض 2: دافيدوف بلاك + دافيدوف وايت",
-        desc: "علبتان دافيدوف (بلاك + وايت) بسعر مغري.",
-        products: ["davidoff-black", "davidoff-white"],
-        price: 60,
-        badge: "الأكثر طلبًا"
-      },
-      {
-        id: "offer3",
-        title: "عرض السيجار الكوبي الفاخر",
-        desc: "سيجار كوبي أصلي مع سيجار روميو وجولييت. السعر حسب الطلب.",
-        products: ["cigar-cuban", "cigar-romeo"],
-        price: null,
-        badge: "طلب خاص"
-      }
-    ];
-
-    // --- SPA Navigation ---
-    const mainEl = document.getElementById('main-content');
-    const modalRoot = document.getElementById('modal-root');
-    const navBtns = document.querySelectorAll('.nav-btn');
-
-    // تحديث active tab
-    navBtns.forEach(btn => {
-      btn.onclick = () => {
-        navBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderPage(btn.getAttribute('data-page'));
-        window.scrollTo(0,0);
-      };
-    });
-
-    // الصفحة الافتراضية
-    function renderPage(page = "home") {
-      modalRoot.innerHTML = ""; // إغلاق أي مودال
-      if (page === "home") {
-        renderHome();
-      } else if (page === "offers") {
-        renderOffers();
-      } else if (page === "lottery") {
-        renderLottery();
-      } else if (page === "about") {
-        renderAbout();
-      }
-    }
-
-    // --- الصفحة الرئيسية ---
-    function renderHome() {
-      mainEl.innerHTML = `
-        <div class="section-title">الطلب السريع</div>
-        ${orderFormHTML()}
-        <div class="section-title" style="margin-top:32px;">جميع المنتجات</div>
-        <div class="card-list">
-          ${products.map(prod => productCardHTML(prod)).join('')}
-        </div>
-      `;
-      bindOrderForm();
-      // Bind product card clicks
-      products.forEach(prod => {
-        const card = document.getElementById('prod-card-'+prod.id);
-        if(card) card.onclick = () => openProductModal(prod);
-      });
-    }
-
-    // --- العروض ---
-    function renderOffers() {
-      mainEl.innerHTML = `
-        <div class="section-title">العروض المتوفرة</div>
-        <div class="card-list">
-          ${offers.map(off => offerCardHTML(off)).join('')}
-        </div>
-      `;
-      offers.forEach(offer => {
-        const card = document.getElementById('offer-card-'+offer.id);
-        if (card) card.onclick = () => openOfferModal(offer);
-      });
-    }
-
-    // --- لعبة الحظ ---
-    function renderLottery() {
-      mainEl.innerHTML = `
-        <div class="section-title">لعبة الحظ</div>
-        <div class="lottery-section">
-          <div>
-            جرب حظك واربح خصمًا أو هدية مميزة! يمكنك اللعب مرة واحدة فقط.<br>
-            <span style="color:#ffd700;font-size:.98em;">
-              إذا ربحت، احفظ لقطة شاشة واستخدمها عند الطلب.
-            </span>
-          </div>
-          <button class="lottery-btn" id="lottery-btn">إلعب الآن</button>
-          <div class="lottery-result" id="lottery-result"></div>
-        </div>
-      `;
-      bindLottery();
-    }
-
-    // --- من نحن ---
-    function renderAbout() {
-      mainEl.innerHTML = `
-        <div class="section-title">من نحن؟</div>
-        <div style="color:#fff;font-size:1.07em;line-height:1.8;">
-          SmokeLine Store - وجهتك الموثوقة لطلب جميع أنواع السجائر والسيجار الفاخر.<br>
-          نضمن لك الجودة الأصلية والتسليم السريع والسرية التامة.<br>
-          اطلب الآن وتمتع بخدمة عملاء مميزة وعروض حصرية.
-        </div>
-        <div style="margin-top:20px;color:#ffd700;">
-          للتواصل أو الاستفسار: <b>smokeline.store@gmail.com</b>
-        </div>
-      `;
-    }
-
-    // === عناصر HTML ديناميكية ===
-    function orderFormHTML(selectedProdId = "", isOffer = false, offerObj = null) {
-      // إظهار اختيار العرض/المنتج
-      let prodOptions = (!isOffer ? `<option value="">اختر المنتج أو العرض</option>` : '');
-      if(isOffer && offerObj) {
-        prodOptions += `<option value="${offerObj.id}" selected>${offerObj.title}</option>`;
-      } else {
-        offers.forEach(off =>
-          prodOptions += `<option value="${off.id}">${off.title}</option>`
-        );
-        products.forEach(prod =>
-          prodOptions += `<option value="${prod.id}">${prod.name}</option>`
-        );
-      }
-      return `
-        <form class="order-form" id="order-form">
-          <div>
-            <label>الاسم الكامل</label>
-            <input type="text" name="name" required placeholder="الاسم الثلاثي">
-          </div>
-          <div>
-            <label>رقم الجوال</label>
-            <input type="tel" name="phone" required pattern="^05\\d{8}$" placeholder="05xxxxxxxx">
-          </div>
-          <div>
-            <label>المنتج / العرض</label>
-            <select name="item" id="order-item" required>
-              ${prodOptions}
-            </select>
-          </div>
-          <div id="cigarette-type-field" style="display:none;">
-            <label>نوع الدخان/التفاصيل</label>
-            <input type="text" name="type" placeholder="مارلبورو جولد, كنت أزرق ...">
-          </div>
-          <button type="submit" class="order-btn">إرسال الطلب</button>
-        </form>
-        <div id="order-success" style="color:#ffd700;margin-top:9px;font-weight:bold;"></div>
-      `;
-    }
-
-    function productCardHTML(prod) {
-      return `
-        <div class="card" id="prod-card-${prod.id}">
-          ${prod.price ? `<span class="card-price">${prod.price} ريال</span>` : `<span class="offer-badge" style="left:auto;right:12px;background:#444;color:#ffd700;font-size:.95em;">سيجار</span>`}
-          <img class="card-img" src="${prod.img}" alt="${prod.name}">
-          <div class="card-title">${prod.name}</div>
-          <div class="card-desc">${prod.desc}</div>
-        </div>
-      `;
-    }
-
-    function offerCardHTML(off) {
-      return `
-        <div class="card" id="offer-card-${off.id}">
-          ${off.badge ? `<span class="offer-badge">${off.badge}</span>` : ""}
-          <div style="display:flex;gap:6px;justify-content:center;">
-            ${off.products.map(pid => `<img src="${products.find(p=>p.id===pid)?.img}" alt="" style="width:34px;height:34px;border-radius:7px;background:#fff2;box-shadow:0 1px 4px #0002;">`).join('')}
-          </div>
-          <div class="card-title" style="margin-top:8px;">${off.title}</div>
-          <div class="card-desc">${off.desc}</div>
-          ${off.price ? `<span class="card-price">${off.price} ريال</span>` : `<span class="card-price" style="color:#ccc">السعر حسب الطلب</span>`}
-        </div>
-      `;
-    }
-
-    // ====== Bindings ======
-    function bindOrderForm() {
-      const form = document.getElementById('order-form');
-      const itemSelect = document.getElementById('order-item');
-      const typeField = document.getElementById('cigarette-type-field');
-      if (!form) return;
-      // إظهار حقل نوع الدخان إذا كان عرض أو سيجار
-      itemSelect.onchange = function() {
-        const val = itemSelect.value;
-        let show = false;
-        if (!val) show = false;
-        else if (val.startsWith('offer')) show = true;
-        else {
-          // سيجار فقط؟!
-          const prod = products.find(p=>p.id===val);
-          if (prod && prod.price === null) show = true;
-          else show = false;
-        }
-        typeField.style.display = show ? 'block' : 'none';
-      };
-      form.onsubmit = function(e) {
-        e.preventDefault();
-        // عرض رسالة نجاح وهمية (بدون backend)
-        form.style.opacity = .5;
-        setTimeout(()=> {
-          document.getElementById('order-success').innerHTML = 'تم استلام طلبك بنجاح! سنتواصل معك قريبًا.';
-          form.reset();
-          form.style.opacity = 1;
-          typeField.style.display = 'none';
-        }, 900);
-      };
-    }
-
-    function openProductModal(prod) {
-      // صفحة طلب المنتج
-      modalRoot.innerHTML = `
-        <div class="modal">
-          <button class="close-btn" onclick="closeModal()">&times;</button>
-          <div class="modal-title">${prod.name}</div>
-          <img src="${prod.img}" alt="${prod.name}" style="width:70px;height:70px;border-radius:9px;margin-bottom:13px;background:#fff1;">
-          <div style="color:#fff;font-size:1.04em;margin-bottom:10px;">${prod.desc}</div>
-          ${prod.price ? `<div style="color:#ffe066;font-weight:bold;margin-bottom:10px;">${prod.price} ريال</div>` : `<div style="color:#ffd700;font-weight:bold;margin-bottom:10px;">سيجار فاخر (السعر حسب الطلب)</div>`}
-          <div style="margin-bottom:10px;font-size:.96em;">لطلب المنتج يرجى تعبئة النموذج التالي:</div>
-          ${orderFormHTML(prod.id)}
-        </div>
-      `;
-      bindOrderForm();
-    }
-
-    function openOfferModal(offerObj) {
-      // صفحة الطلب الخاصة بالعرض
-      modalRoot.innerHTML = `
-        <div class="modal">
-          <button class="close-btn" onclick="closeModal()">&times;</button>
-          <div class="modal-title">${offerObj.title}</div>
-          <div style="display:flex;gap:6px;justify-content:center;">
-            ${offerObj.products.map(pid => `<img src="${products.find(p=>p.id===pid)?.img}" alt="" style="width:34px;height:34px;border-radius:7px;background:#fff2;box-shadow:0 1px 4px #0002;">`).join('')}
-          </div>
-          <div style="color:#fff;margin:12px 0 10px;">${offerObj.desc}</div>
-          ${offerObj.price ? `<div style="color:#ffe066;font-weight:bold;margin-bottom:10px;">${offerObj.price} ريال</div>` : `<div style="color:#ffd700;margin-bottom:9px;">السعر حسب الطلب</div>`}
-          <div style="margin-bottom:10px;font-size:.96em;">لطلب العرض يرجى تعبئة النموذج التالي:</div>
-          ${orderFormHTML("", true, offerObj)}
-        </div>
-      `;
-      bindOrderForm();
-    }
-
-    function closeModal() {
-      modalRoot.innerHTML = "";
-    }
-    window.closeModal = closeModal;
-
-    // ==== Lottery ====
-    function bindLottery() {
-      const btn = document.getElementById('lottery-btn');
-      const resultEl = document.getElementById('lottery-result');
-      const key = "smokeline-lottery-result";
-      const prizes = [
-        "مبروك! ربحت خصم 15 ريال على أي طلب. احفظ لقطة الشاشة وقدّمها عند الطلب.",
-        "مبروك! ربحت توصيل مجاني على أول طلب.",
-        "مبروك! ربحت ولاعة أصلية مع طلبك القادم.",
-        "حظًا أوفر! جرب مرة أخرى في المرات القادمة.",
-        "مبروك! ربحت سيجارة مجانية مع أول طلب.",
-        "حظك اليوم متوسط! خصم 5 ريال.",
-        "لم يحالفك الحظ هذه المرة."
+    function playLuck(btn) {
+      const outcomes = [
+        "✅ مبروك! خصم 5 دراهم على طلبك",
+        "🎁 هدية إضافية مع الطلب",
+        "❌ لا شيء هذه المرة، حظًا أوفر"
       ];
-      // تحقق إذا لعب مسبقاً
-      let prev = localStorage.getItem(key);
-      if (prev) {
-        btn.disabled = true;
-        resultEl.textContent = prev;
-        btn.textContent = "تم اللعب";
-      }
-      btn.onclick = function() {
-        if (btn.disabled) return;
-        // عشوائي
-        const prize = prizes[Math.floor(Math.random()*prizes.length)];
-        localStorage.setItem(key, prize);
-        resultEl.textContent = prize;
-        btn.disabled = true;
-        btn.textContent = "تم اللعب";
-        setTimeout(()=>alert('يرجى حفظ لقطة شاشة لإثبات الجائزة عند الطلب!'), 500);
-      };
+      const result = outcomes[Math.floor(Math.random() * outcomes.length)];
+      document.getElementById("luck-result").innerText = result;
+      btn.disabled = true;
     }
-
-    // ====== Initial Render ======
-    renderPage("home");
-
-    // دعم التنقل عبر الروابط (SPA)
-    // يمكن إضافة window.history.pushState إذا أردت تغيير الروابط بدون إعادة تحميل
   </script>
+
 </body>
 </html>
