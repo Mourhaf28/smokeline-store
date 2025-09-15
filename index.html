@@ -108,7 +108,13 @@
 <body>
 
   <header>
-    
+    <div id="central-search-wrap" style="max-width:980px;margin:14px auto;display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:8px;">
+    <input id="central-search" type="search" placeholder="ابحث في كل العروض: اسم المنتج أو كلمة" aria-label="بحث مركزي" style="flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:15px;">
+    <button id="central-clear" style="padding:10px 12px;border-radius:10px;border:0;background:#d9b86a;color:#070707;font-weight:800;">مسح</button>
+  </div>
+  <div id="central-results" style="min-height:36px;color:#cfc6a3;"></div>
+</div>
   <a href="index.html" class="brand" aria-label="Smokeline store" style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;">
     <img src="logo.svg" alt="Smokeline store" style="height:48px;display:block;">
   </a>
