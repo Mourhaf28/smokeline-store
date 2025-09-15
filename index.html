@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmokeLine Store</title>
+  <style>
+    body { background:#111; color:#eee; font-family:Tahoma; padding:20px; }
+    header, section, footer { margin-bottom:30px; }
+    h1, h2 { color:#e0c080; }
+    nav a { margin:0 10px; color:#e0c080; text-decoration:none; }
+    .whatsapp, .order-btn, button { display:inline-block; background:#25D366; color:#fff; padding:10px 15px; border-radius:5px; text-decoration:none; margin-top:10px; border:none; cursor:pointer; }
+    .product { margin-bottom:20px; padding:10px; background:#222; border-radius:5px; }
+    .product h3 { margin:0 0 5px; }
+    .product p { margin:0 0 5px; }
+    .product a { color:#ccc; text-decoration:underline; display:block; margin-top:5px; }
+    button:disabled { background:#222; color:#888; }
+    #order-form { display:none; background:#222; padding:20px; border-radius:10px; margin-top:30px; }
+    input, textarea { width:100%; padding:10px; margin:10px 0; border:none; border-radius:5px; background:#333; color:#fff; }
+    label { font-weight:bold; }
+  </style>
+</head>
+<body>
+
+  <!-- شعار SmokeLine -->
+  <header>
+    <img src="smokeline-logo-gold.png" alt="SmokeLine Logo" style="width:140px;" />
+    <h1>SmokeLine Store</h1>
+    <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
+    <p style="font-size:14px; color:#ccc;">جميع الأسعار بالدرهم الإماراتي (AED) – تشمل 5 بوكس لكل صنف</p>
+  </header>
+
+  <!-- الطلب السريع -->
+  <section style="background:#222; padding:20px;">
+    <h2>🚀 الطلب السريع</h2>
+    <p>إذا كنت تعرف نوعك المفضل، تواصل معنا مباشرة أو املأ النموذج:</p>
+    <button onclick="openOrder('طلب سريع')">طلب سريع عبر النموذج</button>
+  </section>
+
+  <!-- لعبة الحظ -->
+  <section>
+    <h2>🎲 لعبة الحظ – فرصة واحدة لكل طلب</h2>
+    <button onclick="playLuck(this)">اضغط للعب</button>
+    <p id="luck-result"></p>
+  </section>
+
+  <!-- العروض -->
+  <section>
+    <h2>🧩 العروض المتوفرة</h2>
+
+    <div class="product"><h3>مالبورو جولد تركي</h3><p>285 درهم</p><a href="#" onclick="openOrder('مالبورو جولد تركي')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>دفيدوف وايت سليم</h3><p>470 درهم</p><a href="#" onclick="openOrder('دفيدوف وايت سليم')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>موڤي سلفر</h3><p>250 درهم</p><a href="#" onclick="openOrder('موڤي سلفر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>بربل تشانج</h3><p>250 درهم</p><a href="#" onclick="openOrder('بربل تشانج')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>دفيدوف ون فريش بوكس ستكر</h3><p>650 درهم</p><a href="#" onclick="openOrder('دفيدوف ون فريش بوكس ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>دفيدوف جولد فريش بوكس ستكر</h3><p>640 درهم</p><a href="#" onclick="openOrder('دفيدوف جولد فريش بوكس ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>تيرا تشانج أورانج</h3><p>250 درهم</p><a href="#" onclick="openOrder('تيرا تشانج أورانج')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ستكر</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد سليم</h3><p>270 درهم</p><a href="#" onclick="openOrder('جولد سليم')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد بوكس</h3><p>445 درهم</p><a href="#" onclick="openOrder('جولد بوكس')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد بوكس ستكر</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد بوكس ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون</h3><p>270 درهم</p><a href="#" onclick="openOrder('جولد ون')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون ستكر</h3><p>445 درهم</p><a href="#" onclick="openOrder('جولد ون ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون فريش</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد ون فريش')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون فريش ستكر</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد ون فريش ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون فريش بوكس</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد ون فريش بوكس')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون فريش بوكس ستكر</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد ون فريش بوكس ستكر')">طلب هذا المنتج</a></div>
+    <div class="product"><h3>جولد ون فريش بوكس ستكر 303</h3><p>615 درهم</p><a href="#" onclick="openOrder('جولد ون فريش بوكس ستكر 303')">طلب هذا المنتج</a></div>
+
+  </section>
+
+  <!-- نموذج الطلب -->
+  <section id="order-form">
+    <h2>📝 طلب منتج: <span id="product-name">...</span></h2>
+    <form onsubmit="event.preventDefault(); sendToWhatsApp();">
+      <label>الاسم الكامل:</label>
+      <input type="text" id="name" required />
+
+      <label>رقم الواتساب:</label>
+      <input type="text" id="whatsapp" required />
+
+      <label>الموقع (المدينة أو الدولة):</label>
+      <input type="text" id="location" required />
+
+      <label>ملاحظات إضافية:</label>
+      <textarea id="notes" rows="4"></textarea>
+
+      <label>📸 لقطة شاشة للعبة الحظ:</label>
+      <input type="file" accept="image/*" />
+
+      <button type="submit">إرسال الطلب عبر واتساب</button>
+    </form>
+  </section>
+
+  <!-- ختام رمزي -->
+  <footer>
+    <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
+    <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
+    <p>رمزية 303: بوابة التغيير، والانتقال من العادة إلى الهوية.</p>
+    <p>© 2025 SmokeLine UAE – جميع الحقوق محفوظة</p>
