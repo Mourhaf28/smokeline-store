@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>طلب سريع — SmokeLine</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0f0f10; --card:#161616; --muted:#e6dfc8; --gold:#d9b86a; --accent:#25D366; --danger:#e05b4f; --input-bg:#111;
+    }
+    body{ margin:0; font-family:'Segoe UI', Tahoma, sans-serif; background:linear-gradient(180deg,#0a0a0a,#141414); color:var(--muted); padding:20px; }
+    header{ text-align:center; margin-bottom:18px; }
+    h1{ margin:6px 0; color:var(--gold); font-size:24px; }
+    .card{ background:var(--card); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.6); max-width:760px; margin:0 auto 20px; }
+    label{ display:block; margin:12px 0 6px; font-weight:700; color:#e9e3c5; }
+    input[type="text"], input[type="tel"], input[type="number"], textarea, select {
+      width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:var(--input-bg); color:var(--muted); font-size:16px; box-sizing:border-box;
+    }
+    .row{ display:flex; gap:12px; }
+    .row .col{ flex:1; }
+    .actions{ display:flex; gap:10px; align-items:center; margin-top:14px; flex-wrap:wrap; }
+    .btn{ display:inline-block; padding:12px 18px; border-radius:10px; font-weight:800; font-size:16px; cursor:pointer; text-decoration:none; text-align:center; border:none; }
+    .btn-primary{ background:var(--gold); color:#0b0b0b; }
+    .btn-ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
+    .btn-ws{ background:#128C7E; color:#fff; }
+    .note{ font-size:13px; color:#cfc6a3; margin-top:8px; }
+    .error{ color:var(--danger); font-size:13px; margin-top:6px; display:none; }
+    @media (max-width:640px){ .row{ flex-direction:column; } .actions{ flex-direction:column; } .btn{ width:100%; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>طلب سريع — SmokeLine</h1>
+    <p class="lead">املأ البيانات ثم اضغط إرسال ثم أكمل عبر واتساب لتأكيد الطلب والشحن.</p>
+  </header>
+
+  <main class="card" role="main">
+    <form id="orderForm" novalidate>
+      <label for="product">المنتج</label>
+      <input type="text" id="product" name="product" placeholder="اكتب اسم المنتج أو اتركه افتراضي" />
+
+      <div class="row">
+        <div class="col">
+          <label for="name">الاسم الكامل <span aria-hidden="true">*</span></label>
+          <input type="text" id="name" name="name" placeholder="مثال: محمد الأحمد" required />
+          <div id="err-name" class="error">الرجاء إدخال اسم صحيح</div>
+        </div>
+        <div class="col">
+          <label for="phone">رقم الجوال الاماراتي <span aria-hidden="true">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="مثال: 0501234567" required />
+          <div id="err-phone" class="error">الرجاء إدخال رقم إماراتي يبدأ بـ 05 ويتكون من 10 أرقام</div>
+        </div>
+      </div>
+
+      <label for="emirate">الإمارة <span aria-hidden="true">*</span></label>
+      <select id="emirate" required>
+        <option value="">اختر الإمارة</option>
+      </select>
+      <div id="err-emirate" class="error">الرجاء اختيار الإمارة</div>
+
+      <label for="area">المنطقة التفصيلية <span aria-hidden="true">*</span></label>
+      <select id="area" required>
+        <option value="">اختر المنطقة</option>
+      </select>
+      <div id="err-area" class="error">الرجاء اختيار المنطقة التفصيلية</div>
+
+      <label for="quantity">الكمية</label>
+      <input type="number" id="quantity" name="quantity" min="1" value="1" />
+
+      <label for="notes">ملاحظات إضافية</label>
+      <textarea id="notes" name="notes" placeholder="تفاصيل إضافية أو تفضيلات"></textarea>
+
+      <div class="note">بعد الضغط إرسال ستظهر صفحة تأكيد تحتوي زر فتح واتساب مع رسالة مُعدّة رسمياً.</div>
+
+      <div class="actions">
+        <button type="button" id="sendBtn" class="btn btn-primary">إرسال الطلب</button>
+        <button type="button" id="clearBtn" class="btn btn-ghost">إعادة تعيين النموذج</button>
+        <a id="whatsappFallback" class="btn btn-ws" href="#" style="display:none" target="_blank" rel="noopener">أكمل عبر واتساب فوريا</a>
+      </div>
+    </form>
+  </main>
+
+  <main id="confirmation" class="card" style="display:none; max-width:760px; margin:0 auto;">
+    <div class="success-box" style="background:#0d2b12; border-radius:10px; padding:12px; color:#a6e6bf;">
+      <strong>تم تحضير الطلب.</strong>
+      <p style="margin:8px 0 0;">راجع التفاصيل ثم اضغط زر واتساب لإكمال وإرسال الرسالة الرسمية.</p>
+    </div>
+
+    <div style="margin-top:14px;">
+      <p id="summary" style="white-space:pre-line; color:#efe9d2;"></p>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a id="wsBtn" class="btn btn-ws" href="#" target="_blank" rel="noopener">أكمل عبر واتساب</a>
+      <button id="editBtn" class="btn btn-ghost">تعديل الطلب</button>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const phone = '963934511391';
+      const form = document.getElementById('orderForm');
+      const sendBtn = document.getElementById('sendBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const confirmation = document.getElementById('confirmation');
+      const summary = document.getElementById('summary');
+      const wsBtn = document.getElementById('wsBtn');
+      const editBtn = document.getElementById('editBtn');
+      const whatsappFallback = document.getElementById('whatsappFallback');
+
+      // Emirates and sample areas (يمكنك تعديل القيم هنا)
+      const regions = {
+        "أبوظبي": ["المدينة الجامعية","الداخلية","الرياض","الجزيرة","مشرف"],
+        "دبي": ["البرشاء","المرقبات","الداون تاون","النسيم","البرج"],
+        "الشارقة": ["القلعة","النهدة","الخان","الصجعة","مويلح"],
+        "عجمان": ["الميناء","الراشدية","الناصرية","المدينة"],
+        "أم القيوين": ["المنطقة 1","المنطقة 2"],
+        "رأس الخيمة": ["المرخانية","الخرايب","المنطقة الصناعية"],
+        "الفجيرة": ["المدينة","البدع","دبا الفجيرة"]
+      };
+
+      // populate emirate select
+      const emirateSel = document.getElementById('emirate');
+      const areaSel = document.getElementById('area');
+      Object.keys(regions).forEach(e=>{
+        const opt = document.createElement('option'); opt.value = e; opt.textContent = e; emirateSel.appendChild(opt);
+      });
+
+      emirateSel.addEventListener('change', function(){
+        const val = this.value;
+        areaSel.innerHTML = '<option value="">اختر المنطقة</option>';
+        if(!val) return;
+        regions[val].forEach(a=>{
+          const o = document.createElement('option'); o.value = a; o.textContent = a; areaSel.appendChild(o);
+        });
+      });
+
+      // fill product from query string
+      (function fillProductFromQuery(){
+        try{
+          const params = new URLSearchParams(location.search);
+          const product = params.get('product');
+          if(product){
+            const p = document.getElementById('product');
+            p.value = decodeURIComponent(product);
+          }
+        }catch(e){}
+      })();
+
+      function validate(){
+        let ok = true;
+        const name = document.getElementById('name').value.trim();
+        const phoneVal = document.getElementById('phone').value.trim();
+        const emirateVal = document.getElementById('emirate').value;
+        const areaVal = document.getElementById('area').value;
+        // reset errors
+        document.getElementById('err-name').style.display='none';
+        document.getElementById('err-phone').style.display='none';
+        document.getElementById('err-emirate').style.display='none';
+        document.getElementById('err-area').style.display='none';
+        if(name.length < 2){ document.getElementById('err-name').style.display='block'; ok=false; }
+        // phone must start with 05 and be 10 digits total
+        const digits = phoneVal.replace(/[^\d]/g,'');
+        if(!/^05\d{8}$/.test(digits)){ document.getElementById('err-phone').style.display='block'; ok=false; }
+        if(!emirateVal){ document.getElementById('err-emirate').style.display='block'; ok=false; }
+        if(!areaVal){ document.getElementById('err-area').style.display='block'; ok=false; }
+        return ok;
+      }
+
+      function buildMessage(data){
+        const lines = [];
+        lines.push('مرحبًا، أود تقديم طلب من SmokeLine.');
+        if(data.product) lines.push('المنتج: ' + data.product);
+        lines.push('الاسم: ' + data.name);
+        lines.push('الجوال: ' + data.phone);
+        lines.push('الكمية: ' + data.quantity);
+        lines.push('الإمارة: ' + data.emirate);
+        lines.push('المنطقة: ' + data.area);
+        if(data.notes) lines.push('ملاحظات: ' + data.notes);
+        lines.push('الرجاء التواصل لتأكيد التفاصيل والشحن. شكرًا.');
+        return lines.join('\n');
+      }
+
+      function encodeWaHref(message){
+        return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message);
+      }
+
+      sendBtn.addEventListener('click', function(){
+        if(!validate()) return;
+        const data = {
+          product: document.getElementById('product').value.trim(),
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          quantity: document.getElementById('quantity').value || '1',
+          emirate: document.getElementById('emirate').value,
+          area: document.getElementById('area').value,
+          notes: document.getElementById('notes').value.trim()
+        };
+        const message = buildMessage(data);
+        summary.textContent = message;
+        wsBtn.href = encodeWaHref(message);
+        whatsappFallback.href = wsBtn.href;
+        form.style.display = 'none';
+        confirmation.style.display = 'block';
+        setTimeout(()=>{ confirmation.scrollIntoView({behavior:'smooth'}); },120);
+      });
+
+      editBtn.addEventListener('click', function(){
+        confirmation.style.display = 'none';
+        form.style.display = 'block';
+        form.scrollIntoView({behavior:'smooth'});
+      });
+
+      clearBtn.addEventListener('click', function(){
+        form.reset();
+        areaSel.innerHTML = '<option value="">اختر المنطقة</option>';
+        document.getElementById('err-name').style.display='none';
+        document.getElementById('err-phone').style.display='none';
+        document.getElementById('err-emirate').style.display='none';
+        document.getElementById('err-area').style.display='none';
+      });
+
+      // fallback quick link while filling
+      whatsappFallback.style.display = 'inline-block';
+      function updateFallback(){
+        const data = {
+          product: document.getElementById('product').value.trim(),
+          name: document.getElementById('name').value.trim() || '—',
+          phone: document.getElementById('phone').value.trim() || '—',
+          quantity: document.getElementById('quantity').value || '1',
+          emirate: document.getElementById('emirate').value || '—',
+          area: document.getElementById('area').value || '—',
+          notes: document.getElementById('notes').value.trim()
+        };
+        const message = buildMessage(data);
+        whatsappFallback.href = encodeWaHref(message);
+      }
+      ['product','name','phone','quantity','emirate','area','notes'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('input', updateFallback);
+        el.addEventListener('change', updateFallback);
+      });
+      updateFallback();
+
+    })();
+  </script>
+</body>
+</html>
