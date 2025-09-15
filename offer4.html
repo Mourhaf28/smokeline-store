@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>عرض رقم 4 — SmokeLine</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#070707;
+      --card:#151515;
+      --muted:#e6dfc8;
+      --gold:#d9b86a;
+    }
+    html,body{ height:100%; margin:0; padding:18px; background:linear-gradient(180deg,#060606,#111); color:var(--muted); font-family:'Segoe UI', Tahoma, sans-serif; -webkit-font-smoothing:antialiased; }
+    header{ display:flex; align-items:center; gap:12px; margin-bottom:14px; max-width:980px; margin-left:auto; margin-right:auto; }
+    a.back{ color:var(--muted); text-decoration:none; font-weight:700; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); background:transparent; }
+    h1{ margin:0; color:var(--gold); font-size:20px; }
+    p.lead{ margin:4px 0 0; color:#cfc6a3; font-size:13px; }
+
+    main.card{ max-width:980px; margin:12px auto 40px; background:var(--card); border-radius:12px; padding:14px; box-shadow:0 8px 20px rgba(0,0,0,.6); }
+    .offer-section { border-radius:10px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.04)); margin-bottom:10px; }
+    .sec-head { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; background:rgba(0,0,0,0.06); }
+    .sec-title { font-weight:800; color:#efe9d2; }
+    .sec-toggle { color:var(--gold); font-weight:800; }
+    .offer-list { display:none; flex-direction:column; gap:6px; padding:10px 12px; }
+    .offer-list.show{ display:flex; }
+    .offer-item{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:8px; cursor:pointer; transition:transform .08s, box-shadow .12s; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03)); border:1px solid rgba(255,255,255,0.02); }
+    .offer-item:hover{ transform:translateY(-4px); box-shadow:0 8px 18px rgba(0,0,0,.35); }
+    .offer-item .title{ font-weight:700; color:#efe9d2; font-size:15px; }
+    .offer-item .price{ color:var(--gold); font-weight:800; margin-left:12px; white-space:nowrap; }
+    .note{ color:#cfc6a3; font-size:13px; margin-top:8px; }
+    @media (max-width:720px){
+      body{ padding:12px; }
+      main.card{ padding:12px; margin:8px 6px 30px; }
+      .offer-item .title{ font-size:14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" href="index.html" aria-label="العودة إلى المتجر">◀ المتجر</a>
+    <div>
+      <h1>عرض رقم 4</h1>
+      <p class="lead">كل منتج مذكور مع السعر لكل 5 بوكس. اضغط على المنتج لفتح نموذج الطلب.</p>
+    </div>
+  </header>
+
+  <main class="card" role="main" id="offer-card">
+    <div id="offer4-sections" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <p class="note">ملاحظة: تأكد أن <strong>order.html</strong> موجود في نفس المجلد لعمل إعادة التوجيه وملء الحقل تلقائياً.</p>
+  </main>
+
+  <script>
+  (function(){
+    const sections = [
+      {
+        title: "مارلبورو",
+        items: [
+          { name: "5 مالبورو فلافور ميكس", price: "615" },
+          { name: "5 مالبورو احمر سويسري باركود", price: "470" },
+          { name: "5 مالبورو احمر سويسري استيكر مكفول تاريخ", price: "610" },
+          { name: "5 مالبورو جولد سويسري تاريخ", price: "610" },
+          { name: "5 مالبورو تاتش ستيكر", price: "610" },
+          { name: "5 مالبورو دبل مكس استيكر طبعه فيستا", price: "615" },
+          { name: "5 مالبورو دبل ايس استيكر طبعه قديمه", price: "615" },
+          { name: "5 مالبورو سلفر بلو استيكر", price: "620" },
+          { name: "5 مالبورو وايت سويسري استيكر", price: "610" },
+          { name: "مالبورو جولد سويسري شهر 6", price: "480" },
+          { name: "مالبورو احمر امريكي مكفول", price: "245" },
+          { name: "مالبورو جولد امريكي مكفول", price: "240" },
+          { name: "مالبورو جولد تركي مكفول", price: "260" }
+        ]
+      },
+      {
+        title: "دافيدوف",
+        items: [
+          { name: "5 دافيدوف كلاسيك عريض مفرد", price: "370" },
+          { name: "5 دافيدوف وايت اصلي مفرد", price: "400" },
+          { name: "5 دافيدوف جولد اصلي مفرد", price: "405" },
+          { name: "5 دوفيدوف سيلفر بدون", price: "385" },
+          { name: "5 دافيدوف وايت سليم مفرد", price: "440" },
+          { name: "5 دافيدوف جولد سليم مفرد", price: "410" },
+          { name: "5 دافيدوف سوبر سلم بدون", price: "405" },
+          { name: "5 دافيدوف سوبر سلم استيكر", price: "550" },
+          { name: "5 دافيدوف جولد استيكر", price: "540" },
+          { name: "5 دافيدوف وايت استيكر", price: "540" },
+          { name: "5 دافيدوف سيلفر استيكر", price: "540" },
+          { name: "5 دافيدوف جولد سلم استيكر", price: "550" },
+          { name: "5 دافيدوف وايت سلم استيكر", price: "560" },
+          { name: "5 دافيدوف جولد فريش بوكس استيكر", price: "660" },
+          { name: "5 دافيدوف وان فريش بوكس استيكر", price: "660" }
+        ]
+      },
+      {
+        title: "دنهل",
+        items: [
+          { name: "5 دنهل سيلفر 3mg", price: "380" },
+          { name: "5 دنهل ابيض بدون", price: "380" },
+          { name: "5 دنهل سيلفر جرين استيكر", price: "465" },
+          { name: "5 دنهل مشبح", price: "400" },
+          { name: "5 دنهل جولد ستيكر قصير", price: "465" },
+          { name: "5 دنهل ازرق بدون ستيكر اصلي", price: "385" },
+          { name: "5 دنهل ازرق سويسري استيكر", price: "470" },
+          { name: "5 دنهل بلاك جرين سويسري", price: "380" },
+          { name: "5 دنهل بلا جرين سويسري ستيكر", price: "445" },
+          { name: "5 دنهل ايفوك سلفر", price: "510" },
+          { name: "5 دنهل ايفوك جولد", price: "510" }
+        ]
+      },
+      {
+        title: "بارلمنت",
+        items: [
+          { name: "5 بارلمنت اكوا بلو استيكر", price: "620" },
+          { name: "5 بارلمنت سيلفر بلو استيكر", price: "615" },
+          { name: "5 بارلمنت بلاتينوم استيكر", price: "615" }
+        ]
+      },
+      {
+        title: "وينستون",
+        items: [
+          { name: "5 ونستون ازرق ستكر", price: "415" },
+          { name: "5 ونستون سلفر ستكر", price: "415" },
+          { name: "5 ونستون احمر ستكر", price: "415" },
+          { name: "وينستون ازرق بدون", price: "325" }
+        ]
+      },
+      {
+        title: "كابتن بلاك",
+        items: [
+          { name: "كابتن بلاك دارك كريما", price: "335" },
+          { name: "كابتن بلاك كلاسيك", price: "335" },
+          { name: "كابتن بلاك دارك", price: "345" },
+          { name: "كابتن بلاك مانجو", price: "340" },
+          { name: "كابتن بلاك شيري", price: "335" },
+          { name: "كابتن بلاك عنب", price: "345" }
+        ]
+      },
+      {
+        title: "فوج / ال ام",
+        items: [
+          { name: "فوج منتول بدون", price: "415" },
+          { name: "فوج بلو بدون", price: "445" },
+          { name: "5 ال ام احمر سويسري ستكر", price: "445" }
+        ]
+      },
+      {
+        title: "تيرا",
+        items: [
+          { name: "5 تيرا روسي اصفر بدون صورة", price: "615" },
+          { name: "تيرا امبر سيلفر بدون صورة", price: "615" },
+          { name: "تيرا بربل بصورة", price: "535" },
+          { name: "تيرا تركواز بصورة", price: "535" },
+          { name: "تيرا سيلفر صورة", price: "535" },
+          { name: "تيرا امبر صورة", price: "535" },
+          { name: "تيرا تركواز استيكر", price: "655" },
+          { name: "تيرا اصفر استيكر", price: "620" },
+          { name: "تيرا سيانا استيكر", price: "625" },
+          { name: "تيرا سيلفر استيكر", price: "655" },
+          { name: "تيرا برونز استيكر", price: "635" }
+        ]
+      },
+      {
+        title: "جيتان / جلواز / بينسون / جمل",
+        items: [
+          { name: "جيتان سوبر بلو الاصلي", price: "375" },
+          { name: "5 جلواز ازرق بدون", price: "315" },
+          { name: "بينسون جولد مكفول", price: "365" },
+          { name: "بينسون جولد غير مكفول", price: "265" },
+          { name: "5 جمل اصفر بدون", price: "380" }
+        ]
+      },
+      {
+        title: "ايسي و 303 و ماستر",
+        items: [
+          { name: "5 ايسي سيلفر كومباكت بدون", price: "250" },
+          { name: "5 ايسي بلاك كومباكت بدون", price: "250" },
+          { name: "5 ايسي منتول طبعه جديدة", price: "260" },
+          { name: "5 ايسي اتشنج 18 اصلي", price: "275" },
+          { name: "5 ايسي اتشنج واين", price: "250" },
+          { name: "5 ايسي اتشنج اورانج", price: "250" },
+          { name: "5 ايسي جولد طبعه قديم", price: "255" },
+          { name: "5 ايسي جولد طبعه جديدة", price: "190" },
+          { name: "5 ايسي لايت طبعه قديمه", price: "255" },
+          { name: "5 ايسي لايت سجنتشر", price: "255" },
+          { name: "5 303 اسود بدون", price: "185" },
+          { name: "5 303 بني بدون", price: "185" },
+          { name: "5 303 اخضر عربي", price: "235" },
+          { name: "5 303 ازرق عربي", price: "270" },
+          { name: "ماستر طويل مكفول", price: "150" },
+          { name: "ماستر ازرق مكفول 100%", price: "200" },
+          { name: "ماستر كوين ابيض", price: "230" },
+          { name: "ماستر كوين ازرق", price: "220" },
+          { name: "ماستر سلم وان", price: "220" },
+          { name: "ماستر سلم ازرق", price: "220" }
+        ]
+      },
+      {
+        title: "موند و سبيد و رويال",
+        items: [
+          { name: "5 موند ازرق انجليزي", price: "145" },
+          { name: "5 موند فراولة", price: "140" },
+          { name: "موند تفاح", price: "140" },
+          { name: "5 سبيد", price: "160" },
+          { name: "5 رويال بزنس شهر 5", price: "175" }
+        ]
+      },
+      {
+        title: "مانشستر و بلاتينيوم و منوعات",
+        items: [
+          { name: "5 مانشستر احمر اكسترا", price: "170" },
+          { name: "5 مانشيستر ازرق مكفول", price: "170" },
+          { name: "5 مانشيستر لايت", price: "155" },
+          { name: "5 مانشيستر اكوا كوين", price: "165" },
+          { name: "5 مانشيستر دبل درايف", price: "190" },
+          { name: "5 مانشيستر نبيتي", price: "140" },
+          { name: "5 مانشيستر نانو ابيض", price: "135" },
+          { name: "5 مانشيستر كوين ازرق طبعة قديمة", price: "160" },
+          { name: "5 بلاتينوم سفن كول", price: "140" },
+          { name: "بلاتينيوم دبل ميكس كينج سايز", price: "160" },
+          { name: "5 بلاتينوم سويتش كوين", price: "160" },
+          { name: "5 بلاتينوم ازرق انجليزي", price: "130" },
+          { name: "5 احمر كينج سايز", price: "110" },
+          { name: "ماكدو كوين ازرق", price: "110" },
+          { name: "5 اليجانس سيلفر سوپر سليم", price: "140" },
+          { name: "سنترو سيلفر", price: "165" }
+        ]
+      }
+    ];
+
+    const container = document.getElementById('offer4-sections');
+
+    function openOrder(name, price){
+      const priceText = price ? `${price} AED لكل 5 بوكس` : 'سعر حسب الطلب';
+      const label = `${name} — ${priceText}`;
+      window.location.href = 'order.html?product=' + encodeURIComponent(label);
+    }
+
+    sections.forEach((sec, idx) => {
+      const secWrap = document.createElement('div');
+      secWrap.className = 'offer-section';
+
+      const head = document.createElement('div');
+      head.className = 'sec-head';
+      head.innerHTML = `<div class="sec-title">${sec.title}</div><div class="sec-toggle" aria-hidden="true">+</div>`;
+
+      const list = document.createElement('div');
+      list.className = 'offer-list';
+      list.id = 'offer4-list-' + idx;
+
+      sec.items.forEach(it=>{
+        const row = document.createElement('div');
+        row.className = 'offer-item';
+        row.tabIndex = 0;
+        const t = document.createElement('div'); t.className='title'; t.textContent = it.name;
+        const p = document.createElement('div'); p.className='price'; p.textContent = it.price ? (it.price + ' AED') : '';
+        row.appendChild(t); row.appendChild(p);
+        row.addEventListener('click', ()=> openOrder(it.name, it.price));
+        row.addEventListener('keydown', (e)=> { if(e.key==='Enter' || e.key===' ') openOrder(it.name, it.price); });
+        list.appendChild(row);
+      });
+
+      head.addEventListener('click', ()=>{
+        const open = list.classList.toggle('show');
+        head.querySelector('.sec-toggle').textContent = open ? '−' : '+';
+      });
+
+      secWrap.appendChild(head);
+      secWrap.appendChild(list);
+      container.appendChild(secWrap);
+    });
+
+    // افتح أول قسم تلقائياً
+    const firstList = document.querySelector('.offer-list');
+    if(firstList) {
+      firstList.classList.add('show');
+      const firstToggle = document.querySelector('.sec-head .sec-toggle');
+      if(firstToggle) firstToggle.textContent = '−';
+    }
+  })();
+  </script>
+
+</body>
+</html>
