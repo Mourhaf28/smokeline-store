@@ -804,93 +804,108 @@
   ];
 
   const input = document.getElementById('central-search');
-  const results = document.getElementById('central-results');
-  const clearBtn = document.getElementById('central-clear');
+const results = document.getElementById('central-results');
+const clearBtn = document.getElementById('central-clear');
 
-  if(!input || !results){
-    console.error('Search script: missing #central-search or #central-results elements.');
+if (!input || !results) {
+  console.error('Search script: missing #central-search or #central-results elements.');
+  return;
+}
+
+function normalizeNumberString(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660))
+    .replace(/[,\.\s\u066B\u066C\u066D\u202F]/g, '');
+}
+
+function normalizeText(s) {
+  if (!s) return '';
+  return s.toString().toLowerCase()
+    .replace(/[\u064B-\u0652]/g, '')
+    .replace(/[ـٰ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isPriceQuery(q) {
+  const n = normalizeNumberString(q);
+  return /^\d{1,4}$/.test(n);
+}
+
+function renderResults(term) {
+  const raw = term || '';
+  const q = normalizeText(raw);
+  if (!q) {
+    results.innerHTML = '';
     return;
   }
 
-  function normalizeNumberString(s){
-    if(!s) return '';
-    return String(s).replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660)).replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
+  const queryIsPrice = isPriceQuery(raw);
+  const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw), 10) : null;
+
+  const matches = STATIC_INDEX.filter(item => {
+    if (queryIsPrice && item.price) {
+      return Math.abs(item.price - qNum) <= 5;
+    }
+    const name = normalizeText(item.name);
+    return name.indexOf(q) !== -1;
+  });
+
+  if (matches.length === 0) {
+    results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
+    return;
   }
 
-  function normalizeText(s){
-    if(!s) return '';
-    return s.toString().toLowerCase().replace(/[\u064B-\u0652]/g,'').replace(/[ـٰ]/g,'').replace(/\s+/g,' ').trim();
-  }
+  results.innerHTML = matches.map(item => {
+    const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+    const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+    const href = item.href || '';
+    return `
+      <div class="search-item" data-href="${encodeURIComponent(href)}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+        <div style="font-weight:700;color:#fff">${item.name}</div>
+        <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+      </div>`;
+  }).join('');
 
-  function isPriceQuery(q){
-    const n = normalizeNumberString(q);
-    return /^\d{1,4}$/.test(n);
-  }
+  // ربط مستمع النقر لكل نتيجة
+  results.querySelectorAll('.search-item').forEach(el => {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-  function renderResults(term){
-    const raw = term || '';
-    const q = normalizeText(raw);
-    if(!q){ results.innerHTML = ''; return; }
-
-    const queryIsPrice = isPriceQuery(raw);
-    const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw),10) : null;
-
-    const matches = STATIC_INDEX.filter(item => {
-      if(queryIsPrice && item.price){
-        return Math.abs(item.price - qNum) <= 5;
+      const raw = this.getAttribute('data-href') || '';
+      if (!raw) {
+        console.warn('search click: no data-href');
+        return;
       }
-      const name = normalizeText(item.name);
-      return name.indexOf(q) !== -1;
-    });
 
-    if(matches.length === 0){
-      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
-      return;
-    }
+      // العنصر داخل رابط أبوي، نمنع تنفيذ href الأب
+      const parentLink = this.closest('a[href]');
+      if (parentLink) {
+        e.stopImmediatePropagation();
+      }
 
-    results.innerHTML = matches.map(item => {
-const results = document.getElementById('central-results') || document.querySelector('#central-results');
-if(!results) throw new Error('Missing #central-results element');
-results.innerHTML = matches.map(item => {
-  const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
-  const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
-  const href = item.href || '';  
-  return `
-    <div class="search-item" data-href="${encodeURIComponent(href)}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
-      <div style="font-weight:700;color:#fff">${item.name}</div>
-      <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
-    </div>`;
-}).join('');
+      let resolved;
+      try {
+        const decoded = decodeURIComponent(raw);
+        resolved = new URL(decoded, window.location.href).href;
+      } catch (err) {
+        resolved = raw;
+      }
 
-results.querySelectorAll('.search-item').forEach(el => {
-  el.addEventListener('click', function(e){
-    e.preventDefault();
-    e.stopPropagation();
+      window.location.assign(resolved);
+    }, { passive: false });
+  });
+}
 
-    const raw = this.getAttribute('data-href') || '';
-    if(!raw) {
-      console.warn('search click: no data-href');
-      return;
-    }
-
-    العنصر داخل رابط أبوي، نمنع تنفيذ href الأب
-    const parentLink = this.closest('a[href]');
-    if(parentLink){
-      e.stopImmediatePropagation();
-    }
-
-    let resolved;
-    try{
-      // لاحظ استخدام decodeURIComponent قبل البناء إن أردنا استعادة النص الأصلي
-      const decoded = decodeURIComponent(raw);
-      resolved = new URL(decoded, window.location.href).href;
-    }catch(err){
-      resolved = raw;
-    }
-
-    // توجيه نهائي
-    window.location.assign(resolved);
-  }, { passive: false });
+// ربط البحث
+input.addEventListener('input', e => {
+  try {
+    renderResults(e.target.value);
+  } catch (err) {
+    console.error('Search error:', err);
+  }
 });
   }
 
