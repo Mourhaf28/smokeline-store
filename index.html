@@ -573,7 +573,319 @@
 
     })();
   </script>
+  <script>
+(function(){
+  const STATIC_INDEX = [
+    /* ===== عرض 1 ===== */
+    { name: "بوكس كوفي كريم", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-0" },
+    { name: "مالبورو أحمر أمريكي (5 بوكس)", price: 50, total: 250, qty: 5, offer: "1", href: "offer.html#p-1-1" },
+    { name: "مالبورو جولد أمريكي (5 بوكس)", price: 50, total: 250, qty: 5, offer: "1", href: "offer.html#p-1-2" },
+    { name: "مارلبورو جولد تركي سمارت سيل (5 بوكس)", price: 58, total: 290, qty: 5, offer: "1", href: "offer.html#p-1-3" },
+    { name: "مارلبورو أحمر سويسري ستيكر 3/2025 (5 بوكس)", price: 123, total: 615, qty: 5, offer: "1", href: "offer.html#p-1-4" },
+    { name: "مارلبورو جولد سويسرى ستيكر الاصلي (5 بوكس)", price: 122, total: 610, qty: 5, offer: "1", href: "offer.html#p-1-5" },
+    { name: "مالبورو جولد بولندي ستيكر سوبر ماركت 1/2024 (5 بوكس)", price: 74, total: 370, qty: 5, offer: "1", href: "offer.html#p-1-6" },
+    { name: "مارلبورو وايت سويسري ستيكر 1/2025 (5 بوكس)", price: 124, total: 620, qty: 5, offer: "1", href: "offer.html#p-1-7" },
+    { name: "مارلبورو دبل ميكس ستيكر فيستا (5 بوكس)", price: 125, total: 625, qty: 5, offer: "1", href: "offer.html#p-1-8" },
+    { name: "مارلبورو دبل آيس ستيكر فيستا (5 بوكس)", price: 125, total: 625, qty: 5, offer: "1", href: "offer.html#p-1-9" },
+    { name: "مارلبورو تاتش سويسري ستيكر (5 بوكس)", price: 125, total: 625, qty: 5, offer: "1", href: "offer.html#p-1-10" },
+    { name: "دوف جولد عادي مفرد (5 بوكس)", price: 82, total: 410, qty: 5, offer: "1", href: "offer.html#p-1-11" },
+    { name: "دوف وايت عادي مفرد (5 بوكس)", price: 82, total: 410, qty: 5, offer: "1", href: "offer.html#p-1-12" },
+    { name: "دافيدوف كلاسيك (5 بوكس)", price: 77, total: 385, qty: 5, offer: "1", href: "offer.html#p-1-13" },
+    { name: "دافيدوف سلفر عادي (5 بوكس)", price: 79, total: 395, qty: 5, offer: "1", href: "offer.html#p-1-14" },
+    { name: "دافيدوف جولد سليم بدون (5 بوكس)", price: 85, total: 425, qty: 5, offer: "1", href: "offer.html#p-1-15" },
+    { name: "دافيدوف وايت سليم بدون (5 بوكس)", price: 89, total: 445, qty: 5, offer: "1", href: "offer.html#p-1-16" },
+    { name: "دوف سوبر سليم بدون (5 بوكس)", price: 83, total: 415, qty: 5, offer: "1", href: "offer.html#p-1-17" },
+    { name: "دنهل ازرق عادي (5 بوكس)", price: 77, total: 385, qty: 5, offer: "1", href: "offer.html#p-1-18" },
+    { name: "دنهل وايت عادي (5 بوكس)", price: 77, total: 385, qty: 5, offer: "1", href: "offer.html#p-1-19" },
+    { name: "دنهل سلفر عادي (5 بوكس)", price: 77, total: 385, qty: 5, offer: "1", href: "offer.html#p-1-20" },
+    { name: "دنهل بلاك جرين سويسرى بدون (5 بوكس)", price: 77, total: 385, qty: 5, offer: "1", href: "offer.html#p-1-21" },
+    { name: "دنهل بلاك جرين عربي (5 بوكس)", price: 74, total: 370, qty: 5, offer: "1", href: "offer.html#p-1-22" },
+    { name: "دنهل ازرق ستيكر (5 بوكس)", price: 95, total: 475, qty: 5, offer: "1", href: "offer.html#p-1-23" },
+    { name: "دنهل سلفر جرين ستيكر (5 بوكس)", price: 95, total: 475, qty: 5, offer: "1", href: "offer.html#p-1-24" },
+    { name: "دنهل ايفوك جولد ستيكر (5 بوكس)", price: 103, total: 515, qty: 5, offer: "1", href: "offer.html#p-1-25" },
+    { name: "دنهل ايفوك سلفر ستيكر (5 بوكس)", price: 102, total: 510, qty: 5, offer: "1", href: "offer.html#p-1-26" },
+    { name: "دنهل ايفوك سلفر عربي بدون 2023 (5 بوكس)", price: 44, total: 220, qty: 5, offer: "1", href: "offer.html#p-1-27" },
+    { name: "دنهل جولد قصير ستيكر (5 بوكس)", price: 94, total: 470, qty: 5, offer: "1", href: "offer.html#p-1-28" },
+    { name: "ايسي منتول طبعة قديمة (5 بوكس)", price: 51, total: 255, qty: 5, offer: "1", href: "offer.html#p-1-29" },
+    { name: "ايسي جولد طبعة جديدة (5 بوكس)", price: 40, total: 200, qty: 5, offer: "1", href: "offer.html#p-1-30" },
+    { name: "ايسي تشانج كوري (5 بوكس)", price: 0, total: 0, qty: 5, offer: "1", href: "offer.html#p-1-31" },
+    { name: "ايسي تشانج عربي 2025 (5 بوكس)", price: 33, total: 165, qty: 5, offer: "1", href: "offer.html#p-1-32" },
+    { name: "ايسي تشانج دبل سويتش اورانج (5 بوكس)", price: 50, total: 250, qty: 5, offer: "1", href: "offer.html#p-1-33" },
+    { name: "ايسي تشانج دبل سويتش عنب (5 بوكس)", price: 0, total: 0, qty: 5, offer: "1", href: "offer.html#p-1-34" },
+    { name: "ايسي لايت قديم (5 بوكس)", price: 52, total: 260, qty: 5, offer: "1", href: "offer.html#p-1-35" },
+    { name: "ايسي لايت سيجنتشر (5 بوكس)", price: 51, total: 255, qty: 5, offer: "1", href: "offer.html#p-1-36" },
+    { name: "ايسي بلاك جولد ليف (شجرة) (5 بوكس)", price: 49, total: 245, qty: 5, offer: "1", href: "offer.html#p-1-37" },
+    { name: "بارلمنت اكوا بلو ستيكر مربع (5 بوكس)", price: 125, total: 625, qty: 5, offer: "1", href: "offer.html#p-1-38" },
+    { name: "بارلمنت سلفر بلو ستيكر مربع (5 بوكس)", price: 125, total: 625, qty: 5, offer: "1", href: "offer.html#p-1-39" },
+    { name: "بارلمنت بلاتينيوم ستيكر مستطيل (5 بوكس)", price: 124, total: 620, qty: 5, offer: "1", href: "offer.html#p-1-40" },
+    { name: "كابتن بلاك دارك كريم (5 بوكس)", price: 70, total: 350, qty: 5, offer: "1", href: "offer.html#p-1-41" },
+    { name: "كابتن بلاك كلاسيك (5 بوكس)", price: 70, total: 350, qty: 5, offer: "1", href: "offer.html#p-1-42" },
+    { name: "كابتن بلاك شيري (5 بوكس)", price: 73, total: 365, qty: 5, offer: "1", href: "offer.html#p-1-43" },
+    { name: "كابتن بلاك تفاح (5 بوكس)", price: 74, total: 370, qty: 5, offer: "1", href: "offer.html#p-1-44" },
+    { name: "بلاتينيوم سفن كول سويتش (5 بوكس)", price: 29, total: 145, qty: 5, offer: "1", href: "offer.html#p-1-45" },
+    { name: "بلاتينيوم دبل سويتش عنب (5 بوكس)", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-46" },
+    { name: "بلاتينيوم دبل ميكس (5 بوكس)", price: 33, total: 165, qty: 5, offer: "1", href: "offer.html#p-1-47" },
+    { name: "بلاتينيوم ازرق عادي (5 بوكس)", price: 28, total: 140, qty: 5, offer: "1", href: "offer.html#p-1-48" },
+    { name: "بلاتينيوم ازرق سمارت سيل (5 بوكس)", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-49" },
+    { name: "وينستون ازرق ستيكر (5 بوكس)", price: 85, total: 425, qty: 5, offer: "1", href: "offer.html#p-1-50" },
+    { name: "وينستون سلفر ستيكر (5 بوكس)", price: 83, total: 415, qty: 5, offer: "1", href: "offer.html#p-1-51" },
+    { name: "وينستون احمر ستيكر (5 بوكس)", price: 84, total: 420, qty: 5, offer: "1", href: "offer.html#p-1-52" },
+    { name: "إل إم أحمر سويسري ستيكر (5 بوكس)", price: 89, total: 445, qty: 5, offer: "1", href: "offer.html#p-1-53" },
+    { name: "جلواز اصفر كومباكت غير مكفول (5 بوكس)", price: 59, total: 295, qty: 5, offer: "1", href: "offer.html#p-1-54" },
+    { name: "جلواز احمر كومباكت غير مكفول (5 بوكس)", price: 59, total: 295, qty: 5, offer: "1", href: "offer.html#p-1-55" },
+    { name: "فوج ازرق بدون (5 بوكس)", price: 89, total: 445, qty: 5, offer: "1", href: "offer.html#p-1-56" },
+    { name: "فوج منتول سليم بدون (5 بوكس)", price: 89, total: 445, qty: 5, offer: "1", href: "offer.html#p-1-57" },
+    { name: "كاميل ازرق بدون (5 بوكس)", price: 76, total: 380, qty: 5, offer: "1", href: "offer.html#p-1-58" },
+    { name: "كاميل اصفر بدون (5 بوكس)", price: 75, total: 375, qty: 5, offer: "1", href: "offer.html#p-1-59" },
+    { name: "كاميل اصفر ستيكر (5 بوكس)", price: 93, total: 465, qty: 5, offer: "1", href: "offer.html#p-1-60" },
+    { name: "ماستر قصير مكفول اصلي (5 بوكس)", price: 40, total: 200, qty: 5, offer: "1", href: "offer.html#p-1-61" },
+    { name: "ماستر قصير غير مكفول (5 بوكس)", price: 23, total: 115, qty: 5, offer: "1", href: "offer.html#p-1-62" },
+    { name: "ماستر سوفت طويل (5 بوكس)", price: 29, total: 145, qty: 5, offer: "1", href: "offer.html#p-1-63" },
+    { name: "سبيد (5 بوكس)", price: 34, total: 170, qty: 5, offer: "1", href: "offer.html#p-1-64" },
+    { name: "رويال بيزنس حديث 6/2025 (5 بوكس)", price: 35, total: 175, qty: 5, offer: "1", href: "offer.html#p-1-65" },
+    { name: "اليجانس منتول سوبر سليم (5 بوكس)", price: 29, total: 145, qty: 5, offer: "1", href: "offer.html#p-1-66" },
+    { name: "شملان يمني بلو سمارت سيل (5 بوكس)", price: 34, total: 170, qty: 5, offer: "1", href: "offer.html#p-1-67" },
+    { name: "303 بني (5 بوكس)", price: 37, total: 185, qty: 5, offer: "1", href: "offer.html#p-1-68" },
+    { name: "303 اسود (5 بوكس)", price: 37, total: 185, qty: 5, offer: "1", href: "offer.html#p-1-69" },
+    { name: "303 اخضر بدون (5 بوكس)", price: 58, total: 290, qty: 5, offer: "1", href: "offer.html#p-1-70" },
+    { name: "جيتان سوبر بلو الاصلي (5 بوكس)", price: 74, total: 370, qty: 5, offer: "1", href: "offer.html#p-1-71" },
+    { name: "مانشستر ازرق اصلي 5/2025 (5 بوكس)", price: 34, total: 170, qty: 5, offer: "1", href: "offer.html#p-1-72" },
+    { name: "مانشستر ازرق اصلي 9/2024 (5 بوكس)", price: 27, total: 135, qty: 5, offer: "1", href: "offer.html#p-1-73" },
+    { name: "مانشستر احمر اكسترا (5 بوكس)", price: 35, total: 175, qty: 5, offer: "1", href: "offer.html#p-1-74" },
+    { name: "مانشستر لايت (5 بوكس)", price: 32, total: 160, qty: 5, offer: "1", href: "offer.html#p-1-75" },
+    { name: "مانشستر احمر نبيتي قديم (5 بوكس)", price: 29, total: 145, qty: 5, offer: "1", href: "offer.html#p-1-76" },
+    { name: "مانشستر نبيتي طبعه جديدة (5 بوكس)", price: 27, total: 135, qty: 5, offer: "1", href: "offer.html#p-1-77" },
+    { name: "مانشستر كوين ازرق (5 بوكس)", price: 32, total: 160, qty: 5, offer: "1", href: "offer.html#p-1-78" },
+    { name: "مانشستر كوين احمر (5 بوكس)", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-79" },
+    { name: "مانشستر بلو كراش (5 بوكس)", price: 33, total: 165, qty: 5, offer: "1", href: "offer.html#p-1-80" },
+    { name: "مانشستر جرين كراش (5 بوكس)", price: 33, total: 165, qty: 5, offer: "1", href: "offer.html#p-1-81" },
+    { name: "مانشستر لندن بلو (5 بوكس)", price: 29, total: 145, qty: 5, offer: "1", href: "offer.html#p-1-82" },
+    { name: "مانشستر اكوا كوين (5 بوكس)", price: 32, total: 160, qty: 5, offer: "1", href: "offer.html#p-1-83" },
+    { name: "مانشستر دبل درايف (5 بوكس)", price: 39, total: 195, qty: 5, offer: "1", href: "offer.html#p-1-84" },
+    { name: "مانشستر نانو وايت (5 بوكس)", price: 27, total: 135, qty: 5, offer: "1", href: "offer.html#p-1-85" },
+    { name: "مانشستر خوخ (5 بوكس)", price: 27, total: 135, qty: 5, offer: "1", href: "offer.html#p-1-86" },
+    { name: "مارشال دبل كليك (5 بوكس)", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-87" },
+    { name: "مارشال ازرق (5 بوكس)", price: 26, total: 130, qty: 5, offer: "1", href: "offer.html#p-1-88" },
+    { name: "مارشال احمر (5 بوكس)", price: 26, total: 130, qty: 5, offer: "1", href: "offer.html#p-1-89" },
+    { name: "مارشال بلو فلفر (5 بوكس)", price: 27, total: 135, qty: 5, offer: "1", href: "offer.html#p-1-90" },
+    { name: "موند فراولة سليم (5 بوكس)", price: 28, total: 140, qty: 5, offer: "1", href: "offer.html#p-1-91" },
+    { name: "موند فراولة كينج سايز (5 بوكس)", price: 27, total: 135, qty: 5, offer: "1", href: "offer.html#p-1-92" },
+    { name: "موند تفاح (5 بوكس)", price: 28, total: 140, qty: 5, offer: "1", href: "offer.html#p-1-93" },
+    { name: "قنال سفير بلو (5 بوكس)", price: 23, total: 115, qty: 5, offer: "1", href: "offer.html#p-1-94" },
+    { name: "قنال احمر ريسيرف (5 بوكس)", price: 21, total: 105, qty: 5, offer: "1", href: "offer.html#p-1-95" },
+    { name: "تيريا روسي تركواز (5 بوكس)", price: 107, total: 535, qty: 5, offer: "1", href: "offer.html#p-1-96" },
+    { name: "تيريا روسي امبر (5 بوكس)", price: 107, total: 535, qty: 5, offer: "1", href: "offer.html#p-1-97" },
+    { name: "تيريا روسي سلفر (5 بوكس)", price: 107, total: 535, qty: 5, offer: "1", href: "offer.html#p-1-98" },
+    { name: "تيريا روسي بربل (5 بوكس)", price: 107, total: 535, qty: 5, offer: "1", href: "offer.html#p-1-99" },
+    { name: "معسل الفاخر اكياس حمراء (5 بوكس)", price: 36, total: 180, qty: 5, offer: "1", href: "offer.html#p-1-100" },
+    { name: "معسل الفاخر علبة سوداء (5 بوكس)", price: 48, total: 240, qty: 5, offer: "1", href: "offer.html#p-1-101" },
+    { name: "5 كيلو معسل النخله تفاحتين كفوف انتاج حديث (5 كيلو) *مفروض تعامل منفصل*", price: 51, total: 255, qty: 5, offer: "1", href: "offer.html#p-1-102" },
 
-</script>
+    /* ===== عرض 2 ===== */
+    { name: "5 مالبورو جولد تركي", price: 74, total: 370, qty: 5, offer: "2", href: "offer2.html#p-2-0" },
+    { name: "5 مالبورو جولد ستيكر عربي 3/2025", price: 89, total: 445, qty: 5, offer: "2", href: "offer2.html#p-2-1" },
+    { name: "5 مالبورو جولد باك", price: 51, total: 255, qty: 5, offer: "2", href: "offer2.html#p-2-2" },
+    { name: "5 مالبورو جولد ستيكر اورجنال", price: 122, total: 610, qty: 5, offer: "2", href: "offer2.html#p-2-3" },
+    { name: "5 مالبورو احمر ستيكر اورجنال", price: 121, total: 605, qty: 5, offer: "2", href: "offer2.html#p-2-4" },
+    { name: "5 مالبورو احمر ستيكر باركود", price: 95, total: 475, qty: 5, offer: "2", href: "offer2.html#p-2-5" },
+    { name: "مالبورو احمر ستيكر بوكسات مطار", price: 123, total: 615, qty: 5, offer: "2", href: "offer2.html#p-2-6" },
+    { name: "مالبورو دبل مكس ستيكر فيستا", price: 125, total: 625, qty: 5, offer: "2", href: "offer2.html#p-2-7" },
+    { name: "5 مالبورو وايت ستيكر", price: 122, total: 610, qty: 5, offer: "2", href: "offer2.html#p-2-8" },
+    { name: "5 مالبورو تاتش ستيكر", price: 122, total: 610, qty: 5, offer: "2", href: "offer2.html#p-2-9" },
+    { name: "5 تيرا روسي بصورة سلفر", price: 106, total: 530, qty: 5, offer: "2", href: "offer2.html#p-2-10" },
+    { name: "5 تيرا روسي بصورة بربل", price: 106, total: 530, qty: 5, offer: "2", href: "offer2.html#p-2-11" },
+    { name: "5 تيرا روسي بصورة أمبر", price: 106, total: 530, qty: 5, offer: "2", href: "offer2.html#p-2-12" },
+    { name: "5 تيرا روسي بصورة زنك ويڤ", price: 106, total: 530, qty: 5, offer: "2", href: "offer2.html#p-2-13" },
+    { name: "5 تيرا تركواز بصورة", price: 112, total: 560, qty: 5, offer: "2", href: "offer2.html#p-2-14" },
+    { name: "5 تيرا روسي بدون صورة أمبر", price: 124, total: 620, qty: 5, offer: "2", href: "offer2.html#p-2-15" },
+    { name: "5 تيرا تولايت بريل صن برل", price: 112, total: 560, qty: 5, offer: "2", href: "offer2.html#p-2-16" },
+    { name: "5 تيرا سويسري ستيكر أمبر", price: 125, total: 625, qty: 5, offer: "2", href: "offer2.html#p-2-17" },
+    { name: "5 تيرا سويسري ستيكر اصفر", price: 125, total: 625, qty: 5, offer: "2", href: "offer2.html#p-2-18" },
+    { name: "5 تيرا سويسري ستيكر تركواز", price: 129, total: 645, qty: 5, offer: "2", href: "offer2.html#p-2-19" },
+    { name: "5 هيتس عربي سينا", price: 70, total: 350, qty: 5, offer: "2", href: "offer2.html#p-2-20" },
+    { name: "5 هيتس تيك", price: 70, total: 350, qty: 5, offer: "2", href: "offer2.html#p-2-21" },
+    { name: "5 موڤي سلفر", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-22" },
+    { name: "5 موڤي امبر", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-23" },
+    { name: "5 موڤي بربل", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-24" },
+    { name: "5 موڤي برونز", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-25" },
+    { name: "5 دفيدوف كلاسك سليم", price: 80, total: 400, qty: 5, offer: "2", href: "offer2.html#p-2-26" },
+    { name: "5 دفيدوف جولد", price: 80, total: 400, qty: 5, offer: "2", href: "offer2.html#p-2-27" },
+    { name: "5 دفيدوف وايت", price: 80, total: 400, qty: 5, offer: "2", href: "offer2.html#p-2-28" },
+    { name: "5 دفيدوف كلاسك", price: 78, total: 390, qty: 5, offer: "2", href: "offer2.html#p-2-29" },
+    { name: "5 دفيدوف سلفر", price: 77, total: 385, qty: 5, offer: "2", href: "offer2.html#p-2-30" },
+    { name: "5 دفيدوف وايت سليم بدون", price: 89, total: 445, qty: 5, offer: "2", href: "offer2.html#p-2-31" },
+    { name: "5 دفيدوف جولد سليم بدون", price: 84, total: 420, qty: 5, offer: "2", href: "offer2.html#p-2-32" },
+    { name: "5 دفيدوف جولد سليم ستيكر", price: 110, total: 550, qty: 5, offer: "2", href: "offer2.html#p-2-33" },
+    { name: "5 دفيدوف ون فريش بوكس ستيكر", price: 130, total: 650, qty: 5, offer: "2", href: "offer2.html#p-2-34" },
+    { name: "5 دفيدوف جولد فريش بوكس ستيكر", price: 128, total: 640, qty: 5, offer: "2", href: "offer2.html#p-2-35" },
+    { name: "5 دنهل بلاك جرين سويسري بدون", price: 77, total: 385, qty: 5, offer: "2", href: "offer2.html#p-2-36" },
+    { name: "5 دنهل سلفر جرين ستيكر", price: 93, total: 465, qty: 5, offer: "2", href: "offer2.html#p-2-37" },
+    { name: "5 دنهل ازرق بدون", price: 73, total: 365, qty: 5, offer: "2", href: "offer2.html#p-2-38" },
+    { name: "5 دنهل ازرق ستيكر", price: 93, total: 465, qty: 5, offer: "2", href: "offer2.html#p-2-39" },
+    { name: "5 دنهل جولد ستيكر", price: 93, total: 465, qty: 5, offer: "2", href: "offer2.html#p-2-40" },
+    { name: "5 دنهل سيلفر بلو عربي غير مكفول", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-41" },
+    { name: "5 دنهل ايفوك سلفر", price: 0, total: 0, qty: 5, offer: "2", href: "offer2.html#p-2-42" },
+    { name: "5 دنهل ايفوك جولد", price: 108, total: 540, qty: 5, offer: "2", href: "offer2.html#p-2-43" },
+    { name: "5 دنهل ايفوك سيلفر محلي", price: 75, total: 375, qty: 5, offer: "2", href: "offer2.html#p-2-44" },
+    { name: "5 وينستون دبل ميكس", price: 83, total: 415, qty: 5, offer: "2", href: "offer2.html#p-2-45" },
+    { name: "5 وينستون ازرق ستيكر", price: 83, total: 415, qty: 5, offer: "2", href: "offer2.html#p-2-46" },
+    { name: "5 وينستون سيلفر ستيكر", price: 83, total: 415, qty: 5, offer: "2", href: "offer2.html#p-2-47" },
+    { name: "5 وينستون احمر ستيكر", price: 82, total: 410, qty: 5, offer: "2", href: "offer2.html#p-2-48" },
+    { name: "5 وينستون سلفر بدون", price: 69, total: 345, qty: 5, offer: "2", href: "offer2.html#p-2-49" },
+    { name: "5 وينستون ازرق بدون", price: 66, total: 330, qty: 5, offer: "2", href: "offer2.html#p-2-50" },
+    { name: "5 بينسون جولد", price: 52, total: 260, qty: 5, offer: "2", href: "offer2.html#p-2-51" },
+    { name: "5 جولد ليف", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-52" },
+    { name: "5 جيتان سوبر بلو الاصلي", price: 74, total: 370, qty: 5, offer: "2", href: "offer2.html#p-2-53" },
+    { name: "5 جمل اصفر بدون", price: 74, total: 370, qty: 5, offer: "2", href: "offer2.html#p-2-54" },
+    { name: "5 جمل ازرق بدون", price: 74, total: 370, qty: 5, offer: "2", href: "offer2.html#p-2-55" },
+    { name: "5 ويست سيلفر ستيكر", price: 80, total: 400, qty: 5, offer: "2", href: "offer2.html#p-2-56" },
+    { name: "5 روزمان كوين نعنع فلتر غير مكفول", price: 20, total: 100, qty: 5, offer: "2", href: "offer2.html#p-2-57" },
+    { name: "5 فوج بلو ستيكر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-58" },
+    { name: "5 فوج منتول ستيكر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-59" },
+    { name: "5 مور اخضر", price: 76, total: 380, qty: 5, offer: "2", href: "offer2.html#p-2-60" },
+    { name: "5 ال ام احمر ستيكر", price: 89, total: 445, qty: 5, offer: "2", href: "offer2.html#p-2-61" },
+    { name: "5 كابتن بلاك دارك كريم", price: 67, total: 335, qty: 5, offer: "2", href: "offer2.html#p-2-62" },
+    { name: "5 كابتن بلاك كلاسيك", price: 67, total: 335, qty: 5, offer: "2", href: "offer2.html#p-2-63" },
+    { name: "5 كابتن بلاك شيري", price: 67, total: 335, qty: 5, offer: "2", href: "offer2.html#p-2-64" },
+    { name: "5 باين لايت اورجنال", price: 39, total: 195, qty: 5, offer: "2", href: "offer2.html#p-2-65" },
+    { name: "5 ثري ستار جولد", price: 40, total: 200, qty: 5, offer: "2", href: "offer2.html#p-2-66" },
+    { name: "5 ايسي منتول طبعة جديدة", price: 51, total: 255, qty: 5, offer: "2", href: "offer2.html#p-2-67" },
+    { name: "5 ايسي لايت طبعة قديمة", price: 0, total: 0, qty: 5, offer: "2", href: "offer2.html#p-2-68" },
+    { name: "5 ايسي جولد طبعة قديمة", price: 51, total: 255, qty: 5, offer: "2", href: "offer2.html#p-2-69" },
+    { name: "5 ايسي تشينج نيو", price: 44, total: 220, qty: 5, offer: "2", href: "offer2.html#p-2-70" },
+    { name: "5 ايسي تشينج محلي", price: 40, total: 200, qty: 5, offer: "2", href: "offer2.html#p-2-71" },
+    { name: "5 ايسي تشينج تفاح ونعنع مع برتقال", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-72" },
+    { name: "5 ايسي تشينج تفاح ونعنع مع عنب", price: 50, total: 250, qty: 5, offer: "2", href: "offer2.html#p-2-73" },
+    { name: "5 ايسي سينس 5 ام جي", price: 44, total: 220, qty: 5, offer: "2", href: "offer2.html#p-2-74" },
+    { name: "5 303 بني", price: 36, total: 180, qty: 5, offer: "2", href: "offer2.html#p-2-75" },
+    { name: "5 303 اسود", price: 36, total: 180, qty: 5, offer: "2", href: "offer2.html#p-2-76" },
+    { name: "5 303 اخضر عربي", price: 48, total: 240, qty: 5, offer: "2", href: "offer2.html#p-2-77" },
+    { name: "5 موريس سلفر سليم", price: 22, total: 110, qty: 5, offer: "2", href: "offer2.html#p-2-78" },
+    { name: "5 موريس كوين ازرق", price: 22, total: 110, qty: 5, offer: "2", href: "offer2.html#p-2-79" },
+    { name: "5 موريس كوين سيلفر", price: 22, total: 110, qty: 5, offer: "2", href: "offer2.html#p-2-80" },
+    { name: "5 555 اورجنال", price: 22, total: 110, qty: 5, offer: "2", href: "offer2.html#p-2-81" },
+    { name: "5 رويال بيزنس اورجنال جديد 5/2025", price: 34, total: 170, qty: 5, offer: "2", href: "offer2.html#p-2-82" },
+    { name: "5 رويال فرجينا احمر", price: 24, total: 120, qty: 5, offer: "2", href: "offer2.html#p-2-83" },
+    { name: "5 سبيد ازرق", price: 33, total: 165, qty: 5, offer: "2", href: "offer2.html#p-2-84" },
+    { name: "5 آميكا ليلاس", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-85" },
+    { name: "5 موند كوين ازرق عربي", price: 0, total: 0, qty: 5, offer: "2", href: "offer2.html#p-2-86" },
+    { name: "5 موند فراولة", price: 27, total: 135, qty: 5, offer: "2", href: "offer2.html#p-2-87" },
+    { name: "5 موند تفاح", price: 27, total: 135, qty: 5, offer: "2", href: "offer2.html#p-2-88" },
+    { name: "5 ماستر قصير مكفول", price: 39, total: 195, qty: 5, offer: "2", href: "offer2.html#p-2-89" },
+    { name: "5 ماستر كوين ابيض", price: 46, total: 230, qty: 5, offer: "2", href: "offer2.html#p-2-90" },
+    { name: "5 ماستر كوين ازرق", price: 44, total: 220, qty: 5, offer: "2", href: "offer2.html#p-2-91" },
+    { name: "5 ماستر سليم ازرق", price: 44, total: 220, qty: 5, offer: "2", href: "offer2.html#p-2-92" },
+    { name: "5 ماستر سليم ابيض", price: 44, total: 220, qty: 5, offer: "2", href: "offer2.html#p-2-93" },
+    { name: "5 بلاتينيوم دبل ميكس", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-94" },
+    { name: "5 بلاتينيوم كوين دبل مكس", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-95" },
+    { name: "5 بلاتينيوم سفن كول", price: 27, total: 135, qty: 5, offer: "2", href: "offer2.html#p-2-96" },
+    { name: "5 بلاتينيوم سليم دبل سويتش برتقال", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-97" },
+    { name: "5 بلاتينيوم ازرق عربي كينغ سايز", price: 26, total: 130, qty: 5, offer: "2", href: "offer2.html#p-2-98" },
+    { name: "5 بلاتينيوم ازرق سمارت", price: 31, total: 155, qty: 5, offer: "2", href: "offer2.html#p-2-99" },
+    { name: "5 بلاتينيوم احمر سمارت", price: 31, total: 155, qty: 5, offer: "2", href: "offer2.html#p-2-100" },
+    { name: "5 بلاتينيوم اكوا كوين", price: 27, total: 135, qty: 5, offer: "2", href: "offer2.html#p-2-101" },
+    { name: "5 بلاتينيوم سليم برتقال", price: 33, total: 165, qty: 5, offer: "2", href: "offer2.html#p-2-102" },
+    { name: "5 مانشستر دبل درايف بدون ستكر", price: 37, total: 185, qty: 5, offer: "2", href: "offer2.html#p-2-103" },
+    { name: "5 مانشستر نبيتي", price: 30, total: 150, qty: 5, offer: "2", href: "offer2.html#p-2-104" },
+    { name: "5 مانشستر ازرق عادي الاصلي", price: 33, total: 165, qty: 5, offer: "2", href: "offer2.html#p-2-105" },
+    { name: "5 مانشستر لايت", price: 31, total: 155, qty: 5, offer: "2", href: "offer2.html#p-2-106" },
+    { name: "5 مانشستر احمر اكستر", price: 35, total: 175, qty: 5, offer: "2", href: "offer2.html#p-2-107" },
+    { name: "5 مانشستر كراش ازرق", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-108" },
+    { name: "5 مانشستر كراش اخضر", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-109" },
+    { name: "5 مانشستر كوين ازرق", price: 33, total: 165, qty: 5, offer: "2", href: "offer2.html#p-2-110" },
+    { name: "5 مانشستر اكوا كوين", price: 31, total: 155, qty: 5, offer: "2", href: "offer2.html#p-2-111" },
+    { name: "5 مانشستر نانو ابيض", price: 27, total: 135, qty: 5, offer: "2", href: "offer2.html#p-2-112" },
+    { name: "5 مانشستر احمر كراش سليم", price: 27, total: 135, qty: 5, offer: "2", href: "offer2.html#p-2-113" },
+    { name: "5 مانشستر روز زهر", price: 26, total: 130, qty: 5, offer: "2", href: "offer2.html#p-2-114" },
+    { name: "5 مانشستر اكوا كوين روبي", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-115" },
+    { name: "5 مانشستر كوين احمر", price: 32, total: 160, qty: 5, offer: "2", href: "offer2.html#p-2-116" },
+    { name: "5 مانشستر شوكلا", price: 29, total: 145, qty: 5, offer: "2", href: "offer2.html#p-2-117" },
+    { name: "نيويورك سيلفر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-118" }
+  ];
+
+  const input = document.getElementById('central-search');
+  const results = document.getElementById('central-results');
+  const clearBtn = document.getElementById('central-clear');
+
+  if(!input || !results){
+    console.error('Search script: missing #central-search or #central-results elements.');
+    return;
+  }
+
+  function normalizeNumberString(s){
+    if(!s) return '';
+    return String(s).replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660)).replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
+  }
+
+  function normalizeText(s){
+    if(!s) return '';
+    return s.toString().toLowerCase().replace(/[\u064B-\u0652]/g,'').replace(/[ـٰ]/g,'').replace(/\s+/g,' ').trim();
+  }
+
+  function isPriceQuery(q){
+    const n = normalizeNumberString(q);
+    return /^\d{1,4}$/.test(n);
+  }
+
+  function renderResults(term){
+    const raw = term || '';
+    const q = normalizeText(raw);
+    if(!q){ results.innerHTML = ''; return; }
+
+    const queryIsPrice = isPriceQuery(raw);
+    const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw),10) : null;
+
+    const matches = STATIC_INDEX.filter(item => {
+      if(queryIsPrice && item.price){
+        return Math.abs(item.price - qNum) <= 5;
+      }
+      const name = normalizeText(item.name);
+      return name.indexOf(q) !== -1;
+    });
+
+    if(matches.length === 0){
+      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
+      return;
+    }
+
+    results.innerHTML = matches.map(item => {
+      const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+      const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+      return `
+        <div class="search-item" data-href="${encodeURI(item.href||'')}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+          <div style="font-weight:700;color:#fff">${item.name}</div>
+          <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+        </div>`;
+    }).join('');
+
+    results.querySelectorAll('.search-item').forEach(el => {
+      el.addEventListener('click', function(){
+        const target = this.getAttribute('data-href');
+        if(!target) return;
+        window.location.assign(target);
+      });
+    });
+  }
+
+  input.addEventListener('input', e => {
+    try{
+      renderResults(e.target.value);
+    }catch(err){
+      console.error('Search render error:', err);
+      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">حدث خطأ داخلي. راجع الكونسول.</div>';
+    }
+  });
+
+  if(clearBtn){
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      results.innerHTML = '';
+      input.focus();
+    });
+  }
+
+  console.log('Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
+})();
+  </script>
 </body>
 </html>
