@@ -320,6 +320,40 @@
     }
   })();
   </script>
+(function(){
+  const OFFER_NUM = '1';
 
+  // اضف id و data-name لكل عنصر منتج .offer-item إذا لم يكن موجوداً
+  document.querySelectorAll('.offer-item').forEach((el, i) => {
+    if(!el.id){
+      el.id = 'p-' + OFFER_NUM + '-' + i;
+    }
+    const titleEl = el.querySelector('.title');
+    const name = titleEl ? titleEl.textContent.trim() : el.textContent.trim();
+    if(name) el.dataset.name = name;
+  });
+
+  // عند فتح الصفحة مع هاش (مثال offer5.html#p-5-3) نمرر ونسلط ضوء على العنصر
+  function openFromHash(){
+    const h = location.hash && location.hash.slice(1);
+    if(!h) return;
+    const target = document.getElementById(h);
+    if(!target) return;
+    setTimeout(()=>{
+      try{ target.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){ target.scrollIntoView(); }
+      target.style.transition = 'box-shadow .45s, transform .35s';
+      target.style.boxShadow = '0 12px 30px rgba(217,184,106,0.18)';
+      target.style.transform = 'translateY(-4px)';
+      setTimeout(()=> {
+        target.style.boxShadow = '';
+        target.style.transform = '';
+      }, 3000);
+    }, 160);
+  }
+
+  window.addEventListener('load', openFromHash);
+  window.addEventListener('hashchange', openFromHash);
+})();
+</script>
 </body>
 </html>
