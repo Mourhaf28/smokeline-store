@@ -108,13 +108,6 @@
 <body>
 
   <header>
-    <div id="central-search-wrap" style="max-width:980px;margin:14px auto;display:flex;flex-direction:column;gap:8px;">
-  <div style="display:flex;gap:8px;">
-    <input id="central-search" type="search" placeholder="ابحث في كل العروض: اسم المنتج أو كلمة" aria-label="بحث مركزي" style="flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:15px;">
-    <button id="central-clear" style="padding:10px 12px;border-radius:10px;border:0;background:#d9b86a;color:#070707;font-weight:800;">مسح</button>
-  </div>
-  <div id="central-results" style="min-height:36px;color:#cfc6a3;"></div>
-</div>
   <a href="index.html" class="brand" aria-label="Smokeline store" style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;">
     <img src="logo.svg" alt="Smokeline store" style="height:48px;display:block;">
   </a>
@@ -122,6 +115,55 @@
     <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
     <p style="font-size:15px; color:#ccc;">جميع الأسعار بالدرهم الإماراتي (AED) – تشمل 5 بوكس لكل صنف</p>
   </header>
+  <script>
+(async function(){
+  const OFFER_PAGES = ['offer.html', 'offer2.html', 'offer3.html', 'offer4.html', 'offer5.html', 'offer6.html'];
+  const INDEX_KEY = 'smk_offer_index_v1';
+
+  async function buildIndex(){
+    const index = [];
+    for(const page of OFFER_PAGES){
+      try {
+        const res = await fetch(page);
+        if(!res.ok) continue;
+        const txt = await res.text();
+        const doc = new DOMParser().parseFromString(txt, 'text/html');
+        const items = doc.querySelectorAll('.offer-item');
+        items.forEach((el, i) => {
+          const name = el.dataset.name || el.querySelector('.title')?.textContent?.trim();
+          const id = el.id || `p-${page.replace(/\D/g,'')}-${i}`;
+          if(name) index.push({ name, offer: page, href: `${page}#${id}` });
+        });
+      } catch(e) {}
+    }
+    localStorage.setItem(INDEX_KEY, JSON.stringify(index));
+    return index;
+  }
+
+  const input = document.getElementById('central-search');
+  const results = document.getElementById('central-results');
+  const clearBtn = document.getElementById('central-clear');
+
+  let index = [];
+  try {
+    const cached = localStorage.getItem(INDEX_KEY);
+    index = cached ? JSON.parse(cached) : await buildIndex();
+  } catch(e) {
+    index = await buildIndex();
+  }
+
+  function renderResults(term){
+    const q = term.trim().toLowerCase();
+    if(!q){ results.innerHTML = ''; return; }
+    const matches = index.filter(item => item.name.toLowerCase().includes(q));
+    if(matches.length === 0){ results.innerHTML = 'لا توجد نتائج.'; return; }
+    results.innerHTML = matches.map(item => `<a href="${item.href}" style="display:block;padding:6px 0;color:#d9b86a;">${item.name} — عرض ${item.offer.replace(/\D/g,'')}</a>`).join('');
+  }
+
+  input.addEventListener('input', e => renderResults(e.target.value));
+  clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
+})();
+</script>
 <!-- START: شريط عروض مخصص -->
 <style>
   /* شريط العروض العام */
