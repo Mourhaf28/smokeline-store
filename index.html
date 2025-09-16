@@ -575,7 +575,10 @@
   </script>
 <script>
 (function(){
-  const STATIC_INDEX = [
+  // --- ضع هنا مصفوفة منتجات العرض 1 (STATIC_INDEX) كاملة كما أرسلت لك سابقاً ---
+  const STATIC_INDEX = window.STATIC_INDEX_FULL || [
+    { name: "بوكس كوفي كريم", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-0" },
+    { name: "مالبورو أحمر أمريكي (5 بوكس)", price: 50, total: 250, qty: 5, offer: "1", href: "offer.html#p-1-1" }
   { name: "بوكس كوفي كريم", price: 30, total: 150, qty: 5, offer: "1", href: "offer.html#p-1-0" },
 
   /* مارلبورو */
@@ -715,110 +718,92 @@
   { name: "معسل الفاخر اكياس حمراء (5 بوكس)", price: 36, total: 180, qty: 5, offer: "1", href: "offer.html#p-1-100" },
   { name: "معسل الفاخر علبة سوداء (5 بوكس)", price: 48, total: 240, qty: 5, offer: "1", href: "offer.html#p-1-101" },
   { name: "5 كيلو معسل النخله تفاحتين كفوف انتاج حديث (5 كيلو) *مفروض تعامل منفصل*", price: 51, total: 255, qty: 5, offer: "1", href: "offer.html#p-1-102" }
-]
-  const input = document.getElementById('central-search');
-  const results = document.getElementById('central-results');
-  const clearBtn = document.getElementById('central-clear');
-
-  function renderResults(term){
-    const q = term.trim().toLowerCase();
-    if(!q){ results.innerHTML = ''; return; }
-
-    const isPrice = /^\d{2,4}$/.test(q); // إذا كتب رقم مثل 200 أو 150
-
-    const matches = STATIC_INDEX.filter(item => {
-      if(isPrice){
-        const price = parseInt(q);
-        return Math.abs(item.price - price) <= 10; // تطابق تقريبي ±10 درهم
-      } else {
-        return item.name.toLowerCase().includes(q);
-      }
-    });
-
-    if(matches.length === 0){ results.innerHTML = 'لا توجد نتائج.'; return; }
-
-    results.innerHTML = matches.map(item => `
-      <a href="${item.href}" style="display:block;padding:6px 0;color:#d9b86a;">
-        ${item.name} — ${item.price} درهم — عرض ${item.offer}
-      </a>`).join('');
-  }
-
-  input.addEventListener('input', e => renderResults(e.target.value));
-  clearBtn.addEventListener('click', () => {
-    input.value = '';
-    results.innerHTML = '';
-  });
-})();
-</script>
-  <script>
-(function(){
-  const STATIC_INDEX = [
-    /* مثال لعناصر — استبدل بالمصفوفة الكاملة لديك */
-    { name: "مالبورو أحمر أمريكي (5 بوكس)", price: 50, total: 250, qty: 5, offer: "1", href: "offer.html#p-1-1" },
-    { name: "مالبورو جولد تركي (5 بوكس)", price: 74, total: 370, qty: 5, offer: "2", href: "offer2.html#p-2-0" }
+    // ... باقي العناصر ...
   ];
 
+  // عناصر الصفحة
   const input = document.getElementById('central-search');
   const results = document.getElementById('central-results');
   const clearBtn = document.getElementById('central-clear');
 
+  // فشل العثور على عناصر DOM => سجل وانهِ
+  if(!input || !results){
+    console.error('Search script: missing elements. تأكد من وجود #central-search و #central-results في الصفحة.');
+    return;
+  }
+
+  // تحويل الأرقام العربية-هندية إلى لاتينية وإزالة فراغات وفواصل
   function normalizeNumberString(s){
-    return s.replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660)).replace(/[,٫٬\s]/g,'');
+    if(!s) return '';
+    return String(s).replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660)).replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
+  }
+
+  // تبسيط النص للاكتشاف: حوّل للحروف الصغيرة وازل تشكيل إن وجد (قليلاً)
+  function normalizeText(s){
+    if(!s) return '';
+    return s.toString().toLowerCase().replace(/[\u064B-\u0652]/g,'').replace(/[ـٰ]/g,'').replace(/\s+/g,' ').trim();
   }
 
   function isPriceQuery(q){
     const n = normalizeNumberString(q);
-    return /^\d{2,4}$/.test(n);
+    return /^\d{1,4}$/.test(n);
   }
 
-  function safeHref(h){
-    try { return encodeURI(h); } catch(e){ return h; }
-  }
-
+  // رندر النتائج مع معالج نقر آمن
   function renderResults(term){
-    const q = term.trim().toLowerCase();
+    const raw = term || '';
+    const q = normalizeText(raw);
     if(!q){ results.innerHTML = ''; return; }
 
-    const queryIsPrice = isPriceQuery(q);
-    const normalizedQ = normalizeNumberString(q);
-    const qNum = queryIsPrice ? parseInt(normalizedQ,10) : null;
+    const queryIsPrice = isPriceQuery(raw);
+    const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw),10) : null;
 
+    // فلترة مرنة: اسم يحتوي أو تطابق جزئي للكلمات، او قرب بالسعر +/-5
     const matches = STATIC_INDEX.filter(item => {
       if(queryIsPrice && item.price){
         return Math.abs(item.price - qNum) <= 5;
       }
-      return item.name.toLowerCase().includes(q);
+      const name = normalizeText(item.name);
+      return name.indexOf(q) !== -1;
     });
 
-    if(matches.length === 0){ results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>'; return; }
+    if(matches.length === 0){
+      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
+      return;
+    }
 
     results.innerHTML = matches.map((item, idx) => {
       const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
       const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
-      const hrefSafe = safeHref(item.href || "#");
-      // نضع data-href بدل href حقيقي ونمنع السلوك الافتراضي لاحقاً
       return `
-      <div class="search-item" data-href="${hrefSafe}" style="cursor:pointer;display:block;padding:8px;border-bottom:1px solid rgba(255,255,255,0.02);color:#d9b86a;">
-        <div style="font-weight:700;color:#fff">${item.name}</div>
-        <div style="font-size:13px;color:#cfc6a3;margin-top:4px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
-      </div>`;
+        <div class="search-item" data-href="${encodeURI(item.href||'')}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+          <div style="font-weight:700;color:#fff">${item.name}</div>
+          <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+        </div>`;
     }).join('');
 
-    // أضف معالجات النقر بعد إدخال العناصر في DOM
+    // ربط النقرات
     results.querySelectorAll('.search-item').forEach(el => {
-      el.addEventListener('click', function(e){
+      el.addEventListener('click', function(){
         const target = this.getAttribute('data-href');
         if(!target) return;
-        // ضمان الانتقال الكامل إلى المسار الصحيح
-        // استخدم assign حتى يحفظ في سجل التاريخ
+        // تأكد من مسار نسبي أو مطلق صحيح
         window.location.assign(target);
       });
     });
   }
 
-  if(input){
-    input.addEventListener('input', e => renderResults(e.target.value));
-  }
+  // حدث الإدخال
+  input.addEventListener('input', e => {
+    try{
+      renderResults(e.target.value);
+    }catch(err){
+      console.error('Search render error:', err);
+      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">حدث خطأ داخلي. راجع الكونسول.</div>';
+    }
+  });
+
+  // زر المسح إن وُجد
   if(clearBtn){
     clearBtn.addEventListener('click', () => {
       input.value = '';
@@ -826,7 +811,11 @@
       input.focus();
     });
   }
+
+  // فحص سريع بعد التحميل: هل STATIC_INDEX محشو فعلاً؟
+  console.log('Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
+</script>
 </script>
 </body>
 </html>
