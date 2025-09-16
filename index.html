@@ -750,5 +750,83 @@
   });
 })();
 </script>
+  <script>
+(function(){
+  const STATIC_INDEX = [
+    /* مثال لعناصر — استبدل بالمصفوفة الكاملة لديك */
+    { name: "مالبورو أحمر أمريكي (5 بوكس)", price: 50, total: 250, qty: 5, offer: "1", href: "offer.html#p-1-1" },
+    { name: "مالبورو جولد تركي (5 بوكس)", price: 74, total: 370, qty: 5, offer: "2", href: "offer2.html#p-2-0" }
+  ];
+
+  const input = document.getElementById('central-search');
+  const results = document.getElementById('central-results');
+  const clearBtn = document.getElementById('central-clear');
+
+  function normalizeNumberString(s){
+    return s.replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660)).replace(/[,٫٬\s]/g,'');
+  }
+
+  function isPriceQuery(q){
+    const n = normalizeNumberString(q);
+    return /^\d{2,4}$/.test(n);
+  }
+
+  function safeHref(h){
+    try { return encodeURI(h); } catch(e){ return h; }
+  }
+
+  function renderResults(term){
+    const q = term.trim().toLowerCase();
+    if(!q){ results.innerHTML = ''; return; }
+
+    const queryIsPrice = isPriceQuery(q);
+    const normalizedQ = normalizeNumberString(q);
+    const qNum = queryIsPrice ? parseInt(normalizedQ,10) : null;
+
+    const matches = STATIC_INDEX.filter(item => {
+      if(queryIsPrice && item.price){
+        return Math.abs(item.price - qNum) <= 5;
+      }
+      return item.name.toLowerCase().includes(q);
+    });
+
+    if(matches.length === 0){ results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>'; return; }
+
+    results.innerHTML = matches.map((item, idx) => {
+      const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+      const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+      const hrefSafe = safeHref(item.href || "#");
+      // نضع data-href بدل href حقيقي ونمنع السلوك الافتراضي لاحقاً
+      return `
+      <div class="search-item" data-href="${hrefSafe}" style="cursor:pointer;display:block;padding:8px;border-bottom:1px solid rgba(255,255,255,0.02);color:#d9b86a;">
+        <div style="font-weight:700;color:#fff">${item.name}</div>
+        <div style="font-size:13px;color:#cfc6a3;margin-top:4px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+      </div>`;
+    }).join('');
+
+    // أضف معالجات النقر بعد إدخال العناصر في DOM
+    results.querySelectorAll('.search-item').forEach(el => {
+      el.addEventListener('click', function(e){
+        const target = this.getAttribute('data-href');
+        if(!target) return;
+        // ضمان الانتقال الكامل إلى المسار الصحيح
+        // استخدم assign حتى يحفظ في سجل التاريخ
+        window.location.assign(target);
+      });
+    });
+  }
+
+  if(input){
+    input.addEventListener('input', e => renderResults(e.target.value));
+  }
+  if(clearBtn){
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      results.innerHTML = '';
+      input.focus();
+    });
+  }
+})();
+</script>
 </body>
 </html>
