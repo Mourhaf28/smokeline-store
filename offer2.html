@@ -271,34 +271,40 @@
     }
 
   })();
-     (function(){
-    const OFFER_NUM = 'offer2.html';
-    document.querySelectorAll('.offer-item').forEach((el, i) => {
-      if(!el.id) el.id = 'p-' + OFFER_NUM + '-' + i;
-      const titleEl = el.querySelector('.title');
-      const name = titleEl ? titleEl.textContent.trim() : el.textContent.trim();
-      if(name) el.dataset.name = name;
-    });
-    function openFromHash(){
-      const h = location.hash && location.hash.slice(1);
-      if(!h) return;
-      const target = document.getElementById(h);
-      if(!target) return;
-      setTimeout(()=>{
-        try{ target.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){ target.scrollIntoView(); }
-        target.style.transition = 'box-shadow .45s, transform .35s';
-        target.style.boxShadow = '0 12px 30px rgba(217,184,106,0.18)';
-        target.style.transform = 'translateY(-4px)';
-        setTimeout(()=> {
-          target.style.boxShadow = '';
-          target.style.transform = '';
-        }, 3000);
-      }, 160);
-    }
-    window.addEventListener('load', openFromHash);
-    window.addEventListener('hashchange', openFromHash);
-  })();
   </script>
+<script>
+(function(){
+  const OFFER_NUM = '2'; // ← هذا رقم العرض، لأن اسم الملف هو offer2.html
 
+  // إضافة id لكل منتج داخل الصفحة
+  document.querySelectorAll('.offer-item').forEach((el, i) => {
+    if(!el.id) el.id = 'p-' + OFFER_NUM + '-' + i;
+    const titleEl = el.querySelector('.title');
+    const name = titleEl ? titleEl.textContent.trim() : el.textContent.trim();
+    if(name) el.dataset.name = name;
+  });
+
+  // تمرير وتحديد العنصر عند فتح الصفحة برابط فيه هاش
+  function openFromHash(){
+    const h = location.hash && location.hash.slice(1);
+    if(!h) return;
+    const target = document.getElementById(h);
+    if(!target) return;
+    setTimeout(()=>{
+      try{ target.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){ target.scrollIntoView(); }
+      target.style.transition = 'box-shadow .45s, transform .35s';
+      target.style.boxShadow = '0 12px 30px rgba(217,184,106,0.18)';
+      target.style.transform = 'translateY(-4px)';
+      setTimeout(()=> {
+        target.style.boxShadow = '';
+        target.style.transform = '';
+      }, 3000);
+    }, 160);
+  }
+
+  window.addEventListener('load', openFromHash);
+  window.addEventListener('hashchange', openFromHash);
+})();
+</script>
 </body>
 </html>
