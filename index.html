@@ -859,12 +859,19 @@
     }).join('');
 
     results.querySelectorAll('.search-item').forEach(el => {
-      el.addEventListener('click', function(){
-        const target = this.getAttribute('data-href');
-        if(!target) return;
-        window.location.assign(target);
-      });
-    });
+  el.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    const raw = this.getAttribute('data-href') || '';
+    if(!raw) return;
+    try{
+      const resolved = new URL(raw, window.location.href).href;
+      window.location.assign(resolved);
+    }catch(err){
+      window.location.assign(raw);
+    }
+  }, { passive: true });
+});
   }
 
   input.addEventListener('input', e => {
