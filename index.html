@@ -849,35 +849,53 @@
     }
 
     results.innerHTML = matches.map(item => {
-      const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
-      const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
-      return `
-        <div class="search-item" data-href="${encodeURI(item.href||'')}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
-          <div style="font-weight:700;color:#fff">${item.name}</div>
-          <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
-        </div>`;
-    }).join('');
+    // تأكد أن element النتائج معرف قبل أي استخدام
+const results = document.getElementById('central-results') || document.querySelector('#central-results');
+if(!results) throw new Error('Missing #central-results element');
 
-    results.querySelectorAll('.search-item').forEach(el => {
+// توليد HTML للنتائج
+results.innerHTML = matches.map(item => {
+  const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+  const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+  const href = item.href || '';
+  // استخدم encodeURIComponent داخل قيمة data-href للتعامل مع المسافات والرموز
+  return `
+    <div class="search-item" data-href="${encodeURIComponent(href)}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+      <div style="font-weight:700;color:#fff">${item.name}</div>
+      <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+    </div>`;
+}).join('');
+
+// ربط مستمعي النقر بعد إدراج الـ HTML
+results.querySelectorAll('.search-item').forEach(el => {
   el.addEventListener('click', function(e){
     e.preventDefault();
     e.stopPropagation();
+
     const raw = this.getAttribute('data-href') || '';
-    if(!raw) return console.warn('no data-href');
+    if(!raw) {
+      console.warn('search click: no data-href');
+      return;
+    }
+
+    // إذا العنصر داخل رابط أبوي، نمنع تنفيذ href الأب
+    const parentLink = this.closest('a[href]');
+    if(parentLink){
+      e.stopImmediatePropagation();
+    }
+
     let resolved;
     try{
-      resolved = new URL(raw, window.location.href).href;
+      // لاحظ استخدام decodeURIComponent قبل البناء إن أردنا استعادة النص الأصلي
+      const decoded = decodeURIComponent(raw);
+      resolved = new URL(decoded, window.location.href).href;
     }catch(err){
       resolved = raw;
     }
-    console.log('search click ->', { raw, resolved });
-    if(resolved.includes('offer3.html')){
-      console.warn('Blocked navigation to offer3.html for debugging. If this is incorrect, remove the guard.');
-      alert('تم اكتشاف تحويل إلى offer3.html. أبلغني بالقيمة raw المعروضة في الكونسول.');
-      return;
-    }
+
+    // توجيه نهائي
     window.location.assign(resolved);
-  }, { passive: true });
+  }, { passive: false });
 });
   }
 
