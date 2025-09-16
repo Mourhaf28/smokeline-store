@@ -863,13 +863,20 @@
     e.preventDefault();
     e.stopPropagation();
     const raw = this.getAttribute('data-href') || '';
-    if(!raw) return;
+    if(!raw) return console.warn('no data-href');
+    let resolved;
     try{
-      const resolved = new URL(raw, window.location.href).href;
-      window.location.assign(resolved);
+      resolved = new URL(raw, window.location.href).href;
     }catch(err){
-      window.location.assign(raw);
+      resolved = raw;
     }
+    console.log('search click ->', { raw, resolved });
+    if(resolved.includes('offer3.html')){
+      console.warn('Blocked navigation to offer3.html for debugging. If this is incorrect, remove the guard.');
+      alert('تم اكتشاف تحويل إلى offer3.html. أبلغني بالقيمة raw المعروضة في الكونسول.');
+      return;
+    }
+    window.location.assign(resolved);
   }, { passive: true });
 });
   }
