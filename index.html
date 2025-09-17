@@ -803,23 +803,64 @@
     { name: "نيويورك سيلفر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-118" }
   ];
 
-const input = document.getElementById('central-search');
+  // 2. تحقق وتصحيح تلقائي
+  const report = [];
+  STATIC_INDEX.forEach(item => {
+    const expectedPrefix = `offer${item.offer === "1" ? "" : item.offer}.html`;
+    const actualPrefix = item.href.split('#')[0];
+    if (actualPrefix !== expectedPrefix) {
+      report.push({
+        name: item.name,
+        offer: item.offer,
+        oldHref: item.href,
+        correctedHref: `${expectedPrefix}#${item.href.split('#')[1] || ''}`
+      });
+      item.href = `${expectedPrefix}#${item.href.split('#')[1] || ''}`;
+    }
+  });
+
+  if (report.length > 0) {
+    console.warn(`❌ تم تصحيح ${report.length} رابط غير متطابق:`);
+    report.forEach((r, i) => {
+      console.log(`${i+1}. ${r.name} — عرض ${r.offer}`);
+      console.log(`   قبل: ${r.oldHref}`);
+      console.log(`   بعد: ${r.correctedHref}`);
+    });
+
+    const logBox = document.createElement('div');
+    logBox.style = 'background:#222;padding:10px;margin:10px 0;border:1px solid #444;color:#e5c9a0;font-size:14px';
+    logBox.innerHTML = `<strong>✅ تم تصحيح ${report.length} رابط غير متطابق تلقائيًا:</strong><br>` +
+      report.map(r => `• ${r.name} → <span style="color:#ccc">${r.correctedHref}</span>`).join('<br>');
+    document.body.appendChild(logBox);
+  } else {
+    console.log("✅ جميع الروابط متطابقة مع أرقام العروض.");
+  }
+
+  // 3. عناصر الصفحة
+  const input = document.getElementById('central-search');
   const results = document.getElementById('central-results');
   const clearBtn = document.getElementById('central-clear');
 
-  if(!input || !results){
+  if (!input || !results) {
     console.error('Search script: missing #central-search or #central-results elements.');
     return;
   }
 
-  function normalizeNumberString(s){
-    if(!s) return '';
-    return String(s).replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660)).replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
-  }
-
+  // 4. دوال التطبيع
   function normalizeText(s){
     if(!s) return '';
-    return s.toString().toLowerCase().replace(/[\u064B-\u0652]/g,'').replace(/[ـٰ]/g,'').replace(/\s+/g,' ').trim();
+    return s.toString().toLowerCase()
+      .replace(/[\u064B-\u0652]/g,'')
+      .replace(/[ـٰ]/g,'')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function normalizeNumberString(s){
+    if(!s) return '';
+    return String(s)
+      .replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660))
+      .replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
   }
 
   function isPriceQuery(q){
@@ -827,6 +868,7 @@ const input = document.getElementById('central-search');
     return /^\d{1,4}$/.test(n);
   }
 
+  // 5. عرض النتائج
   function renderResults(term){
     const raw = term || '';
     const q = normalizeText(raw);
@@ -840,7 +882,7 @@ const input = document.getElementById('central-search');
         return Math.abs(item.price - qNum) <= 5;
       }
       const name = normalizeText(item.name);
-      return name.indexOf(q) !== -1;
+      return name.includes(q);
     });
 
     if(matches.length === 0){
@@ -867,6 +909,7 @@ const input = document.getElementById('central-search');
     });
   }
 
+  // 6. مستمع البحث
   input.addEventListener('input', e => {
     try{
       renderResults(e.target.value);
@@ -876,6 +919,7 @@ const input = document.getElementById('central-search');
     }
   });
 
+  // 7. زر المسح
   if(clearBtn){
     clearBtn.addEventListener('click', () => {
       input.value = '';
@@ -884,8 +928,8 @@ const input = document.getElementById('central-search');
     });
   }
 
-  console.log('Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
+  console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
-</script> 
+</script>
 </body>
 </html>
