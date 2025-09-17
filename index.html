@@ -164,15 +164,24 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
-  <!-- 🔍 مربع البحث المركزي -->
-<div id="central-search-wrap" style="max-width:980px;margin:14px auto;display:flex;flex-direction:column;gap:8px;">
-  <div style="display:flex;gap:8px;">
-    <input id="central-search" type="search" placeholder="ابحث في كل العروض..." aria-label="بحث مركزي"
-           style="flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:15px;">
-    <button id="central-clear" style="padding:10px 12px;border-radius:10px;border:0;background:#d9b86a;color:#070707;font-weight:800;">مسح</button>
+<div class="rating-box" style="margin:20px 0; text-align:center;">
+  <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
+  <div class="stars" style="font-size:30px; cursor:pointer;">
+    <span onclick="rateSite(1)">★</span>
+    <span onclick="rateSite(2)">★</span>
+    <span onclick="rateSite(3)">★</span>
+    <span onclick="rateSite(4)">★</span>
+    <span onclick="rateSite(5)">★</span>
   </div>
-  <div id="central-results" style="min-height:36px;color:#cfc6a3;"></div>
+  <div id="rating-result" style="margin-top:10px; color:#e5c9a0;"></div>
 </div>
+
+<script>
+function rateSite(stars){
+  const msg = `شكرًا! تم تسجيل تقييمك: ${stars} نجمة${stars > 1 ? '⭐' : ''}`;
+  document.getElementById('rating-result').textContent = msg;
+}
+</script>
 <!-- START: شريط عروض مخصص -->
 <style>
   /* شريط العروض العام */
