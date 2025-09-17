@@ -802,12 +802,7 @@
     { name: "5 مانشستر شوكلا", price: 29, total: 145, qty: 5, offer: "2", href: "offer2.html#p-2-117" },
     { name: "نيويورك سيلفر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-118" }
   ];
-// 2. تحقق وتصحيح تلقائي حسب رقم العرض
-  const report = [];
-  STATIC_INDEX.forEach(item => {
-    const expectedPrefix = `offer${item.offer}.html`;
-
-  // 3. عناصر الصفحة
+ // 2. عناصر الصفحة
   const input = document.getElementById('central-search');
   const results = document.getElementById('central-results');
   const clearBtn = document.getElementById('central-clear');
@@ -817,7 +812,7 @@
     return;
   }
 
-  // 4. دوال التطبيع
+  // 3. دوال التطبيع
   function normalizeText(s){
     if(!s) return '';
     return s.toString().toLowerCase()
@@ -839,7 +834,7 @@
     return /^\d{1,4}$/.test(n);
   }
 
-  // 5. عرض النتائج
+  // 4. عرض النتائج
   function renderResults(term){
     const raw = term || '';
     const q = normalizeText(raw);
@@ -886,7 +881,7 @@
     });
   }
 
-  // 6. مستمع البحث
+  // 5. مستمع البحث
   input.addEventListener('input', e => {
     try{
       renderResults(e.target.value);
@@ -896,7 +891,7 @@
     }
   });
 
-  // 7. زر المسح
+  // 6. زر المسح
   if(clearBtn){
     clearBtn.addEventListener('click', () => {
       input.value = '';
