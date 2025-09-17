@@ -164,23 +164,34 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
-<div class="rating-box" style="margin:20px 0; text-align:center;">
-  <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
-  <div class="stars" style="font-size:30px; cursor:pointer;">
-    <span onclick="rateSite(1)">★</span>
-    <span onclick="rateSite(2)">★</span>
-    <span onclick="rateSite(3)">★</span>
-    <span onclick="rateSite(4)">★</span>
-    <span onclick="rateSite(5)">★</span>
+<div class="rating-box" style="margin:30px auto; text-align:center; max-width:400px;">
+  <h2 style="color:#fff; margin-bottom:10px;">قيّم تجربتك معنا</h2>
+  <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
+    <span onclick="rateSite(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
+    <span onclick="rateSite(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
+    <span onclick="rateSite(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
+    <span onclick="rateSite(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
+    <span onclick="rateSite(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
   </div>
-  <div id="rating-result" style="margin-top:10px; color:#e5c9a0;"></div>
+  <div id="rating-result" style="margin-top:12px; color:#cfc6a3; font-size:16px;"></div>
 </div>
 
 <script>
 function rateSite(stars){
-  const msg = `شكرًا! تم تسجيل تقييمك: ${stars} نجمة${stars > 1 ? '⭐' : ''}`;
+  localStorage.setItem('siteRating', stars); // تخزين التقييم
+  showRating(stars);
+}
+
+function showRating(stars){
+  const msg = `شكرًا! تم تسجيل تقييمك: ${stars} ${stars === 1 ? 'نجمة' : 'نجوم'} ⭐`;
   document.getElementById('rating-result').textContent = msg;
 }
+
+// عند تحميل الصفحة، تحقق من وجود تقييم سابق
+document.addEventListener('DOMContentLoaded', () => {
+  const savedRating = localStorage.getItem('siteRating');
+  if (savedRating) showRating(parseInt(savedRating));
+});
 </script>
 <!-- START: شريط عروض مخصص -->
 <style>
