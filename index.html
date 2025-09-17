@@ -163,7 +163,7 @@
   input.addEventListener('input', e => renderResults(e.target.value));
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
-
+</script>
   <!-- 🔍 مربع البحث المركزي -->
 <div id="central-search-wrap" style="max-width:980px;margin:14px auto;display:flex;flex-direction:column;gap:8px;">
   <div style="display:flex;gap:8px;">
@@ -917,8 +917,6 @@ if(clearBtn){
 }
 
 console.log('Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
-  </script>
-
 </script>
 </body>
 </html>
