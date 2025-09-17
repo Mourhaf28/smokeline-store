@@ -853,81 +853,59 @@ function renderResults(term) {
   });
 
   if (matches.length === 0) {
-    results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
-    return;
-  }
+    results.innerHTML = matches.map(item => {
+  // توليد العناصر...
+}).join('');
 
-  results.innerHTML = matches.map(item => {
-    const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
-    const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
-    const href = item.href || '';
-    return `
-      <div class="search-item" data-href="${encodeURIComponent(href)}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
-        <div style="font-weight:700;color:#fff">${item.name}</div>
-        <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
-      </div>`;
-  }).join('');
+// ربط مستمع النقر لكل عنصر بعد التوليد
+results.querySelectorAll('.search-item').forEach(el => {
+  el.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-  // ربط مستمع النقر لكل نتيجة
-  results.querySelectorAll('.search-item').forEach(el => {
-    el.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
+    const raw = this.getAttribute('data-href') || '';
+    if (!raw) {
+      console.warn('search click: no data-href');
+      return;
+    }
 
-      const raw = this.getAttribute('data-href') || '';
-      if (!raw) {
-        console.warn('search click: no data-href');
-        return;
-      }
+    // العنصر داخل رابط أبوي، نمنع تنفيذ href الأب
+    const parentLink = this.closest('a[href]');
+    if (parentLink) {
+      e.stopImmediatePropagation();
+    }
 
-      // العنصر داخل رابط أبوي، نمنع تنفيذ href الأب
-      const parentLink = this.closest('a[href]');
-      if (parentLink) {
-        e.stopImmediatePropagation();
-      }
+    let resolved;
+    try {
+      const decoded = decodeURIComponent(raw);
+      resolved = new URL(decoded, window.location.href).href;
+    } catch (err) {
+      resolved = raw;
+    }
 
-      let resolved;
-      try {
-        const decoded = decodeURIComponent(raw);
-        resolved = new URL(decoded, window.location.href).href;
-      } catch (err) {
-        resolved = raw;
-      }
-
-      window.location.assign(resolved);
-    }, { passive: false });
-  });
-}
-
-// ربط البحث
+    window.location.assign(resolved);
+  }, { passive: false });
+});
+ // ربط البحث
 input.addEventListener('input', e => {
   try {
     renderResults(e.target.value);
   } catch (err) {
-    console.error('Search error:', err);
+    console.error('Search render error:', err);
+    results.innerHTML = '<div style="padding:8px;color:#e5c9a0">حدث خطأ داخلي. راجع الكونسول.</div>';
   }
 });
-  }
 
-  input.addEventListener('input', e => {
-    try{
-      renderResults(e.target.value);
-    }catch(err){
-      console.error('Search render error:', err);
-      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">حدث خطأ داخلي. راجع الكونسول.</div>';
-    }
+// زر المسح
+if(clearBtn){
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    results.innerHTML = '';
+    input.focus();
   });
+}
 
-  if(clearBtn){
-    clearBtn.addEventListener('click', () => {
-      input.value = '';
-      results.innerHTML = '';
-      input.focus();
-    });
-  }
-
-  console.log('Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
-})();
+console.log('Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
   </script>
 </body>
 </html>
