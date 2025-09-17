@@ -802,20 +802,16 @@
     { name: "5 مانشستر شوكلا", price: 29, total: 145, qty: 5, offer: "2", href: "offer2.html#p-2-117" },
     { name: "نيويورك سيلفر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-118" }
   ];
-
-// 2. تحقق وتصحيح تلقائي
+// 2. تحقق وتصحيح تلقائي حسب رقم العرض
   const report = [];
   STATIC_INDEX.forEach(item => {
-    const expectedPrefix = `offer${item.offer === "1" ? "" : item.offer}.html`;
+    const expectedPrefix = `offer${item.offer}.html`;
     const actualPrefix = item.href.split('#')[0];
     if (actualPrefix !== expectedPrefix) {
-      report.push({
-        name: item.name,
-        offer: item.offer,
-        oldHref: item.href,
-        correctedHref: `${expectedPrefix}#${item.href.split('#')[1] || ''}`
-      });
-      item.href = `${expectedPrefix}#${item.href.split('#')[1] || ''}`;
+      const anchor = item.href.includes('#') ? item.href.split('#')[1] : '';
+      const correctedHref = `${expectedPrefix}${anchor ? '#' + anchor : ''}`;
+      report.push({ name: item.name, offer: item.offer, oldHref: item.href, correctedHref });
+      item.href = correctedHref;
     }
   });
 
@@ -894,7 +890,7 @@
       const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
       const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
       return `
-        <div class="search-item" data-href="${encodeURI(item.href||'')}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+        <div class="search-item" data-href="${encodeURI(item.href||'')}" data-offer="${item.offer}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
           <div style="font-weight:700;color:#fff">${item.name}</div>
           <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
         </div>`;
@@ -903,8 +899,14 @@
     results.querySelectorAll('.search-item').forEach(el => {
       el.addEventListener('click', function(){
         const target = this.getAttribute('data-href');
-        if(!target) return;
-        window.location.assign(target);
+        const offer = this.getAttribute('data-offer');
+        if (!target || !offer) return;
+
+        if (offer === "1") {
+          window.location.assign(target); // عرض 1 ← نفس الصفحة
+        } else {
+          window.open(target, '_blank'); // عرض 2 ← تبويب جديد
+        }
       });
     });
   }
@@ -930,7 +932,6 @@
 
   console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
-</script>
 </script>
 </body>
 </html>
