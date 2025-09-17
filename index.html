@@ -803,16 +803,18 @@
     { name: "نيويورك سيلفر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-118" }
   ];
 
-  // 2. تحقق وتصحيح تلقائي
+// 2. تحقق وتصحيح تلقائي
   const report = [];
   STATIC_INDEX.forEach(item => {
-  const expectedPrefix = `offer${item.offer}.html`;
-  const actualPrefix = item.href.split('#')[0];
-  if (actualPrefix !== expectedPrefix) {
-    const anchor = item.href.includes('#') ? item.href.split('#')[1] : '';
-    item.href = `${expectedPrefix}${anchor ? '#' + anchor : ''}`;
-  }
-});
+    const expectedPrefix = `offer${item.offer === "1" ? "" : item.offer}.html`;
+    const actualPrefix = item.href.split('#')[0];
+    if (actualPrefix !== expectedPrefix) {
+      report.push({
+        name: item.name,
+        offer: item.offer,
+        oldHref: item.href,
+        correctedHref: `${expectedPrefix}#${item.href.split('#')[1] || ''}`
+      });
       item.href = `${expectedPrefix}#${item.href.split('#')[1] || ''}`;
     }
   });
@@ -928,6 +930,7 @@
 
   console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
+</script>
 </script>
 </body>
 </html>
