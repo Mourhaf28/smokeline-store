@@ -806,31 +806,6 @@
   const report = [];
   STATIC_INDEX.forEach(item => {
     const expectedPrefix = `offer${item.offer}.html`;
-    const actualPrefix = item.href.split('#')[0];
-    if (actualPrefix !== expectedPrefix) {
-      const anchor = item.href.includes('#') ? item.href.split('#')[1] : '';
-      const correctedHref = `${expectedPrefix}${anchor ? '#' + anchor : ''}`;
-      report.push({ name: item.name, offer: item.offer, oldHref: item.href, correctedHref });
-      item.href = correctedHref;
-    }
-  });
-
-  if (report.length > 0) {
-    console.warn(`❌ تم تصحيح ${report.length} رابط غير متطابق:`);
-    report.forEach((r, i) => {
-      console.log(`${i+1}. ${r.name} — عرض ${r.offer}`);
-      console.log(`   قبل: ${r.oldHref}`);
-      console.log(`   بعد: ${r.correctedHref}`);
-    });
-
-    const logBox = document.createElement('div');
-    logBox.style = 'background:#222;padding:10px;margin:10px 0;border:1px solid #444;color:#e5c9a0;font-size:14px';
-    logBox.innerHTML = `<strong>✅ تم تصحيح ${report.length} رابط غير متطابق تلقائيًا:</strong><br>` +
-      report.map(r => `• ${r.name} → <span style="color:#ccc">${r.correctedHref}</span>`).join('<br>');
-    document.body.appendChild(logBox);
-  } else {
-    console.log("✅ جميع الروابط متطابقة مع أرقام العروض.");
-  }
 
   // 3. عناصر الصفحة
   const input = document.getElementById('central-search');
