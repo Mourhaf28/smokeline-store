@@ -853,6 +853,64 @@ function renderResults(term) {
   });
 
   if (matches.length === 0) {
+    results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
+    return;
+  }
+
+  results.innerHTML = matches.map(item => {
+    const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+    const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+    const href = item.href || '';
+    return `
+      <div class="search-item" data-href="${encodeURIComponent(href)}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+        <div style="font-weight:700;color:#fff">${item.name}</div>
+        <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+      </div>`;
+  }).join('');
+
+  // ربط مستمع النقر بعد توليد العناصر
+  results.querySelectorAll('.search-item').forEach(el => {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const raw = this.getAttribute('data-href') || '';
+      if (!raw) {
+        console.warn('search click: no data-href');
+        return;
+      }
+
+      const parentLink = this.closest('a[href]');
+      if (parentLink) {
+        e.stopImmediatePropagation();
+      }
+
+      let resolved;
+      try {
+        const decoded = decodeURIComponent(raw);
+        resolved = new URL(decoded, window.location.href).href;
+      } catch (err) {
+        resolved = raw;
+      }
+
+      window.location.assign(resolved);
+    }, { passive: false });
+  });
+
+  }
+
+  const queryIsPrice = isPriceQuery(raw);
+  const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw), 10) : null;
+
+  const matches = STATIC_INDEX.filter(item => {
+    if (queryIsPrice && item.price) {
+      return Math.abs(item.price - qNum) <= 5;
+    }
+    const name = normalizeText(item.name);
+    return name.indexOf(q) !== -1;
+  });
+
+  if (matches.length === 0) {
   results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
   return;
 }
