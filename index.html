@@ -853,8 +853,19 @@ function renderResults(term) {
   });
 
   if (matches.length === 0) {
-    results.innerHTML = matches.map(item => {
-  // توليد العناصر...
+  results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
+  return;
+}
+
+results.innerHTML = matches.map(item => {
+  const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+  const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+  const href = item.href || '';
+  return `
+    <div class="search-item" data-href="${encodeURIComponent(href)}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+      <div style="font-weight:700;color:#fff">${item.name}</div>
+      <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+    </div>`;
 }).join('');
 
 // ربط مستمع النقر لكل عنصر بعد التوليد
