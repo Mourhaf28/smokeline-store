@@ -802,106 +802,138 @@
     { name: "5 مانشستر شوكلا", price: 29, total: 145, qty: 5, offer: "2", href: "offer2.html#p-2-117" },
     { name: "نيويورك سيلفر", price: 100, total: 500, qty: 5, offer: "2", href: "offer2.html#p-2-118" }
   ];
- // 2. عناصر الصفحة
-  const input = document.getElementById('central-search');
-  const results = document.getElementById('central-results');
-  const clearBtn = document.getElementById('central-clear');
+ 
+// 2. تحقق وتصحيح تلقائي حسب رقم العرض
+  const report = [];
+  STATIC_INDEX.forEach(item => {
+    const expectedPrefix = `offer${item.offer}.html`;
+    const actualPrefix = item.href.split('#')[0];
+    if (actualPrefix !== expectedPrefix) {
+      const anchor = item.href.includes('#') ? item.href.split('#')[1] : '';
+      const correctedHref = `${expectedPrefix}${anchor ? '#' + anchor : ''}`;
+      report.push({ name: item.name, offer: item.offer, oldHref: item.href, correctedHref });
+      item.href = correctedHref;
+    }
+  });
 
-  if (!input || !results) {
-    console.error('Search script: missing #central-search or #central-results elements.');
-    return;
-  }
+  if (report.length > 0) {
+    console.warn(`❌ تم تصحيح ${report.length} رابط غير متطابق:`);
+    report.forEach((r, i) => {
+      console.log(`${i+1}. ${r.name} — عرض ${r.offer}`);
+      console.log(`   قبل: ${r.oldHref}`);
+      console.log(`   بعد: ${r.correctedHref}`);
+    });
 
-  // 3. دوال التطبيع
-  function normalizeText(s){
-    if(!s) return '';
-    return s.toString().toLowerCase()
-      .replace(/[\u064B-\u0652]/g,'')
-      .replace(/[ـٰ]/g,'')
-      .replace(/\s+/g,' ')
-      .trim();
-  }
+    const logBox = document.createElement('div');
+    logBox.style = 'background:#222;padding:10px;margin:10px 0;border:1px solid #444;color:#e5c9a0;font-size:14px';
+    logBox.innerHTML = `<strong>✅ تم تصحيح ${report.length} رابط غير متطابق تلقائيًا:</strong><br>` +
+      report.map(r => `• ${r.name} → <span style="color:#ccc">${r.correctedHref}</span>`).join('<br>');
+    document.body.appendChild(logBox);
+  } else {
+    console.log("✅ جميع الروابط متطابقة مع أرقام العروض.");
+  }
 
-  function normalizeNumberString(s){
-    if(!s) return '';
-    return String(s)
-      .replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660))
-      .replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
-  }
+  // 3. عناصر الصفحة
+  const input = document.getElementById('central-search');
+  const results = document.getElementById('central-results');
+  const clearBtn = document.getElementById('central-clear');
 
-  function isPriceQuery(q){
-    const n = normalizeNumberString(q);
-    return /^\d{1,4}$/.test(n);
-  }
+  if (!input || !results) {
+    console.error('Search script: missing #central-search or #central-results elements.');
+    return;
+  }
 
-  // 4. عرض النتائج
-  function renderResults(term){
-    const raw = term || '';
-    const q = normalizeText(raw);
-    if(!q){ results.innerHTML = ''; return; }
+  // 4. دوال التطبيع
+  function normalizeText(s){
+    if(!s) return '';
+    return s.toString().toLowerCase()
+      .replace(/[\u064B-\u0652]/g,'')
+      .replace(/[ـٰ]/g,'')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
 
-    const queryIsPrice = isPriceQuery(raw);
-    const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw),10) : null;
+  function normalizeNumberString(s){
+    if(!s) return '';
+    return String(s)
+      .replace(/[\u0660-\u0669]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660))
+      .replace(/[,\.\s\u066B\u066C\u066D\u202F]/g,'');
+  }
 
-    const matches = STATIC_INDEX.filter(item => {
-      if(queryIsPrice && item.price){
-        return Math.abs(item.price - qNum) <= 5;
-      }
-      const name = normalizeText(item.name);
-      return name.includes(q);
-    });
+  function isPriceQuery(q){
+    const n = normalizeNumberString(q);
+    return /^\d{1,4}$/.test(n);
+  }
 
-    if(matches.length === 0){
-      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
-      return;
-    }
+  // 5. عرض النتائج
+  function renderResults(term){
+    const raw = term || '';
+    const q = normalizeText(raw);
+    if(!q){ results.innerHTML = ''; return; }
 
-    results.innerHTML = matches.map(item => {
-      const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
-      const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
-      return `
-        <div class="search-item" data-href="${encodeURI(item.href||'')}" data-offer="${item.offer}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
-          <div style="font-weight:700;color:#fff">${item.name}</div>
-          <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
-        </div>`;
-    }).join('');
+    const queryIsPrice = isPriceQuery(raw);
+    const qNum = queryIsPrice ? parseInt(normalizeNumberString(raw),10) : null;
 
-    results.querySelectorAll('.search-item').forEach(el => {
-      el.addEventListener('click', function(){
-        const target = this.getAttribute('data-href');
-        const offer = this.getAttribute('data-offer');
-        if (!target || !offer) return;
+    const matches = STATIC_INDEX.filter(item => {
+      if(queryIsPrice && item.price){
+        return Math.abs(item.price - qNum) <= 5;
+      }
+      const name = normalizeText(item.name);
+      return name.includes(q);
+    });
 
-        if (offer === "1") {
-          window.location.assign(target); // عرض 1 ← نفس الصفحة
-        } else {
-          window.open(target, '_blank'); // عرض 2 ← تبويب جديد
-        }
-      });
-    });
-  }
+    if(matches.length === 0){
+      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">لا توجد نتائج.</div>';
+      return;
+    }
 
-  // 5. مستمع البحث
-  input.addEventListener('input', e => {
-    try{
-      renderResults(e.target.value);
-    }catch(err){
-      console.error('Search render error:', err);
-      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">حدث خطأ داخلي. راجع الكونسول.</div>';
-    }
-  });
+    results.innerHTML = matches.map(item => {
+      const priceLabel = item.price ? `${item.price} درهم للبوكس` : `سعر غير محدد`;
+      const totalLabel = item.total ? ` — إجمالي ${item.total} درهم` : '';
+      return `
+        <div class="search-item" data-href="${encodeURI(item.href||'')}" data-offer="${item.offer}" style="cursor:pointer;padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+          <div style="font-weight:700;color:#fff">${item.name}</div>
+          <div style="font-size:13px;color:#cfc6a3;margin-top:6px">${priceLabel}${totalLabel} — عرض ${item.offer}</div>
+        </div>`;
+    }).join('');
 
-  // 6. زر المسح
-  if(clearBtn){
-    clearBtn.addEventListener('click', () => {
-      input.value = '';
-      results.innerHTML = '';
-      input.focus();
-    });
-  }
+    results.querySelectorAll('.search-item').forEach(el => {
+      el.addEventListener('click', function(){
+        const target = this.getAttribute('data-href');
+        const offer = this.getAttribute('data-offer');
+        if (!target || !offer) return;
 
-  console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
+        if (offer === "1") {
+          window.location.assign(target); // عرض 1 ← نفس الصفحة
+        } else {
+          window.open(target, '_blank'); // عرض 2 ← تبويب جديد
+        }
+      });
+    });
+  }
+
+  // 6. مستمع البحث
+  input.addEventListener('input', e => {
+    try{
+      renderResults(e.target.value);
+    }catch(err){
+      console.error('Search render error:', err);
+      results.innerHTML = '<div style="padding:8px;color:#e5c9a0">حدث خطأ داخلي. راجع الكونسول.</div>';
+    }
+  });
+
+  // 7. زر المسح
+  if(clearBtn){
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      results.innerHTML = '';
+      input.focus();
+    });
+  }
+
+  console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
+</script>
 </script>
 </body>
 </html>
