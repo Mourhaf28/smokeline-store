@@ -806,12 +806,11 @@
   // 2. تحقق وتصحيح تلقائي
   const report = [];
   STATIC_INDEX.forEach(item => {
-  const expectedPrefix = item.offer === "1" ? "offer.html" : `offer${item.offer}.html`;
+  const expectedPrefix = `offer${item.offer}.html`;
   const actualPrefix = item.href.split('#')[0];
   if (actualPrefix !== expectedPrefix) {
     const anchor = item.href.includes('#') ? item.href.split('#')[1] : '';
-    const correctedHref = `${expectedPrefix}${anchor ? '#' + anchor : ''}`;
-    item.href = correctedHref;
+    item.href = `${expectedPrefix}${anchor ? '#' + anchor : ''}`;
   }
 });
       item.href = `${expectedPrefix}#${item.href.split('#')[1] || ''}`;
