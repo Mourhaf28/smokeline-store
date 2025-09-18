@@ -164,33 +164,90 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
-<div class="rating-box" style="margin:30px auto; text-align:center; max-width:400px;">
-  <h2 style="color:#fff; margin-bottom:10px;">قيّم تجربتك معنا</h2>
-  <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
-    <span onclick="rateSite(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
-    <span onclick="rateSite(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
-    <span onclick="rateSite(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
-    <span onclick="rateSite(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
-    <span onclick="rateSite(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+<div id="rating-section" style="max-width:400px; margin:30px auto; text-align:center;">
+  <h2 style="color:#fff;">سجّل لتقييم الموقع</h2>
+  <form id="user-form" onsubmit="registerUser(event)">
+    <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
+    <input type="tel" id="userPhone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
+    <button type="submit">تسجيل الدخول</button>
+  </form>
+
+  <div id="rating-box" style="display:none; margin-top:20px;">
+    <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
+    <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
+      <span onclick="submitRating(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
+      <span onclick="submitRating(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
+      <span onclick="submitRating(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
+      <span onclick="submitRating(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
+      <span onclick="submitRating(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+    </div>
+    <div id="rating-result" style="margin-top:12px; color:#cfc6a3;"></div>
   </div>
-  <div id="rating-result" style="margin-top:12px; color:#cfc6a3; font-size:16px;"></div>
+
+  <div id="average-box" style="margin-top:20px; color:#e5c9a0; font-size:18px;"></div>
 </div>
 
 <script>
-function rateSite(stars){
-  localStorage.setItem('siteRating', stars); // تخزين التقييم
-  showRating(stars);
+function registerUser(e){
+  e.preventDefault();
+  const name = document.getElementById('userName').value.trim();
+  const phone = document.getElementById('userPhone').value.trim();
+  if (!name || !phone) return alert('يرجى إدخال الاسم والرقم');
+
+  localStorage.setItem('userName', name);
+  localStorage.setItem('userPhone', phone);
+
+  document.getElementById('user-form').style.display = 'none';
+  document.getElementById('rating-box').style.display = 'block';
 }
 
-function showRating(stars){
-  const msg = `شكرًا! تم تسجيل تقييمك: ${stars} ${stars === 1 ? 'نجمة' : 'نجوم'} ⭐`;
-  document.getElementById('rating-result').textContent = msg;
+function submitRating(stars){
+  const name = localStorage.getItem('userName');
+  const phone = localStorage.getItem('userPhone');
+  const rated = localStorage.getItem('siteRated');
+
+  if (rated) return alert('لقد قمت بتقييم الموقع مسبقًا.');
+
+  const msg = `الزبون ${name} (${phone}) قيّم الموقع بـ ${stars} نجوم ⭐`;
+  const encoded = encodeURIComponent(msg);
+  const whatsappLink = `https://wa.me/963XXXXXXXXX?text=${encoded}`; // ← ضع رقمك السوري هنا
+
+  localStorage.setItem('siteRated', stars);
+  document.getElementById('rating-result').textContent = 'شكرًا! تم إرسال تقييمك.';
+  window.open(whatsappLink, '_blank');
+
+  updateAverage(stars);
 }
 
-// عند تحميل الصفحة، تحقق من وجود تقييم سابق
+function updateAverage(newRating){
+  let ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
+  ratings.push(newRating);
+  localStorage.setItem('allRatings', JSON.stringify(ratings));
+
+  const sum = ratings.reduce((a,b) => a + b, 0);
+  const avg = (sum / ratings.length).toFixed(1);
+  document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  const savedRating = localStorage.getItem('siteRating');
-  if (savedRating) showRating(parseInt(savedRating));
+  const name = localStorage.getItem('userName');
+  const phone = localStorage.getItem('userPhone');
+  const rated = localStorage.getItem('siteRated');
+  const ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
+
+  if (name && phone){
+    document.getElementById('user-form').style.display = 'none';
+    document.getElementById('rating-box').style.display = 'block';
+    if (rated){
+      document.getElementById('rating-result').textContent = `شكرًا ${name}! تقييمك: ${rated} نجوم ⭐`;
+    }
+  }
+
+  if (ratings.length > 0){
+    const sum = ratings.reduce((a,b) => a + b, 0);
+    const avg = (sum / ratings.length).toFixed(1);
+    document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
+  }
 });
 </script>
 <!-- START: شريط عروض مخصص -->
