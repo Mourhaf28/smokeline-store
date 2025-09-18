@@ -164,89 +164,80 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
+
 <div id="rating-section" style="max-width:400px; margin:30px auto; text-align:center;">
-  <h2 style="color:#fff;">سجّل لتقييم الموقع</h2>
-  <form id="user-form" onsubmit="registerUser(event)">
+  <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
+  <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
+    <span onclick="startRating(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
+    <span onclick="startRating(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
+    <span onclick="startRating(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
+    <span onclick="startRating(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
+    <span onclick="startRating(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+  </div>
+  <div id="average-box" style="margin-top:15px; color:#e5c9a0; font-size:18px;"></div>
+  <div id="rating-result" style="margin-top:10px; color:#cfc6a3;"></div>
+
+  <form id="user-form" onsubmit="submitRating(event)" style="display:none; margin-top:20px;">
     <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
     <input type="tel" id="userPhone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
-    <button type="submit">تسجيل الدخول</button>
+    <button type="submit">تأكيد التقييم</button>
   </form>
-
-  <div id="rating-box" style="display:none; margin-top:20px;">
-    <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
-    <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
-      <span onclick="submitRating(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
-      <span onclick="submitRating(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
-      <span onclick="submitRating(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
-      <span onclick="submitRating(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
-      <span onclick="submitRating(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
-    </div>
-    <div id="rating-result" style="margin-top:12px; color:#cfc6a3;"></div>
-  </div>
-
-  <div id="average-box" style="margin-top:20px; color:#e5c9a0; font-size:18px;"></div>
 </div>
 
 <script>
-function registerUser(e){
+let pendingRating = null;
+
+function startRating(stars){
+  const rated = localStorage.getItem('siteRated');
+  if (rated) return alert('لقد قمت بتقييم الموقع مسبقًا.');
+
+  pendingRating = stars;
+  document.getElementById('user-form').style.display = 'block';
+  document.getElementById('rating-result').textContent = `اخترت ${stars} نجمة، يرجى إدخال اسمك ورقمك لتأكيد التقييم.`;
+}
+
+function submitRating(e){
   e.preventDefault();
   const name = document.getElementById('userName').value.trim();
   const phone = document.getElementById('userPhone').value.trim();
-  if (!name || !phone) return alert('يرجى إدخال الاسم والرقم');
+  if (!name || !phone || !pendingRating) return alert('يرجى إدخال البيانات كاملة.');
 
+  // حفظ التقييم
   localStorage.setItem('userName', name);
   localStorage.setItem('userPhone', phone);
+  localStorage.setItem('siteRated', pendingRating);
 
-  document.getElementById('user-form').style.display = 'none';
-  document.getElementById('rating-box').style.display = 'block';
-}
-
-function submitRating(stars){
-  const name = localStorage.getItem('userName');
-  const phone = localStorage.getItem('userPhone');
-  const rated = localStorage.getItem('siteRated');
-
-  if (rated) return alert('لقد قمت بتقييم الموقع مسبقًا.');
-
-  const msg = `الزبون ${name} (${phone}) قيّم الموقع بـ ${stars} نجوم ⭐`;
+  // إرسال واتساب
+  const msg = `الزبون ${name} (${phone}) قيّم الموقع بـ ${pendingRating} نجوم ⭐`;
   const encoded = encodeURIComponent(msg);
-  const whatsappLink = `https://wa.me/963XXXXXXXXX?text=${encoded}`; // ← ضع رقمك السوري هنا
-
-  localStorage.setItem('siteRated', stars);
-  document.getElementById('rating-result').textContent = 'شكرًا! تم إرسال تقييمك.';
+  const whatsappLink = `https://wa.me/963934511391?text=${encoded}`; // ← ضع رقمك السوري هنا
   window.open(whatsappLink, '_blank');
 
-  updateAverage(stars);
-}
-
-function updateAverage(newRating){
+  // تحديث المتوسط
   let ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-  ratings.push(newRating);
+  ratings.push(pendingRating);
   localStorage.setItem('allRatings', JSON.stringify(ratings));
 
   const sum = ratings.reduce((a,b) => a + b, 0);
   const avg = (sum / ratings.length).toFixed(1);
   document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
+  document.getElementById('rating-result').textContent = `شكرًا ${name}! تم تسجيل تقييمك: ${pendingRating} نجوم ⭐`;
+  document.getElementById('user-form').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const name = localStorage.getItem('userName');
-  const phone = localStorage.getItem('userPhone');
   const rated = localStorage.getItem('siteRated');
   const ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-
-  if (name && phone){
-    document.getElementById('user-form').style.display = 'none';
-    document.getElementById('rating-box').style.display = 'block';
-    if (rated){
-      document.getElementById('rating-result').textContent = `شكرًا ${name}! تقييمك: ${rated} نجوم ⭐`;
-    }
-  }
 
   if (ratings.length > 0){
     const sum = ratings.reduce((a,b) => a + b, 0);
     const avg = (sum / ratings.length).toFixed(1);
     document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
+  }
+
+  if (rated){
+    const name = localStorage.getItem('userName');
+    document.getElementById('rating-result').textContent = `شكرًا ${name}! تقييمك: ${rated} نجوم ⭐`;
   }
 });
 </script>
