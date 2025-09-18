@@ -12,7 +12,33 @@
       --accent:#25D366;
       --card:#222;
     }
-    body {
+    body 
+
+  <!-- زر الهامبرغر + اللوغو -->
+  <table>
+    <tr>
+      <td>
+        <!-- زر الهامبرغر -->
+        <button onclick="toggleMenu()">☰</button>
+      </td>
+      <td>
+        <!-- اللوغو -->
+        <img src="logo.svg" alt="Smokeline store" style="height:48px;display:block;">
+      </td>
+    </tr>
+  </table>
+
+  <!-- القائمة -->
+  <nav id="menu" hidden>
+    <ul>
+      <li><a href="#faq">الأسئلة الشائعة</a></li>
+      <li><a href="#about">من نحن</a></li>
+      <li><a href="#updates">ما الجديد</a></li>
+    </ul>
+  </nav>
+
+  <!-- باقي محتوى الصفحة -->
+    {
       background: var(--bg);
       color: var(--muted);
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -109,7 +135,7 @@
 
   <header>
   <a href="index.html" class="brand" aria-label="Smokeline store" style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;">
-    <img src="logo.svg" alt="Smokeline store" style="height:48px;display:block;">
+    
   </a>
     <h1>SmokeLine Store</h1>
     <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
