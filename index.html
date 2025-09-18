@@ -13,6 +13,63 @@
       --card:#222;
     }
     body {
+      <!-- زر الهامبرغر -->
+<button class="hamburger" onclick="toggleMenu()">
+  ☰
+</button>
+
+<!-- القائمة -->
+<nav class="top-menu" id="menu">
+  <ul>
+    <li><a href="#faq">الأسئلة الشائعة</a></li>
+    <li><a href="#about">من نحن</a></li>
+    <li><a href="#updates">ما الجديد</a></li>
+  </ul>
+</nav>
+
+<style>
+  .hamburger {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .top-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  .top-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .top-menu li {
+    margin-bottom: 10px;
+  }
+
+  .top-menu a {
+    text-decoration: none;
+    color: #333;
+  }
+</style>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  }
+</script>
       background: var(--bg);
       color: var(--muted);
       font-family: 'Segoe UI', Tahoma, sans-serif;
