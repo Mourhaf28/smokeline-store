@@ -5,6 +5,36 @@
   <title>SmokeLine Store</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
+.top-menu {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0,0,0,0.7);
+  padding: 10px 15px;
+  border-radius: 8px;
+  z-index: 999;
+}
+
+.top-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.top-menu li a {
+  color: #FFD700;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.top-menu li a:hover {
+  text-decoration: underline;
+}
+  </style>
+  <style>
     :root{
       --bg:#111;
       --muted:#eee;
@@ -13,6 +43,13 @@
       --card:#222;
     }
     body {
+      <nav class="top-menu">
+  <ul>
+    <li><a href="#faq">الأسئلة الشائعة</a></li>
+    <li><a href="#about">من نحن</a></li>
+    <li><a href="#updates">ما الجديد</a></li>
+  </ul>
+</nav>
       background: var(--bg);
       color: var(--muted);
       font-family: 'Segoe UI', Tahoma, sans-serif;
