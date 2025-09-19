@@ -165,32 +165,46 @@
 })();
 </script>
 
-<div>
-  <span onclick="selectStars(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
-  <span onclick="selectStars(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
-  <span onclick="selectStars(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
-  <span onclick="selectStars(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
-  <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+<div style="text-align:center; font-family:Arial;">
+  <h3 style="color:#e5c9a0;">قيّم تجربتك معنا</h3>
+
+  <div style="font-size:24px; margin-bottom:10px;">
+    <span onclick="selectStars(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
+    <span onclick="selectStars(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
+    <span onclick="selectStars(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
+    <span onclick="selectStars(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
+    <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+  </div>
 
   <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendHybridRating(event)">
     <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
     <input type="tel" id="userPhone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
     <textarea id="userComment" placeholder="رأيك أو تعليقك" required style="margin:5px; width:90%;"></textarea><br>
     <input type="hidden" id="userStars">
-    <button type="submit">تأكيد التقييم</button>
+    <button type="submit" style="margin-top:10px;">تأكيد التقييم</button>
   </form>
 
-  <div id="average-box" style="margin-top:15px; color:#e5c9a0; font-size:18px;">
-    ⭐ متوسط التقييم يظهر هنا
+  <!-- ✅ رسالة شكر -->
+  <div id="thankYouMessage" style="display:none; margin-top:20px; color:#e5c9a0; font-size:18px;">
+    💛 شكرًا من القلب على تقييمك! رأيك يهمّنا ويساعدنا نكون أفضل دائمًا.
   </div>
-  <div id="rating-result" style="margin-top:20px; color:#cfc6a3; text-align:right;"></div>
+
+  <!-- ✅ متوسط التقييم -->
+  <div style="margin-top:30px;">
+    <iframe
+      src="https://script.google.com/macros/s/AKfycbxLWNqoiD9Hq3RC8o0C5oWgtgtgtWYYAQvne_Vwip9H75EqUznN2t2lxulA2t5fXBvr/exec"
+      width="100%"
+      height="60"
+      style="border:none; background:transparent;">
+    </iframe>
+  </div>
 </div>
 
-<script src="https://unpkg.com/tabletop@1.5.1/tabletop.js"></script>
 <script>
   function selectStars(stars) {
     document.getElementById('userStars').value = stars;
     document.getElementById('rating-form').style.display = 'block';
+    document.getElementById('thankYouMessage').style.display = 'none';
   }
 
   function sendHybridRating(e) {
@@ -211,10 +225,9 @@
         if (response === "duplicate") {
           alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
         } else if (response === "saved") {
-          alert("تم حفظ تقييمك بنجاح. شكرًا لك!");
           document.getElementById('rating-form').reset();
           document.getElementById('rating-form').style.display = 'none';
-          location.reload(); // إعادة تحميل لعرض التقييم الجديد
+          document.getElementById('thankYouMessage').style.display = 'block';
         } else {
           alert("رد غير متوقع من الخادم: " + response);
         }
@@ -229,38 +242,6 @@
 
     xhr.send(data);
   }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    Tabletop.init({
-      key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRO7RjaIncZrDFMwqJv9hLEANoWvPWpaS3Hpmm3H9KsKVSdQz7RMguMLRNT6GtChUKe82MBOdiqupF/pubhtml',
-      callback: function(data) {
-        const container = document.getElementById('rating-result');
-        const averageBox = document.getElementById('average-box');
-        let total = 0, count = 0;
-
-        container.innerHTML = ''; // تنظيف التقييمات القديمة
-
-        data.forEach(entry => {
-          const rating = parseFloat(entry['عدد النجوم']);
-          if (!isNaN(rating)) {
-            total += rating;
-            count++;
-          }
-
-          const div = document.createElement('div');
-          div.innerHTML = `
-            <strong>${entry['الاسم']}</strong> ⭐ ${entry['عدد النجوم']}<br>
-            ${entry['رأيك أو تعليقك']}<hr>
-          `;
-          container.appendChild(div);
-        });
-
-        const average = count > 0 ? (total / count).toFixed(1) : '—';
-        averageBox.innerHTML = `⭐ متوسط التقييم: <strong>${average}</strong> من أصل 5`;
-      },
-      simpleSheet: true
-    });
-  });
 </script>
 <!<section id="faq">
   <h2>الأسئلة الشائعة</h2>
