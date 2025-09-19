@@ -191,69 +191,40 @@
 
 <script src="https://unpkg.com/tabletop@1.5.1/tabletop.js"></script>
 <script>
-  function selectStars(stars) {
-    document.getElementById('userStars').value = stars;
-    document.getElementById('rating-form').style.display = 'block';
-  }
+function sendHybridRating(e) {
+  e.preventDefault();
+  const name = document.getElementById('userName').value.trim();
+  const phone = document.getElementById('userPhone').value.trim();
+  const comment = document.getElementById('userComment').value.trim();
+  const stars = document.getElementById('userStars').value;
 
-  function sendHybridRating(e) {
-    e.preventDefault();
-    const name = document.getElementById('userName').value.trim();
-    const phone = document.getElementById('userPhone').value.trim();
-    const comment = document.getElementById('userComment').value.trim();
-    const stars = document.getElementById('userStars').value;
+  const data = JSON.stringify({ name, phone, comment, stars });
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://script.google.com/macros/s/AKfycbxs0xTOzsChbGtf6iEnlbr2mbb7HcUGybalEunjuofdH1FD3oqMX97bdW6Yht55_I9Vtg/exec", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
 
-    fetch("https://script.google.com/macros/s/AKfycbxs0xTOzsChbGtf6iEnlbr2mbb7HcUGybalEunjuofdH1FD3oqMX97bdW6Yht55_I9Vtg/exec", {
-      method: "POST",
-      body: JSON.stringify({ name, phone, comment, stars }),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.text())
-    .then(response => {
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const response = xhr.responseText;
       if (response === "duplicate") {
         alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
       } else {
         const message = `⭐ تقييم جديد:\nالاسم: ${name}\nرقم الزبون: ${phone}\nعدد النجوم: ${stars}\nالتعليق: ${comment}`;
         const encodedMessage = encodeURIComponent(message);
-        const whatsappLink = `https://wa.me/963934511391?text=${encodedMessage}`; // ← استبدل برقمك الإماراتي
+        const whatsappLink = `https://wa.me/971501234567?text=${encodedMessage}`; // ← استبدل برقمك الإماراتي
         window.location.href = whatsappLink;
       }
-    })
-    .catch(err => {
-      alert("حدث خطأ أثناء إرسال التقييم");
-      console.error("خطأ:", err);
-    });
-  }
+    } else {
+      alert("خطأ في الاتصال: " + xhr.status);
+    }
+  };
 
-  window.addEventListener('DOMContentLoaded', () => {
-    Tabletop.init({
-      key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRO7RjaIncZrDFMwqJv9hLEANoWvPWpaS3Hpmm3H9KsKVSdQz7RMguMLRNT6GtChUKe82MBOdiqupF/pubhtml',
-      callback: function(data) {
-        const container = document.getElementById('rating-result');
-        const averageBox = document.getElementById('average-box');
-        let total = 0, count = 0;
+  xhr.onerror = function () {
+    alert("فشل الاتصال بالخادم");
+  };
 
-        data.forEach(entry => {
-          const rating = parseFloat(entry['عدد النجوم']);
-          if (!isNaN(rating)) {
-            total += rating;
-            count++;
-          }
-
-          const div = document.createElement('div');
-          div.innerHTML = `
-            <strong>${entry['الاسم']}</strong> ⭐ ${entry['عدد النجوم']}<br>
-            ${entry['رأيك أو تعليقك']}<hr>
-          `;
-          container.appendChild(div);
-        });
-
-        const average = count > 0 ? (total / count).toFixed(1) : '—';
-        averageBox.innerHTML = `⭐ متوسط التقييم: <strong>${average}</strong> من أصل 5`;
-      },
-      simpleSheet: true
-    });
-  });
+  xhr.send(data);
+}
 </script>
 <!<section id="faq">
   <h2>الأسئلة الشائعة</h2>
