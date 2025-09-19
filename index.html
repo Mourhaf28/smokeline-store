@@ -164,15 +164,13 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
-<div id="rating-section" style="max-width:400px; margin:30px auto; text-align:center;">
-  <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
-  <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
-    <span onclick="selectStars(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
-    <span onclick="selectStars(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
-    <span onclick="selectStars(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
-    <span onclick="selectStars(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
-    <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
-  </div>
+
+<div>
+  <span onclick="selectStars(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
+  <span onclick="selectStars(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
+  <span onclick="selectStars(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
+  <span onclick="selectStars(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
+  <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
 
   <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendHybridRating(event)">
     <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
@@ -204,7 +202,7 @@
 
     const data = JSON.stringify({ name, phone, comment, stars });
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://script.google.com/macros/s/AKfycbwfzZGy8VtxAIGu8hn_WUGZNYCRU2fZNjt-QRb7k0wU1dQx1WpZgyXFqjfA1bkqS9DQ/exec", true);
+    xhr.open("POST", "https://script.google.com/macros/s/AKfycbxLWNqoiD9Hq3RC8o0C5oWgtgtgtWYYAQvne_Vwip9H75EqUznN2t2lxulA2t5fXBvr/exec", true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onload = function () {
@@ -216,6 +214,7 @@
           alert("تم حفظ تقييمك بنجاح. شكرًا لك!");
           document.getElementById('rating-form').reset();
           document.getElementById('rating-form').style.display = 'none';
+          location.reload(); // إعادة تحميل لعرض التقييم الجديد
         } else {
           alert("رد غير متوقع من الخادم: " + response);
         }
@@ -238,6 +237,8 @@
         const container = document.getElementById('rating-result');
         const averageBox = document.getElementById('average-box');
         let total = 0, count = 0;
+
+        container.innerHTML = ''; // تنظيف التقييمات القديمة
 
         data.forEach(entry => {
           const rating = parseFloat(entry['عدد النجوم']);
