@@ -164,6 +164,7 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
+
 <div id="rating-section" style="max-width:400px; margin:30px auto; text-align:center;">
   <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
   <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
@@ -174,7 +175,7 @@
     <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
   </div>
 
-  <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendToSheet(event)">
+  <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendHybridRating(event)">
     <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
     <input type="tel" id="userPhone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
     <textarea id="userComment" placeholder="رأيك أو تعليقك" required style="margin:5px; width:90%;"></textarea><br>
@@ -188,7 +189,6 @@
   <div id="rating-result" style="margin-top:20px; color:#cfc6a3; text-align:right;"></div>
 </div>
 
-<!-- عرض التقييمات من Google Sheets -->
 <script src="https://unpkg.com/tabletop@1.5.1/tabletop.js"></script>
 <script>
   function selectStars(stars) {
@@ -196,26 +196,35 @@
     document.getElementById('rating-form').style.display = 'block';
   }
 
-  function sendToSheet(e) {
+  function sendHybridRating(e) {
     e.preventDefault();
-    const name = document.getElementById('userName').value;
-    const phone = document.getElementById('userPhone').value;
-    const comment = document.getElementById('userComment').value;
+    const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+    const comment = document.getElementById('userComment').value.trim();
     const stars = document.getElementById('userStars').value;
 
-    // إرسال البيانات إلى Google Sheets عبر Web App
-    fetch("https://script.google.com/macros/s/AKfycbzp6YCFjz_ZT3_y0sLfeyE4kwDdtgP0XkN42TCSJ3cePjI7OxrQmLnwp-ZkK9SdAWQI/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbxs0xTOzsChbGtf6iEnlbr2mbb7HcUGybalEunjuofdH1FD3oqMX97bdW6Yht55_I9Vtg/exec", {
       method: "POST",
       body: JSON.stringify({ name, phone, comment, stars }),
       headers: { "Content-Type": "application/json" }
-    }).then(() => {
-      alert("تم إرسال التقييم بنجاح!");
-      document.getElementById('rating-form').reset();
-      document.getElementById('rating-form').style.display = 'none';
+    })
+    .then(res => res.text())
+    .then(response => {
+      if (response === "duplicate") {
+        alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
+      } else {
+        const message = `⭐ تقييم جديد:\nالاسم: ${name}\nرقم الزبون: ${phone}\nعدد النجوم: ${stars}\nالتعليق: ${comment}`;
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappLink = `https://wa.me/963934511391?text=${encodedMessage}`; // ← استبدل برقمك الإماراتي
+        window.location.href = whatsappLink;
+      }
+    })
+    .catch(err => {
+      alert("حدث خطأ أثناء إرسال التقييم");
+      console.error("خطأ:", err);
     });
   }
 
-  // عرض التقييمات
   window.addEventListener('DOMContentLoaded', () => {
     Tabletop.init({
       key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRO7RjaIncZrDFMwqJv9hLEANoWvPWpaS3Hpmm3H9KsKVSdQz7RMguMLRNT6GtChUKe82MBOdiqupF/pubhtml',
