@@ -167,21 +167,85 @@
 <div id="rating-section" style="max-width:400px; margin:30px auto; text-align:center;">
   <h3 style="color:#fff;">قيّم تجربتك معنا</h3>
   <div class="stars" style="font-size:32px; cursor:pointer; color:#e5c9a0;">
-    <span onclick="startRating(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
-    <span onclick="startRating(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
-    <span onclick="startRating(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
-    <span onclick="startRating(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
-    <span onclick="startRating(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+    <span onclick="selectStars(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
+    <span onclick="selectStars(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
+    <span onclick="selectStars(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
+    <span onclick="selectStars(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
+    <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
   </div>
-  <div id="average-box" style="margin-top:15px; color:#e5c9a0; font-size:18px;"></div>
-  <div id="rating-result" style="margin-top:10px; color:#cfc6a3;"></div>
 
-  <form id="user-form" onsubmit="submitRating(event)" style="display:none; margin-top:20px;">
+  <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendToSheet(event)">
     <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
     <input type="tel" id="userPhone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
+    <textarea id="userComment" placeholder="رأيك أو تعليقك" required style="margin:5px; width:90%;"></textarea><br>
+    <input type="hidden" id="userStars">
     <button type="submit">تأكيد التقييم</button>
   </form>
+
+  <div id="average-box" style="margin-top:15px; color:#e5c9a0; font-size:18px;">
+    ⭐ متوسط التقييم يظهر هنا
+  </div>
+  <div id="rating-result" style="margin-top:20px; color:#cfc6a3; text-align:right;"></div>
 </div>
+
+<!-- عرض التقييمات من Google Sheets -->
+<script src="https://unpkg.com/tabletop@1.5.1/tabletop.js"></script>
+<script>
+  function selectStars(stars) {
+    document.getElementById('userStars').value = stars;
+    document.getElementById('rating-form').style.display = 'block';
+  }
+
+  function sendToSheet(e) {
+    e.preventDefault();
+    const name = document.getElementById('userName').value;
+    const phone = document.getElementById('userPhone').value;
+    const comment = document.getElementById('userComment').value;
+    const stars = document.getElementById('userStars').value;
+
+    // إرسال البيانات إلى Google Sheets عبر Web App
+    fetch("https://script.google.com/macros/s/AKfycbzp6YCFjz_ZT3_y0sLfeyE4kwDdtgP0XkN42TCSJ3cePjI7OxrQmLnwp-ZkK9SdAWQI/exec", {
+      method: "POST",
+      body: JSON.stringify({ name, phone, comment, stars }),
+      headers: { "Content-Type": "application/json" }
+    }).then(() => {
+      alert("تم إرسال التقييم بنجاح!");
+      document.getElementById('rating-form').reset();
+      document.getElementById('rating-form').style.display = 'none';
+    });
+  }
+
+  // عرض التقييمات
+  window.addEventListener('DOMContentLoaded', () => {
+    Tabletop.init({
+      key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRO7RjaIncZrDFMwqJv9hLEANoWvPWpaS3Hpmm3H9KsKVSdQz7RMguMLRNT6GtChUKe82MBOdiqupF/pubhtml',
+      callback: function(data) {
+        const container = document.getElementById('rating-result');
+        const averageBox = document.getElementById('average-box');
+        let total = 0, count = 0;
+
+        data.forEach(entry => {
+          const rating = parseFloat(entry['عدد النجوم']);
+          if (!isNaN(rating)) {
+            total += rating;
+            count++;
+          }
+
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <strong>${entry['الاسم']}</strong> ⭐ ${entry['عدد النجوم']}<br>
+            ${entry['رأيك أو تعليقك']}<hr>
+          `;
+          container.appendChild(div);
+        });
+
+        const average = count > 0 ? (total / count).toFixed(1) : '—';
+        averageBox.innerHTML = `⭐ متوسط التقييم: <strong>${average}</strong> من أصل 5`;
+      },
+      simpleSheet: true
+    });
+  });
+</script>
 <!<section id="faq">
   <h2>الأسئلة الشائعة</h2>
 
