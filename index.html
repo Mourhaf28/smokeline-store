@@ -176,10 +176,10 @@
   </div>
 
   <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendHybridRating(event)">
-    <input type="text" id="userName" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
-    <input type="tel" id="userPhone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
-    <textarea id="userComment" placeholder="رأيك أو تعليقك" required style="margin:5px; width:90%;"></textarea><br>
-    <input type="hidden" id="userStars">
+    <input type="text" id="name" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
+    <input type="tel" id="phone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
+    <textarea id="comment" placeholder="رأيك أو تعليقك" required style="margin:5px; width:90%;"></textarea><br>
+    <input type="hidden" id="stars">
     <button type="submit" style="margin-top:10px;">تأكيد التقييم</button>
   </form>
 
@@ -199,7 +199,7 @@
 
 <script>
   function selectStars(stars) {
-    document.getElementById('userStars').value = stars;
+    document.getElementById('stars').value = stars;
     document.getElementById('rating-form').style.display = 'block';
     document.getElementById('thankYouMessage').style.display = 'none';
   }
