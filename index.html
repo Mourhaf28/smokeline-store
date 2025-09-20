@@ -206,10 +206,10 @@
 
   function sendHybridRating(e) {
     e.preventDefault();
-    const name = document.getElementById('userName').value.trim();
-    const phone = document.getElementById('userPhone').value.trim();
-    const comment = document.getElementById('userComment').value.trim();
-    const stars = document.getElementById('userStars').value;
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const comment = document.getElementById('comment').value.trim();
+    const stars = document.getElementById('stars').value;
 
     if (!stars) {
       alert("يرجى اختيار عدد النجوم قبل إرسال التقييم");
