@@ -167,84 +167,89 @@
 <div style="text-align:center; font-family:Arial;">
   <h3 style="color:#e5c9a0;">قيّم تجربتك معنا</h3>
 
-  <div style="font-size:24px; margin-bottom:10px;">
-    <span onclick="selectStars(1)">★<sub style="font-size:14px;color:#ccc;">1</sub></span>
-    <span onclick="selectStars(2)">★<sub style="font-size:14px;color:#ccc;">2</sub></span>
-    <span onclick="selectStars(3)">★<sub style="font-size:14px;color:#ccc;">3</sub></span>
-    <span onclick="selectStars(4)">★<sub style="font-size:14px;color:#ccc;">4</sub></span>
-    <span onclick="selectStars(5)">★<sub style="font-size:14px;color:#ccc;">5</sub></span>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تقييم SmokeLine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; background: #111; color: #e5c9a0; text-align: center; padding: 20px; }
+    input, textarea, button { width: 90%; margin: 8px 0; padding: 10px; font-size: 16px; border: none; border-radius: 5px; }
+    button { background: #e5c9a0; color: #111; font-weight: bold; }
+    .stars span { font-size: 24px; cursor: pointer; padding: 5px; }
+    #thankYou { display: none; margin-top: 20px; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+  <iframe src="https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec"
+          width="100%" height="40" style="border:none; background:transparent;"></iframe>
+
+  <h2>💛 قيّم تجربتك معنا</h2>
+
+  <div class="stars">
+    <span onclick="setStars(1)">★</span>
+    <span onclick="setStars(2)">★</span>
+    <span onclick="setStars(3)">★</span>
+    <span onclick="setStars(4)">★</span>
+    <span onclick="setStars(5)">★</span>
   </div>
 
-  <form id="rating-form" style="display:none; margin-top:20px;" onsubmit="sendHybridRating(event)">
-    <input type="text" id="name" placeholder="الاسم" required style="margin:5px; width:90%;"><br>
-    <input type="tel" id="phone" placeholder="رقم واتساب" required style="margin:5px; width:90%;"><br>
-    <textarea id="comment" placeholder="رأيك أو تعليقك" required style="margin:5px; width:90%;"></textarea><br>
+  <form id="ratingForm" onsubmit="submitRating(event)">
+    <input type="text" id="name" placeholder="الاسم" required>
+    <input type="tel" id="phone" placeholder="رقم واتساب" required>
+    <textarea id="comment" placeholder="رأيك أو تعليقك" required></textarea>
     <input type="hidden" id="stars">
-    <button type="submit" style="margin-top:10px;">تأكيد التقييم</button>
+    <button type="submit">إرسال التقييم</button>
   </form>
 
-  <div id="thankYouMessage" style="display:none; margin-top:20px; color:#e5c9a0; font-size:18px;">
-    💛 شكرًا من القلب على تقييمك! رأيك يهمّنا ويساعدنا نكون أفضل دائمًا.
-  </div>
+  <div id="thankYou">شكرًا من القلب على تقييمك 💛</div>
 
-  <div style="margin-top:30px;">
-    <iframe
-      src="https://script.google.com/macros/s/AKfycbylW7ONJNXxIp_j4ScSdaK2kB6WAYqUTIOq4vjq5WZMleV0gUWJbVxCeBu7S7N7mMApsA/exec"
-      width="100%"
-      height="60"
-      style="border:none; background:transparent;">
-    </iframe>
-  </div>
-</div>
-
-<script>
-  function selectStars(stars) {
-    document.getElementById('stars').value = stars;
-    document.getElementById('rating-form').style.display = 'block';
-    document.getElementById('thankYouMessage').style.display = 'none';
-  }
-
-  function sendHybridRating(e) {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const comment = document.getElementById('comment').value.trim();
-    const stars = document.getElementById('stars').value;
-
-    if (!stars) {
-      alert("يرجى اختيار عدد النجوم قبل إرسال التقييم");
-      return;
+  <script>
+    function setStars(n) {
+      document.getElementById('stars').value = n;
     }
 
-    const data = JSON.stringify({ name, phone, comment, stars });
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://script.google.com/macros/s/AKfycbylW7ONJNXxIp_j4ScSdaK2kB6WAYqUTIOq4vjq5WZMleV0gUWJbVxCeBu7S7N7mMApsA/exec", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    function submitRating(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const comment = document.getElementById('comment').value.trim();
+      const stars = document.getElementById('stars').value;
 
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        const response = xhr.responseText;
-        if (response === "duplicate") {
-          alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
-        } else if (response === "saved") {
-          document.getElementById('rating-form').reset();
-          document.getElementById('rating-form').style.display = 'none';
-          document.getElementById('thankYouMessage').style.display = 'block';
+      if (!stars) return alert("يرجى اختيار عدد النجوم");
+
+      const data = JSON.stringify({ name, phone, comment, stars });
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          if (xhr.responseText === "duplicate") {
+            alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
+          } else if (xhr.responseText === "saved") {
+            document.getElementById('ratingForm').reset();
+            document.getElementById('thankYou').style.display = 'block';
+          } else {
+            alert("رد غير متوقع: " + xhr.responseText);
+          }
         } else {
-          alert("رد غير متوقع من الخادم: " + response);
+          alert("خطأ في الاتصال: " + xhr.status);
         }
-      } else {
-        alert("خطأ في الاتصال: " + xhr.status);
-      }
-    };
+      };
 
-    xhr.onerror = function () {
-      alert("فشل الاتصال بالخادم");
-    };
+      xhr.onerror = function () {
+        alert("فشل الاتصال بالخادم");
+      };
 
-    xhr.send(data);
-  }
-</script>
+      xhr.send(data);
+    }
+  </script>
+
+</body>
+</html>
 <!<section id="faq">
   <h2>الأسئلة الشائعة</h2>
 
