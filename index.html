@@ -164,7 +164,6 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
-
 <div style="text-align:center; font-family:Arial;">
   <h3 style="color:#e5c9a0;">قيّم تجربتك معنا</h3>
 
@@ -184,15 +183,13 @@
     <button type="submit" style="margin-top:10px;">تأكيد التقييم</button>
   </form>
 
-  <!-- ✅ رسالة شكر -->
   <div id="thankYouMessage" style="display:none; margin-top:20px; color:#e5c9a0; font-size:18px;">
     💛 شكرًا من القلب على تقييمك! رأيك يهمّنا ويساعدنا نكون أفضل دائمًا.
   </div>
 
-  <!-- ✅ متوسط التقييم -->
   <div style="margin-top:30px;">
     <iframe
-      src="https://script.google.com/macros/s/AKfycbw8Ql7pFo2_Zpea9jlrBgo4sX-UE8CCrABAM8ecga81H5NkLUs5GNjQTR1SHfB82Q0X/exec"
+      src="https://script.google.com/macros/s/AKfycbxvRWijd0CwTu4lgv8p1cpnaqYxvIo1XkWZGKuJ-F1CsIFVG5-HMF0HdUPwV7g67aok/exec"
       width="100%"
       height="60"
       style="border:none; background:transparent;">
@@ -214,9 +211,14 @@
     const comment = document.getElementById('userComment').value.trim();
     const stars = document.getElementById('userStars').value;
 
+    if (!stars) {
+      alert("يرجى اختيار عدد النجوم قبل إرسال التقييم");
+      return;
+    }
+
     const data = JSON.stringify({ name, phone, comment, stars });
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://script.google.com/macros/s/AKfycbw8Ql7pFo2_Zpea9jlrBgo4sX-UE8CCrABAM8ecga81H5NkLUs5GNjQTR1SHfB82Q0X/exec", true);
+    xhr.open("POST", "https://script.google.com/macros/s/AKfycbxvRWijd0CwTu4lgv8p1cpnaqYxvIo1XkWZGKuJ-F1CsIFVG5-HMF0HdUPwV7g67aok/exec", true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onload = function () {
