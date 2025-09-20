@@ -164,6 +164,7 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -196,7 +197,7 @@
   </div>
 
   <!-- نموذج التقييم -->
-  <form id="ratingForm" onsubmit="submitRating(event)">
+  <form id="ratingForm">
     <input type="text" id="name" placeholder="الاسم" required>
     <input type="tel" id="phone" placeholder="رقم واتساب" required>
     <textarea id="comment" placeholder="رأيك أو تعليقك" required></textarea>
@@ -207,11 +208,12 @@
   <div id="thankYou">شكرًا من القلب على تقييمك 💛</div>
 
   <script>
-    // اختيار النجوم وتلوينها
     document.addEventListener("DOMContentLoaded", function () {
       const starsContainer = document.getElementById("starsContainer");
       const hiddenStars = document.getElementById("stars");
+      const form = document.getElementById("ratingForm");
 
+      // اختيار النجوم
       starsContainer.querySelectorAll("span").forEach(star => {
         star.addEventListener("click", function () {
           const selected = this.getAttribute("data-star");
@@ -222,46 +224,46 @@
           });
         });
       });
-    });
 
-    // إرسال التقييم
-    function submitRating(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const comment = document.getElementById('comment').value.trim();
-      const stars = document.getElementById('stars').value;
+      // إرسال التقييم
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const comment = document.getElementById('comment').value.trim();
+        const stars = hiddenStars.value;
 
-      if (!stars) return alert("يرجى اختيار عدد النجوم");
+        if (!stars) return alert("يرجى اختيار عدد النجوم");
 
-      const data = JSON.stringify({ name, phone, comment, stars });
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec", true);
-      xhr.setRequestHeader("Content-Type", "application/json");
+        const data = JSON.stringify({ name, phone, comment, stars });
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
 
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          if (xhr.responseText === "duplicate") {
-            alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
-          } else if (xhr.responseText === "saved") {
-            document.getElementById('ratingForm').reset();
-            document.getElementById('thankYou').style.display = 'block';
-            document.getElementById('stars').value = "";
-            document.querySelectorAll(".stars span").forEach(s => s.style.color = "#555");
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            if (xhr.responseText === "duplicate") {
+              alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
+            } else if (xhr.responseText === "saved") {
+              form.reset();
+              hiddenStars.value = "";
+              starsContainer.querySelectorAll("span").forEach(s => s.style.color = "#555");
+              document.getElementById('thankYou').style.display = 'block';
+            } else {
+              alert("رد غير متوقع: " + xhr.responseText);
+            }
           } else {
-            alert("رد غير متوقع: " + xhr.responseText);
+            alert("خطأ في الاتصال: " + xhr.status);
           }
-        } else {
-          alert("خطأ في الاتصال: " + xhr.status);
-        }
-      };
+        };
 
-      xhr.onerror = function () {
-        alert("فشل الاتصال بالخادم");
-      };
+        xhr.onerror = function () {
+          alert("فشل الاتصال بالخادم");
+        };
 
-      xhr.send(data);
-    }
+        xhr.send(data);
+      });
+    });
   </script>
 
 </body>
