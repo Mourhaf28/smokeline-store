@@ -165,29 +165,10 @@
 })();
 </script>
 
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>تقييم SmokeLine</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: sans-serif; background: #111; color: #e5c9a0; text-align: center; padding: 20px; }
-    input, textarea, button { width: 90%; margin: 8px 0; padding: 10px; font-size: 16px; border: none; border-radius: 5px; }
-    button { background: #e5c9a0; color: #111; font-weight: bold; }
-    .stars span { font-size: 24px; cursor: pointer; padding: 5px; color: #555; }
-    #thankYou { display: none; margin-top: 20px; font-size: 18px; }
-  </style>
-</head>
-<body>
-
-  <!-- متوسط التقييم -->
-  <iframe src="https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec"
-          width="100%" height="40" style="border:none; background:transparent;"></iframe>
-
+<!-- ✅ قسم التقييم داخل الصفحة -->
+<section id="ratingSection" style="text-align:center; padding:20px; background:#111; color:#e5c9a0; font-family:sans-serif;">
   <h2>💛 قيّم تجربتك معنا</h2>
 
-  <!-- اختيار النجوم -->
   <div class="stars" id="starsContainer">
     <span data-star="1">★</span>
     <span data-star="2">★</span>
@@ -196,8 +177,7 @@
     <span data-star="5">★</span>
   </div>
 
-  <!-- نموذج التقييم -->
-  <form id="ratingForm">
+  <form id="ratingForm" style="margin-top:10px;">
     <input type="text" id="name" placeholder="الاسم" required>
     <input type="tel" id="phone" placeholder="رقم واتساب" required>
     <textarea id="comment" placeholder="رأيك أو تعليقك" required></textarea>
@@ -205,69 +185,8 @@
     <button type="submit">إرسال التقييم</button>
   </form>
 
-  <div id="thankYou">شكرًا من القلب على تقييمك 💛</div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const starsContainer = document.getElementById("starsContainer");
-      const hiddenStars = document.getElementById("stars");
-      const form = document.getElementById("ratingForm");
-
-      // اختيار النجوم
-      starsContainer.querySelectorAll("span").forEach(star => {
-        star.addEventListener("click", function () {
-          const selected = this.getAttribute("data-star");
-          hiddenStars.value = selected;
-
-          starsContainer.querySelectorAll("span").forEach(s => {
-            s.style.color = Number(s.getAttribute("data-star")) <= selected ? "#e5c9a0" : "#555";
-          });
-        });
-      });
-
-      // إرسال التقييم
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const name = document.getElementById('name').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const comment = document.getElementById('comment').value.trim();
-        const stars = hiddenStars.value;
-
-        if (!stars) return alert("يرجى اختيار عدد النجوم");
-
-        const data = JSON.stringify({ name, phone, comment, stars });
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            if (xhr.responseText === "duplicate") {
-              alert("لقد قمت بالتقييم مسبقًا. شكرًا لك!");
-            } else if (xhr.responseText === "saved") {
-              form.reset();
-              hiddenStars.value = "";
-              starsContainer.querySelectorAll("span").forEach(s => s.style.color = "#555");
-              document.getElementById('thankYou').style.display = 'block';
-            } else {
-              alert("رد غير متوقع: " + xhr.responseText);
-            }
-          } else {
-            alert("خطأ في الاتصال: " + xhr.status);
-          }
-        };
-
-        xhr.onerror = function () {
-          alert("فشل الاتصال بالخادم");
-        };
-
-        xhr.send(data);
-      });
-    });
-  </script>
-
-</body>
-</html>
+  <div id="response" style="margin-top:15px; font-size:18px;"></div>
+</section>
 <!<section id="faq">
   <h2>الأسئلة الشائعة</h2>
 
@@ -1120,5 +1039,68 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const starsContainer = document.getElementById("starsContainer");
+    const hiddenStars = document.getElementById("stars");
+    const form = document.getElementById("ratingForm");
+    const responseBox = document.getElementById("response");
+
+    // اختيار النجوم
+    starsContainer.querySelectorAll("span").forEach(star => {
+      star.addEventListener("click", function () {
+        const selected = this.getAttribute("data-star");
+        hiddenStars.value = selected;
+        starsContainer.querySelectorAll("span").forEach(s => {
+          s.style.color = Number(s.getAttribute("data-star")) <= selected ? "#e5c9a0" : "#555";
+        });
+      });
+    });
+
+    // إرسال التقييم
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      responseBox.textContent = "📡 جاري الإرسال...";
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const comment = document.getElementById('comment').value.trim();
+      const stars = hiddenStars.value;
+
+      if (!stars) {
+        responseBox.textContent = "⚠️ يرجى اختيار عدد النجوم";
+        return;
+      }
+
+      const data = JSON.stringify({ name, phone, comment, stars });
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          if (xhr.responseText === "duplicate") {
+            responseBox.textContent = "⚠️ لقد قمت بالتقييم مسبقًا. شكرًا لك!";
+          } else if (xhr.responseText === "saved") {
+            responseBox.textContent = "✅ تم حفظ التقييم. شكرًا من القلب!";
+            form.reset();
+            hiddenStars.value = "";
+            starsContainer.querySelectorAll("span").forEach(s => s.style.color = "#555");
+          } else {
+            responseBox.textContent = "❓ رد غير متوقع: " + xhr.responseText;
+          }
+        } else {
+          responseBox.textContent = "❌ خطأ في الاتصال: " + xhr.status;
+        }
+      };
+
+      xhr.onerror = function () {
+        responseBox.textContent = "❌ فشل الاتصال بالخادم";
+      };
+
+      xhr.send(data);
+    });
+  });
+  </script>
 </body>
 </html>
