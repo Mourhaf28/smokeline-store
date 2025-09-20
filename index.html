@@ -164,8 +164,6 @@
   clearBtn.addEventListener('click', () => { input.value = ''; results.innerHTML = ''; });
 })();
 </script>
-
-<!-- ✅ قسم التقييم داخل الصفحة -->
 <section id="ratingSection" style="text-align:center; padding:20px; background:#111; color:#e5c9a0; font-family:sans-serif;">
   <h2>💛 قيّم تجربتك معنا</h2>
 
@@ -187,7 +185,6 @@
 
   <div id="response" style="margin-top:15px; font-size:18px;"></div>
 </section>
-<!<section id="faq">
   <h2>الأسئلة الشائعة</h2>
 
   <details>
@@ -1038,8 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
 </script>
-</script>
-  <script>
+<script>
   document.addEventListener("DOMContentLoaded", function () {
     const starsContainer = document.getElementById("starsContainer");
     const hiddenStars = document.getElementById("stars");
@@ -1074,7 +1070,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = JSON.stringify({ name, phone, comment, stars });
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://script.google.com/macros/s/AKfycbwaohnrka_xy2X5WUJ-dHJRSDnUnd7wjNs6UuJ7wurCl2rHWR_GaSMgB9g3lRborm-edg/exec", true);
+      xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQW33LaOK8ES_5tmajcAG5G4QOa__SThjdm1SZzLP2jwYpfZokDODk8R6Q25trBEjGBg/exec", true);
       xhr.setRequestHeader("Content-Type", "application/json");
 
       xhr.onload = function () {
@@ -1095,12 +1091,12 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       xhr.onerror = function () {
-        responseBox.textContent = "❌ فشل الاتصال بالخادم";
+        responseBox.textContent = "❌ فشل الوصول للخادم. تأكد من الرابط أو جرب من متصفح مختلف.";
       };
 
       xhr.send(data);
     });
   });
-  </script>
+</script>
 </body>
 </html>
