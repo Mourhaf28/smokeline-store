@@ -315,21 +315,7 @@
 </style>
 
 <!-- وظائف الزر والأسئلة -->
-<script>
-  function toggleFAQ(){
-    const section = document.getElementById("faq-section");
-    section.style.display = section.style.display === "none" ? "block" : "none";
-  }
 
-  document.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll(".faq-question").forEach(btn => {
-      btn.addEventListener("click", function(){
-        const answer = this.nextElementSibling;
-        answer.style.display = answer.style.display === "block" ? "none" : "block";
-      });
-    });
-  });
-</script>
 <!-- START: شريط عروض مخصص -->
 <style>
   /* شريط العروض العام */
@@ -1101,5 +1087,20 @@
   console.log('✅ Search initialized. STATIC_INDEX size =', STATIC_INDEX.length);
 })();
 </script>
+  <script>
+  function toggleFAQ(){
+    const section = document.getElementById("faq-section");
+    section.style.display = section.style.display === "none" ? "block" : "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll(".faq-question").forEach(btn => {
+      btn.addEventListener("click", function(){
+        const answer = this.nextElementSibling;
+        answer.style.display = answer.style.display === "block" ? "none" : "block";
+      });
+    });
+  });
+  </script>
 </body>
 </html>
