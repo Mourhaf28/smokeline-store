@@ -177,6 +177,90 @@
     من نحن
   </a>
 </div>
+  <section id="ratingSection" style="text-align:center; padding:20px; background:#111; color:#e5c9a0; font-family:sans-serif;">
+  <h2>💛 قيّم تجربتك معنا</h2>
+
+  <div class="stars" id="starsContainer">
+    <span data-star="1">★</span>
+    <span data-star="2">★</span>
+    <span data-star="3">★</span>
+    <span data-star="4">★</span>
+    <span data-star="5">★</span>
+  </div>
+
+  <form id="ratingForm" style="margin-top:10px;">
+    <input type="text" id="name" placeholder="الاسم" required>
+    <input type="tel" id="phone" placeholder="رقم واتساب" required>
+    <textarea id="comment" placeholder="رأيك أو تعليقك" required></textarea>
+    <input type="hidden" id="stars">
+    <button type="submit">إرسال التقييم</button>
+  </form>
+
+  <div id="response" style="margin-top:15px; font-size:18px;"></div>
+  </section>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const starsContainer = document.getElementById("starsContainer");
+    const hiddenStars = document.getElementById("stars");
+    const form = document.getElementById("ratingForm");
+    const responseBox = document.getElementById("response");
+
+    // اختيار النجوم
+    starsContainer.querySelectorAll("span").forEach(star => {
+      star.addEventListener("click", function () {
+        const selected = this.getAttribute("data-star");
+        hiddenStars.value = selected;
+        starsContainer.querySelectorAll("span").forEach(s => {
+          s.style.color = Number(s.getAttribute("data-star")) <= selected ? "#e5c9a0" : "#555";
+        });
+      });
+    });
+
+    // إرسال التقييم
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      responseBox.textContent = "📡 جاري الإرسال...";
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const comment = document.getElementById('comment').value.trim();
+      const stars = hiddenStars.value;
+
+      if (!stars) {
+        responseBox.textContent = "⚠️ يرجى اختيار عدد النجوم";
+        return;
+      }
+
+      const data = JSON.stringify({ name, phone, comment, stars });
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQW33LaOK8ES_5tmajcAG5G4QOa__SThjdm1SZzLP2jwYpfZokDODk8R6Q25trBEjGBg/exec", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          if (xhr.responseText === "duplicate") {
+            responseBox.textContent = "⚠️ لقد قمت بالتقييم مسبقًا. شكرًا لك!";
+          } else if (xhr.responseText === "saved") {
+            responseBox.textContent = "✅ تم حفظ التقييم. شكرًا من القلب!";
+            form.reset();
+            hiddenStars.value = "";
+            starsContainer.querySelectorAll("span").forEach(s => s.style.color = "#555");
+          } else {
+            responseBox.textContent = "❓ رد غير متوقع: " + xhr.responseText;
+          }
+        } else {
+          responseBox.textContent = "❌ خطأ في الاتصال: " + xhr.status;
+        }
+      };
+
+      xhr.onerror = function () {
+        responseBox.textContent = "❌ فشل الوصول للخادم. تأكد من الرابط أو جرب من متصفح مختلف.";
+      };
+
+      xhr.send(data);
+    });
+  });
+  </script>
   <h2>الأسئلة الشائعة</h2>
 
   <details>
