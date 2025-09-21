@@ -209,63 +209,7 @@
     <p>قريباً سيتم إضافة قسم مخصص للصور، يرجى مراسلتنا لتزويدك بصورة للمنتج المطلوب.</p>
   </details>
 </section>
-<script>
-let pendingRating = null;
 
-function startRating(stars){
-  const rated = localStorage.getItem('siteRated');
-  if (rated) return alert('لقد قمت بتقييم الموقع مسبقًا.');
-
-  pendingRating = stars;
-  document.getElementById('user-form').style.display = 'block';
-  document.getElementById('rating-result').textContent = `اخترت ${stars} نجمة، يرجى إدخال اسمك ورقمك لتأكيد التقييم.`;
-}
-
-function submitRating(e){
-  e.preventDefault();
-  const name = document.getElementById('userName').value.trim();
-  const phone = document.getElementById('userPhone').value.trim();
-  if (!name || !phone || !pendingRating) return alert('يرجى إدخال البيانات كاملة.');
-
-  // حفظ التقييم
-  localStorage.setItem('userName', name);
-  localStorage.setItem('userPhone', phone);
-  localStorage.setItem('siteRated', pendingRating);
-
-  // إرسال واتساب
-  const msg = `الزبون ${name} (${phone}) قيّم الموقع بـ ${pendingRating} نجوم ⭐`;
-  const encoded = encodeURIComponent(msg);
-  const whatsappLink = `https://wa.me/963XXXXXXXXX?text=${encoded}`; // ← ضع رقمك السوري هنا
-  window.open(whatsappLink, '_blank');
-
-  // تحديث المتوسط
-  let ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-  ratings.push(pendingRating);
-  localStorage.setItem('allRatings', JSON.stringify(ratings));
-
-  const sum = ratings.reduce((a,b) => a + b, 0);
-  const avg = (sum / ratings.length).toFixed(1);
-  document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
-  document.getElementById('rating-result').textContent = `شكرًا ${name}! تم تسجيل تقييمك: ${pendingRating} نجوم ⭐`;
-  document.getElementById('user-form').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const rated = localStorage.getItem('siteRated');
-  const ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-
-  if (ratings.length > 0){
-    const sum = ratings.reduce((a,b) => a + b, 0);
-    const avg = (sum / ratings.length).toFixed(1);
-    document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
-  }
-
-  if (rated){
-    const name = localStorage.getItem('userName');
-    document.getElementById('rating-result').textContent = `شكرًا ${name}! تقييمك: ${rated} نجوم ⭐`;
-  }
-});
-</script>
 <!-- START: شريط عروض مخصص -->
 <style>
   /* شريط العروض العام */
