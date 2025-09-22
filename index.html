@@ -157,52 +157,8 @@
   </style>
 </head>
 <body>
-<!-- زر الأسئلة الشائعة -->
-<div style="text-align:center; margin:30px 0;">
-  <button onclick="toggleFAQ()" style="background-color:#e5c9a0; color:#000; padding:10px 20px; border:none; border-radius:5px; font-weight:bold; cursor:pointer; transition:transform 0.3s ease;">
-    📚 الأسئلة الشائعة
-  </button>
-</div>
 
-<!-- قسم الأسئلة -->
-<section id="faq-section" style="display:none; background-color:#1a1a1a; padding:30px 20px; text-align:right;">
-  <h2 style="color:#e5c9a0; font-size:24px; margin-bottom:20px;">الأسئلة الشائعة</h2>
 
-  <div class="faq-item">
-    <button class="faq-question">💳 ماهي طرق الدفع؟</button>
-    <div class="faq-answer">الدفع نقداً عند الاستلام.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">🚚 كم يستغرق الطلب حتى استلمه؟</button>
-    <div class="faq-answer">التوصيل خلال ٤٨ ساعة كحد أقصى، نبذل قصارى جهدنا ليكون خلال ٢٤ ساعة.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">🕰️ ماهي أوقات الدوام؟</button>
-    <div class="faq-answer">نعمل على التوصيل خلال أيام التوصيل ماعدا يوم الجمعة.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">🎁 ما هي أفضل العروض؟</button>
-    <div class="faq-answer">العرضين الأول والثاني هم الأكثر طلباً.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">✅ هل منتجاتكم أصلية؟</button>
-    <div class="faq-answer">نعم بالتأكيد، نضمن الجودة ولدينا العديد من شهادات الزبائن.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">🔥 هل لديكم سيجار؟</button>
-    <div class="faq-answer">نعم بالتأكيد، يمكنك مراسلتنا للطلب. سنضيف قسم السيجار قريباً.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">🖼️ هل لديكم صور للمنتجات؟</button>
-    <div class="faq-answer">نعم بالتأكيد، يمكنك سؤالنا عن أي منتج وسنرسل لك صورة. سيضاف قسم الصور قريباً.</div>
-  </div>
-</section>
   <header>
   <a href="index.html" class="brand" aria-label="Smokeline store" style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;">
     <img src="logo.svg" alt="Smokeline store" style="height:48px;display:block;">
@@ -273,37 +229,51 @@
     من نحن
   </a>
   </div>
-  <h2>الأسئلة الشائعة</h2>
+  <!-- زر الأسئلة الشائعة -->
+<div style="text-align:center; margin:30px 0;">
+  <button onclick="toggleFAQ()" style="background-color:#e5c9a0; color:#000; padding:10px 20px; border:none; border-radius:5px; font-weight:bold; cursor:pointer; transition:transform 0.3s ease;">
+    📚 الأسئلة الشائعة
+  </button>
+</div>
 
-  <details>
-    <summary>ما هي طرق الدفع؟</summary>
-    <p>الدفع نقداً عند الاستلام.</p>
-  </details>
+<!-- قسم الأسئلة -->
+<section id="faq-section" style="display:none; background-color:#1a1a1a; padding:30px 20px; text-align:right;">
+  <h2 style="color:#e5c9a0; font-size:24px; margin-bottom:20px;">الأسئلة الشائعة</h2>
 
-  <details>
-    <summary>هل يوجد ضمان على المنتجات؟</summary>
-    <p>نضمن جودة المنتجات بنسبة ١٠٠٪، في حال وجود أي مشكلة متعلقة بنوع الطلب يرجى عدم فتح الطلب والتواصل معنا مباشرة ليتم استبداله.</p>
-  </details>
+  <div class="faq-item">
+    <button class="faq-question">💳 ماهي طرق الدفع؟</button>
+    <div class="faq-answer">الدفع نقداً عند الاستلام.</div>
+  </div>
 
-  <details>
-    <summary>هل يوجد لديكم سيجار؟</summary>
-    <p>نعم بالتأكيد، سنضيف قسم السيجار قريباً. لطلب سيجار الآن يرجى مراسلتنا عبر واتساب.</p>
-  </details>
+  <div class="faq-item">
+    <button class="faq-question">🚚 كم يستغرق الطلب حتى استلمه؟</button>
+    <div class="faq-answer">التوصيل خلال ٤٨ ساعة كحد أقصى، نبذل قصارى جهدنا ليكون خلال ٢٤ ساعة.</div>
+  </div>
 
-  <details>
-    <summary>ما الفرق بين العروض الستة المعروضة؟</summary>
-    <p>يوجد فرق في الأسعار والجودة. أفضل العروض هما العرض ١ و العرض ٢.</p>
-  </details>
+  <div class="faq-item">
+    <button class="faq-question">🕰️ ماهي أوقات الدوام؟</button>
+    <div class="faq-answer">نعمل على التوصيل خلال أيام التوصيل ماعدا يوم الجمعة.</div>
+  </div>
 
-  <details>
-    <summary>ما هو الأكثر طلباً؟</summary>
-    <p>العرضين ١ و ٢ هما الأكثر طلباً.</p>
-  </details>
+  <div class="faq-item">
+    <button class="faq-question">🎁 ما هي أفضل العروض؟</button>
+    <div class="faq-answer">العرضين الأول والثاني هم الأكثر طلباً.</div>
+  </div>
 
-  <details>
-    <summary>هل يوجد صور للمنتجات؟</summary>
-    <p>قريباً سيتم إضافة قسم مخصص للصور، يرجى مراسلتنا لتزويدك بصورة للمنتج المطلوب.</p>
-  </details>
+  <div class="faq-item">
+    <button class="faq-question">✅ هل منتجاتكم أصلية؟</button>
+    <div class="faq-answer">نعم بالتأكيد، نضمن الجودة ولدينا العديد من شهادات الزبائن.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">🔥 هل لديكم سيجار؟</button>
+    <div class="faq-answer">نعم بالتأكيد، يمكنك مراسلتنا للطلب. سنضيف قسم السيجار قريباً.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">🖼️ هل لديكم صور للمنتجات؟</button>
+    <div class="faq-answer">نعم بالتأكيد، يمكنك سؤالنا عن أي منتج وسنرسل لك صورة. سيضاف قسم الصور قريباً.</div>
+  </div>
 </section>
 <script>
 let pendingRating = null;
