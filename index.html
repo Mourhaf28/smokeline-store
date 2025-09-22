@@ -128,6 +128,92 @@ button:hover {
       .wheel-wrap{ justify-content:center; }
     }
   </style>
+  <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #121212;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  h2 {
+    color: #e5c9a0;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #fff;
+    font-size: 16px;
+  }
+
+  .wheel {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(#e5c9a0 0deg 60deg, #222 60deg 120deg, #e5c9a0 120deg 180deg, #222 180deg 240deg, #e5c9a0 240deg 300deg, #222 300deg 360deg);
+    position: relative;
+    cursor: pointer;
+    transition: transform 2s ease-out;
+    margin: 20px auto;
+  }
+
+  .wheel:hover {
+    transform: scale(1.05);
+  }
+
+  .pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid #e5c9a0;
+  }
+
+  .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-weight: bold;
+  }
+
+  #luck-result {
+    display: none;
+    background-color: #222;
+    color: #e5c9a0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    max-width: 300px;
+    margin: 20px auto;
+  }
+
+  #whatsapp-link {
+    display: none;
+    background-color: #e5c9a0;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+  }
+
+  #whatsapp-link:hover {
+    transform: scale(1.03);
+  }
+  </style>
 </head>
 <body>
 
@@ -480,35 +566,21 @@ document.addEventListener('DOMContentLoaded', () => {
       <a class="whatsapp-btn" id="whatsappBtn" href="https://wa.me/963934511391?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A9%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%AA%D9%82%D8%AF%D9%8A%D9%85%20%D8%B7%D9%84%D8%A8%20%D9%85%D9%86%20SmokeLine.%20%D8%A7%D9%84%D8%B1%D8%AC%D8%A7%D8%A1%20%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%84%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D9%88%D8%A7%D9%84%D8%B4%D8%AD%D9%86.%20%D8%B4%D9%83%D8%B1%D8%A7%D9%8B" target="_blank" rel="noopener">أطلب بالواتساب</a>
     </div>
   </section>
+<section class="card">
+  <h2>🎲 لعبة الحظ</h2>
+  <p>كل طلب يحمل فرصة واحدة. اضغط على العجلة لتكشف النتيجة:</p>
 
-  <section class="card">
-    <h2>🎲 لعبة الحظ</h2>
-    <p>كل طلب يحمل فرصة واحدة. اضغط لتدور العجلة وتكشف النتيجة:</p>
+  <div class="wheel" id="wheel" onclick="spinWheel()">
+    <div class="pointer"></div>
+    <div class="center">اضغط هنا</div>
+  </div>
 
-    <div class="wheel-wrap">
-      <div class="wheel" aria-hidden="true">
-        <div class="pointer" aria-hidden="true"></div>
-        <div class="labels" id="wheelLabels" style="transform:rotate(0deg);">
-          <svg width="100%" height="100%" viewBox="0 0 200 200" style="transform:rotate(0deg);">
-            <g transform="translate(100,100)">
-              <text transform="rotate(30) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">خصم 5</text>
-              <text transform="rotate(90) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">هدية</text>
-              <text transform="rotate(150) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">لا شيء</text>
-              <text transform="rotate(210) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">خصم 5</text>
-              <text transform="rotate(270) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">هدية</text>
-              <text transform="rotate(330) translate(60,0)" font-size="12" text-anchor="middle" fill="#0b0b0b" font-weight="700">لا شيء</text>
-            </g>
-          </svg>
-        </div>
-        <div class="center" aria-hidden="true">لعبة الحظ</div>
-      </div>
+  <div id="luck-result"></div>
 
-      <div style="flex:1; min-width:200px;">
-        <button class="spin-btn" id="spinBtn" onclick="spinWheel(this)">دور العجلة</button>
-        <p id="luck-result" aria-live="polite"></p>
-      </div>
-    </div>
-  </section>
+  <a id="whatsapp-link" href="#" target="_blank" onclick="allowReplay()">
+    🛍️ طلب سريع عبر واتساب
+  </a>
+</section>
 <!-- START: عرض رقم 1 (مرتّب حسب الأقسام، قابل للطَي) -->
 <section class="card" id="offer-1" style="margin-top:22px;">
   <h2 style="color:var(--gold);margin-bottom:8px;">عرض رقم 1 — قائمة المنتجات</h2>
@@ -1143,6 +1215,46 @@ document.addEventListener('DOMContentLoaded', () => {
   section.style.display = section.style.display === "none" ? "block" : "none";
   window.scrollTo({ top: section.offsetTop, behavior: 'smooth' });
 }
-</script>
+  <script>
+  let hasPlayed = false;
+
+  function spinWheel() {
+    if (hasPlayed) return;
+
+    const wheel = document.getElementById("wheel");
+    const resultBox = document.getElementById("luck-result");
+    const whatsappLink = document.getElementById("whatsapp-link");
+
+    wheel.style.pointerEvents = "none";
+    hasPlayed = true;
+
+    const outcomes = ["خصم 5", "هدية", "فرصة قادمة", "خصم 10", "هدية", "فرصة قادمة"];
+    const angle = Math.floor(Math.random() * 360);
+    const finalAngle = angle + 720;
+
+    wheel.style.transform = `rotate(${finalAngle}deg)`;
+
+    setTimeout(() => {
+      const index = Math.floor(angle / 60) % outcomes.length;
+      const result = outcomes[index];
+
+      resultBox.textContent = `🎉 نتيجتك: ${result}`;
+      resultBox.style.display = "block";
+
+      const message = encodeURIComponent(`مرحباً، طلعت نتيجتي في لعبة الحظ: ${result} وأرغب بالطلب الآن.`);
+      const phone = "971XXXXXXXXX"; // ← غيّر هذا لرقمك الإماراتي بصيغة دولية
+      whatsappLink.href = `https://wa.me/${phone}?text=${message}`;
+      whatsappLink.style.display = "inline-block";
+
+      wheel.style.pointerEvents = "auto";
+    }, 2000);
+  }
+
+  function allowReplay() {
+    hasPlayed = false;
+    document.getElementById("luck-result").style.display = "none";
+    document.getElementById("whatsapp-link").style.display = "none";
+  }
+  </script>
 </body>
 </html>
