@@ -64,69 +64,7 @@ button:hover {
       margin-top:14px;
     }
     .order-btn:hover, .whatsapp-btn:hover, .spin-btn:hover{ filter:brightness(.95); transform:translateY(-1px); }
-    .whatsapp-btn { background: #128C7E; margin-left:10px; }
-    .spin-btn[disabled] { background:#444; cursor:default; box-shadow:none; color:#aaa; }
-    .card { background: var(--card); padding:20px; border-radius:12px; }
-    .wheel-wrap { display:flex; gap:18px; align-items:center; flex-wrap:wrap; }
-    .wheel {
-      width:220px;
-      height:220px;
-      border-radius:50%;
-      position:relative;
-      overflow:hidden;
-      border:6px solid rgba(224,192,128,.06);
-      box-shadow: 0 8px 30px rgba(0,0,0,.6), inset 0 2px 10px rgba(0,0,0,.4);
-      background: conic-gradient(
-        #c79b4a 0deg 60deg,
-        #b07f3f 60deg 120deg,
-        #c79b4a 120deg 180deg,
-        #8f6a32 180deg 240deg,
-        #c79b4a 240deg 300deg,
-        #8f6a32 300deg 360deg
-      );
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin:6px;
-    }
-    .wheel::after{
-      content:"";
-      position:absolute;
-      width:42%;
-      height:42%;
-      border-radius:50%;
-      background:linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.5));
-      z-index:2;
-    }
-    .wheel .pointer {
-      position:absolute;
-      top:-12px; left:50%;
-      transform:translateX(-50%);
-      width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:22px solid var(--gold);
-      z-index:6;
-    }
-    .wheel .labels {
-      position:absolute;
-      width:100%;
-      height:100%;
-      transform-origin:50% 50%;
-      z-index:3;
-    }
-    .wheel .center {
-      position:relative; z-index:4;
-      text-align:center;
-      color:#0b0b0b;
-      font-weight:800;
-      background:var(--gold);
-      width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;
-      box-shadow:0 6px 16px rgba(0,0,0,.4);
-    }
-    #luck-result { margin-top:12px; font-size:18px; color:var(--gold); min-height:28px; }
-    @media (max-width:480px){
-      .wheel { width:180px; height:180px; }
-      .order-btn, .whatsapp-btn, .spin-btn { width:100%; box-sizing:border-box; text-align:center; }
-      .wheel-wrap{ justify-content:center; }
-    }
+
   
   html {
     scroll-behavior: smooth;
