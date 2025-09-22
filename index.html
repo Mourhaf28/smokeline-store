@@ -732,26 +732,26 @@ button:hover {
 })();
 </script>
 <!-- END: عرض رقم 1 -->
-  <section id="rating-section">
+<section id="rating-section">
   <h2>قيّم موقع SmokeLine</h2>
 
-  <form id="ratingForm">
+  <form id="ratingForm" action="#">
     <input type="text" id="name" name="name" placeholder="الاسم" required><br><br>
     <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required><br><br>
 
     <div class="stars">
-      <input type="radio" id="star5" name="stars" value="5"><label for="star5">★</label>
-      <input type="radio" id="star4" name="stars" value="4"><label for="star4">★</label>
-      <input type="radio" id="star3" name="stars" value="3"><label for="star3">★</label>
-      <input type="radio" id="star2" name="stars" value="2"><label for="star2">★</label>
-      <input type="radio" id="star1" name="stars" value="1"><label for="star1">★</label>
+      <input type="radio" id="star1" name="stars" value="1" title="1 نجمة"><label for="star1">★</label>
+      <input type="radio" id="star2" name="stars" value="2" title="2 نجمتان"><label for="star2">★</label>
+      <input type="radio" id="star3" name="stars" value="3" title="3 نجوم"><label for="star3">★</label>
+      <input type="radio" id="star4" name="stars" value="4" title="4 نجوم"><label for="star4">★</label>
+      <input type="radio" id="star5" name="stars" value="5" title="5 نجوم"><label for="star5">★</label>
     </div>
 
     <button type="submit">إرسال التقييم</button>
   </form>
 
-  <div id="response">جاري تحميل التقييمات...</div>
-  </section>
+  <div id="response" style="margin-top:15px; font-weight:bold; color:var(--gold);">جاري تحميل التقييمات...</div>
+      </section>
   <footer>
     <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
     <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
