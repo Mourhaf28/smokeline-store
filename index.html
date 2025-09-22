@@ -181,6 +181,29 @@ button:hover {
   .wheel-wrap { justify-content: center; flex-direction: column; align-items: center; }
   .whatsapp-btn { width: 100%; box-sizing: border-box; text-align: center; }
       }
+    .stars {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.stars input {
+  display: none;
+}
+
+.stars label {
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+  color: gold;
+    }
   </style>
 </head>
 <body>
@@ -374,63 +397,7 @@ button:hover {
   });
 </script>
 </section>
-<script>
-let pendingRating = null;
 
-function startRating(stars){
-  const rated = localStorage.getItem('siteRated');
-  if (rated) return alert('لقد قمت بتقييم الموقع مسبقًا.');
-
-  pendingRating = stars;
-  document.getElementById('user-form').style.display = 'block';
-  document.getElementById('rating-result').textContent = `اخترت ${stars} نجمة، يرجى إدخال اسمك ورقمك لتأكيد التقييم.`;
-}
-
-function submitRating(e){
-  e.preventDefault();
-  const name = document.getElementById('userName').value.trim();
-  const phone = document.getElementById('userPhone').value.trim();
-  if (!name || !phone || !pendingRating) return alert('يرجى إدخال البيانات كاملة.');
-
-  // حفظ التقييم
-  localStorage.setItem('userName', name);
-  localStorage.setItem('userPhone', phone);
-  localStorage.setItem('siteRated', pendingRating);
-
-  // إرسال واتساب
-  const msg = `الزبون ${name} (${phone}) قيّم الموقع بـ ${pendingRating} نجوم ⭐`;
-  const encoded = encodeURIComponent(msg);
-  const whatsappLink = `https://wa.me/963XXXXXXXXX?text=${encoded}`; // ← ضع رقمك السوري هنا
-  window.open(whatsappLink, '_blank');
-
-  // تحديث المتوسط
-  let ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-  ratings.push(pendingRating);
-  localStorage.setItem('allRatings', JSON.stringify(ratings));
-
-  const sum = ratings.reduce((a,b) => a + b, 0);
-  const avg = (sum / ratings.length).toFixed(1);
-  document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
-  document.getElementById('rating-result').textContent = `شكرًا ${name}! تم تسجيل تقييمك: ${pendingRating} نجوم ⭐`;
-  document.getElementById('user-form').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const rated = localStorage.getItem('siteRated');
-  const ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-
-  if (ratings.length > 0){
-    const sum = ratings.reduce((a,b) => a + b, 0);
-    const avg = (sum / ratings.length).toFixed(1);
-    document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
-  }
-
-  if (rated){
-    const name = localStorage.getItem('userName');
-    document.getElementById('rating-result').textContent = `شكرًا ${name}! تقييمك: ${rated} نجوم ⭐`;
-  }
-});
-</script>
 <!-- START: شريط عروض مخصص -->
 <style>
   /* شريط العروض العام */
@@ -765,7 +732,26 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 <!-- END: عرض رقم 1 -->
-  
+  <section id="rating-section">
+  <h2>قيّم موقع SmokeLine</h2>
+
+  <form id="ratingForm">
+    <input type="text" id="name" name="name" placeholder="الاسم" required><br><br>
+    <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required><br><br>
+
+    <div class="stars">
+      <input type="radio" id="star5" name="stars" value="5"><label for="star5">★</label>
+      <input type="radio" id="star4" name="stars" value="4"><label for="star4">★</label>
+      <input type="radio" id="star3" name="stars" value="3"><label for="star3">★</label>
+      <input type="radio" id="star2" name="stars" value="2"><label for="star2">★</label>
+      <input type="radio" id="star1" name="stars" value="1"><label for="star1">★</label>
+    </div>
+
+    <button type="submit">إرسال التقييم</button>
+  </form>
+
+  <div id="response">جاري تحميل التقييمات...</div>
+  </section>
   <footer>
     <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
     <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
@@ -1179,6 +1165,53 @@ document.addEventListener('DOMContentLoaded', () => {
   section.style.display = section.style.display === "none" ? "block" : "none";
   window.scrollTo({ top: section.offsetTop, behavior: 'smooth' });
 }
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbzqNS0pB9bN4yxtAQtQvDJMv1Kwku3g2odJaXUpdxxgjDd7FozOwpQf7ZFBU05cpRjI/exec";
+
+  // تحميل المتوسط عند الدخول
+  fetch(scriptURL)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("response").innerText =
+        `المتوسط الحالي: ${data.average.toFixed(2)} ⭐ من أصل ${data.count} تقييم`;
+    });
+
+  // منع التقييم المكرر باستخدام localStorage
+  document.getElementById("ratingForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    if (localStorage.getItem("smokelineRated")) {
+      document.getElementById("response").innerText = "لقد قمت بالتقييم مسبقاً. شكراً!";
+      return;
+    }
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const stars = document.querySelector('input[name="stars"]:checked');
+
+    if (!name || !phone || !stars) {
+      document.getElementById("response").innerText = "يرجى تعبئة جميع الحقول واختيار عدد النجوم.";
+      return;
+    }
+
+    const params = new URLSearchParams({
+      name: name,
+      phone: phone,
+      stars: stars.value
+    });
+
+    fetch(scriptURL + "?" + params.toString())
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem("smokelineRated", "true");
+        document.getElementById("response").innerText =
+          `شكراً لتقييمك يا ${name}! المتوسط الآن: ${data.average.toFixed(2)} ⭐ من أصل ${data.count} تقييم`;
+      })
+      .catch(error => {
+        document.getElementById("response").innerText = "حدث خطأ أثناء الإرسال.";
+        console.error(error);
+      });
+  });
 </script>
 </body>
 </html>
