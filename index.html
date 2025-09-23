@@ -216,6 +216,7 @@ button[type="submit"]:hover {
 }
 
 .star-rating {
+.star-rating {
   direction: rtl;
   display: flex;
   justify-content: center;
@@ -233,21 +234,18 @@ button[type="submit"]:hover {
   transition: color 0.2s ease;
 }
 
+/* تلوين النجوم المختارة وما قبلها */
 .star-rating input[type="radio"]:checked ~ label {
-  color: #555;
+  color: #555; /* يرجع الباقي للون الرمادي */
 }
 
-.star-rating input[type="radio"]:checked + label,
 .star-rating label:hover,
-.star-rating label:hover ~ label {
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating input[type="radio"]:checked + label,
+.star-rating input[type="radio"]:checked + label ~ label {
   color: var(--gold);
 }
-
-.rating-response {
-  margin-top: 20px;
-  font-weight: bold;
-  color: var(--gold);
-  }
   </style>
 </head>
 <body>
