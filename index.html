@@ -780,6 +780,13 @@ button[type="submit"]:hover {
   <h2>قيّم SmokeLine</h2>
 
   <form id="ratingForm" action="javascript:void(0);">
+    <!-- بطاقة التقييم -->
+    <div class="rating-card">
+      <div class="rating-stars" id="averageStars">⭐ ...</div>
+      <div class="rating-count" id="ratingCount">جاري تحميل التقييمات...</div>
+      <div class="rating-note">انضم إلى من قيّموا SmokeLine</div>
+    </div>
+
     <input type="text" id="name" name="name" placeholder="الاسم" required><br><br>
     <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required><br><br>
 
@@ -793,9 +800,10 @@ button[type="submit"]:hover {
 
     <button type="submit">إرسال التقييم</button>
   </form>
-<div id="response" class="rating-response"></div>
-<div id="averageDisplay" class="rating-average"></div></section>
-  <footer>
+
+  <div id="response" class="rating-response"></div>
+</section>
+    <footer>
     <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
     <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
     <p>رمزية 303: بوابة التغيير، والانتقال من العادة إلى الهوية.</p>
@@ -1216,8 +1224,8 @@ button[type="submit"]:hover {
   fetch(scriptURL)
     .then(res => res.json())
     .then(data => {
-      document.getElementById("response").innerText =
-        `المتوسط الحالي: ${data.average} ⭐ من أصل ${data.count} تقييم`;
+      document.getElementById("averageStars").innerText = `⭐ ${data.average}`;
+      document.getElementById("ratingCount").innerText = `من أصل ${data.count} تقييم`;
     });
 
   // إرسال التقييم
@@ -1242,9 +1250,12 @@ button[type="submit"]:hover {
         if (text.includes("Duplicate rating")) {
           document.getElementById("response").innerText = "لقد قمت بالتقييم مسبقاً. شكراً!";
         } else {
+          document.getElementById("response").innerText = `شكراً لتقييمك يا ${name}!`;
+
+          // تحديث البطاقة بعد الإرسال
           const data = JSON.parse(text);
-          document.getElementById("response").innerText =
-            `شكراً لتقييمك يا ${name}! المتوسط الآن: ${data.average} ⭐ من أصل ${data.count} تقييم`;
+          document.getElementById("averageStars").innerText = `⭐ ${data.average}`;
+          document.getElementById("ratingCount").innerText = `من أصل ${data.count} تقييم`;
         }
       })
       .catch(error => {
@@ -1252,6 +1263,6 @@ button[type="submit"]:hover {
         console.error(error);
       });
   });
-    </script>
+</script>
 </body>
 </html>
