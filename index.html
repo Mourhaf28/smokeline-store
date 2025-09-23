@@ -1220,16 +1220,21 @@ button[type="submit"]:hover {
     <script>
   const scriptURL = "https://script.google.com/macros/s/AKfycbxTwZRm4vU-Brb1YDNaBfRblAdYuYMdo1gFmnS8-tppxFYblHAZMq5ZTqhgZl_1VGVU/exec";
 
-  // تحميل المتوسط عند الدخول
-  fetch(scriptURL)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("averageStars").innerText = `⭐ ${data.average}`;
-      document.getElementById("ratingCount").innerText = `من أصل ${data.count} تقييم`;
-    });
+  // تحميل المتوسط بعد تحميل الصفحة بالكامل
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch(scriptURL)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("averageStars").innerText = `⭐ ${data.average}`;
+        document.getElementById("ratingCount").innerText = `من أصل ${data.count} تقييم`;
+      })
+      .catch(() => {
+        document.getElementById("ratingCount").innerText = "تعذر تحميل التقييمات";
+      });
+  });
 
   // إرسال التقييم
-  document.getElementById("ratingForm").addEventListener("submit", function(e) {
+  document.getElementById("ratingForm").addEventListener("submit", function (e) {
     e.preventDefault();
     window.scrollTo({ top: window.scrollY, behavior: "instant" });
 
@@ -1263,6 +1268,6 @@ button[type="submit"]:hover {
         console.error(error);
       });
   });
-</script>
+    </script>
 </body>
 </html>
