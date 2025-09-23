@@ -181,6 +181,73 @@ button:hover {
   .wheel-wrap { justify-content: center; flex-direction: column; align-items: center; }
   .whatsapp-btn { width: 100%; box-sizing: border-box; text-align: center; }
       }
+    #rating-section {
+  text-align: center;
+  padding: 30px 15px;
+  background: #111;
+  color: #f5f5f5;
+  border-top: 2px solid var(--gold);
+}
+
+input[type="text"],
+input[type="tel"] {
+  width: 80%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background: #222;
+  color: #fff;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background: var(--gold);
+  color: #111;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background: #e6c200;
+}
+
+.star-rating {
+  direction: rtl;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.star-rating input[type="radio"] {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 2.5em;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+  color: #555;
+}
+
+.star-rating input[type="radio"]:checked + label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: var(--gold);
+}
+
+.rating-response {
+  margin-top: 20px;
+  font-weight: bold;
+  color: var(--gold);
+  }
   </style>
 </head>
 <body>
@@ -374,63 +441,7 @@ button:hover {
   });
 </script>
 </section>
-<script>
-let pendingRating = null;
 
-function startRating(stars){
-  const rated = localStorage.getItem('siteRated');
-  if (rated) return alert('لقد قمت بتقييم الموقع مسبقًا.');
-
-  pendingRating = stars;
-  document.getElementById('user-form').style.display = 'block';
-  document.getElementById('rating-result').textContent = `اخترت ${stars} نجمة، يرجى إدخال اسمك ورقمك لتأكيد التقييم.`;
-}
-
-function submitRating(e){
-  e.preventDefault();
-  const name = document.getElementById('userName').value.trim();
-  const phone = document.getElementById('userPhone').value.trim();
-  if (!name || !phone || !pendingRating) return alert('يرجى إدخال البيانات كاملة.');
-
-  // حفظ التقييم
-  localStorage.setItem('userName', name);
-  localStorage.setItem('userPhone', phone);
-  localStorage.setItem('siteRated', pendingRating);
-
-  // إرسال واتساب
-  const msg = `الزبون ${name} (${phone}) قيّم الموقع بـ ${pendingRating} نجوم ⭐`;
-  const encoded = encodeURIComponent(msg);
-  const whatsappLink = `https://wa.me/963XXXXXXXXX?text=${encoded}`; // ← ضع رقمك السوري هنا
-  window.open(whatsappLink, '_blank');
-
-  // تحديث المتوسط
-  let ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-  ratings.push(pendingRating);
-  localStorage.setItem('allRatings', JSON.stringify(ratings));
-
-  const sum = ratings.reduce((a,b) => a + b, 0);
-  const avg = (sum / ratings.length).toFixed(1);
-  document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
-  document.getElementById('rating-result').textContent = `شكرًا ${name}! تم تسجيل تقييمك: ${pendingRating} نجوم ⭐`;
-  document.getElementById('user-form').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const rated = localStorage.getItem('siteRated');
-  const ratings = JSON.parse(localStorage.getItem('allRatings') || '[]');
-
-  if (ratings.length > 0){
-    const sum = ratings.reduce((a,b) => a + b, 0);
-    const avg = (sum / ratings.length).toFixed(1);
-    document.getElementById('average-box').textContent = `متوسط التقييم العام: ${avg} من 5 (${ratings.length} زائر)`;
-  }
-
-  if (rated){
-    const name = localStorage.getItem('userName');
-    document.getElementById('rating-result').textContent = `شكرًا ${name}! تقييمك: ${rated} نجوم ⭐`;
-  }
-});
-</script>
 <!-- START: شريط عروض مخصص -->
 <style>
   /* شريط العروض العام */
@@ -765,7 +776,26 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 <!-- END: عرض رقم 1 -->
-  
+  <section id="rating-section">
+  <h2>قيّم SmokeLine</h2>
+
+  <form id="ratingForm" action="javascript:void(0);">
+    <input type="text" id="name" name="name" placeholder="الاسم" required><br><br>
+    <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required><br><br>
+
+    <div class="star-rating">
+      <input type="radio" id="star5" name="stars" value="5"><label for="star5" title="5 نجوم">★</label>
+      <input type="radio" id="star4" name="stars" value="4"><label for="star4" title="4 نجوم">★</label>
+      <input type="radio" id="star3" name="stars" value="3"><label for="star3" title="3 نجوم">★</label>
+      <input type="radio" id="star2" name="stars" value="2"><label for="star2" title="نجمتان">★</label>
+      <input type="radio" id="star1" name="stars" value="1"><label for="star1" title="نجمة واحدة">★</label>
+    </div><br>
+
+    <button type="submit">إرسال التقييم</button>
+  </form>
+
+  <div id="response" class="rating-response">جاري تحميل التقييمات...</div>
+</section>
   <footer>
     <p>SmokeLine Store – لأن كل نكهة تحمل طقسًا، وكل رقم يحمل رسالة.</p>
     <p>رمزية الرقم 5: التوازن بين الحواس الخمس، والقرار المدروس.</p>
@@ -1180,5 +1210,49 @@ document.addEventListener('DOMContentLoaded', () => {
   window.scrollTo({ top: section.offsetTop, behavior: 'smooth' });
 }
 </script>
+    <script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxTwZRm4vU-Brb1YDNaBfRblAdYuYMdo1gFmnS8-tppxFYblHAZMq5ZTqhgZl_1VGVU/exec";
+
+  // تحميل المتوسط عند الدخول
+  fetch(scriptURL)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("response").innerText =
+        `المتوسط الحالي: ${data.average} ⭐ من أصل ${data.count} تقييم`;
+    });
+
+  // إرسال التقييم
+  document.getElementById("ratingForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: window.scrollY, behavior: "instant" });
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const stars = document.querySelector('input[name="stars"]:checked');
+
+    if (!name || !phone || !stars) {
+      document.getElementById("response").innerText = "يرجى تعبئة جميع الحقول واختيار عدد النجوم.";
+      return;
+    }
+
+    const url = `${scriptURL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&stars=${stars.value}`;
+
+    fetch(url)
+      .then(res => res.text())
+      .then(text => {
+        if (text.includes("Duplicate rating")) {
+          document.getElementById("response").innerText = "لقد قمت بالتقييم مسبقاً. شكراً!";
+        } else {
+          const data = JSON.parse(text);
+          document.getElementById("response").innerText =
+            `شكراً لتقييمك يا ${name}! المتوسط الآن: ${data.average} ⭐ من أصل ${data.count} تقييم`;
+        }
+      })
+      .catch(error => {
+        document.getElementById("response").innerText = "حدث خطأ أثناء الإرسال.";
+        console.error(error);
+      });
+  });
+    </script>
 </body>
 </html>
