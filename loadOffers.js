@@ -1,9 +1,17 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const offerCode = "offer2";
+  const offerCode = "offer2"; // ← غيّر حسب العرض المطلوب
+
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) {
-    console.error(`❌ العنصر #${offerCode}-sections غير موجود`);
+    debug(`❌ العنصر #${offerCode}-sections غير موجود`);
     return;
+  }
+
+  function debug(msg) {
+    const log = document.createElement('div');
+    log.style = "background:#f9f9f9;padding:6px;margin:6px;border:1px solid #ccc;font-size:14px;color:#333";
+    log.textContent = msg;
+    document.body.appendChild(log);
   }
 
   function openOrder(name, price){
@@ -14,7 +22,12 @@ window.addEventListener('DOMContentLoaded', () => {
   fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
     .then(res => res.json())
     .then(data => {
+      debug(`✅ تم جلب البيانات من Google Sheets`);
       const offerItems = data.filter(item => item.offer === offerCode);
+      debug(`✅ العرض: ${offerCode}`);
+      debug(`✅ عدد المنتجات: ${offerItems.length}`);
+      debug(`✅ أسماء المنتجات: ${offerItems.map(p => p.name).join(" | ")}`);
+
       if (offerItems.length === 0) {
         container.innerHTML = "<p>لا توجد منتجات لهذا العرض.</p>";
         return;
@@ -32,6 +45,8 @@ window.addEventListener('DOMContentLoaded', () => {
       list.id = `${offerCode}-list`;
 
       offerItems.forEach((item, idx) => {
+        debug(`🟢 بناء المنتج: ${item.name} ← ${item.price} AED`);
+
         const row = document.createElement('div');
         row.className = 'offer-item';
         row.tabIndex = 0;
@@ -64,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
       container.appendChild(section);
     })
     .catch(err => {
-      console.error("⚠️ خطأ في جلب المنتجات:", err);
+      debug("⚠️ خطأ في جلب المنتجات: " + err.message);
       container.innerHTML = "<p>تعذر تحميل المنتجات. حاول لاحقًا.</p>";
     });
 });
