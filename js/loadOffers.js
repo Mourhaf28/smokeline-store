@@ -1,41 +1,35 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const offerCode = "offer2"; // ← تأكد أن اسم العرض مطابق للجدول
-
+  const offerCode = "offer2";
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) return;
-
-  function showDebug(msg) {
-    const box = document.createElement('div');
-    box.style = "background:#222;color:#eee;padding:6px;margin:6px;border:1px solid #444;font-size:14px";
-    box.textContent = msg;
-    document.body.appendChild(box);
-  }
 
   function openOrder(name, price){
     const label = `${name} — ${price} AED لكل 5 بوكس`;
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
+  fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
     .then(res => res.json())
     .then(data => {
-      showDebug("✅ تم جلب البيانات من Google Sheets");
-
-      const offerItems = data.filter(item => item.offer === offerCode);
+      const offerItems = data.filter(item => item.offer?.trim() === offerCode);
       if (offerItems.length === 0) {
         container.innerHTML = "<p>لا توجد منتجات لهذا العرض.</p>";
         return;
       }
 
-      // تقسيم حسب الأقسام
+      // تصنيف حسب القسم مع توحيد الكتابة
       const grouped = {};
+      const displayNames = {};
       offerItems.forEach(item => {
-        const section = item.title || "بدون تصنيف";
-        if (!grouped[section]) grouped[section] = [];
-        grouped[section].push(item);
+        const raw = item.title ?? "بدون تصنيف";
+        const key = raw.trim().toLowerCase();
+        displayNames[key] = raw.trim();
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(item);
       });
 
-      Object.entries(grouped).forEach(([sectionTitle, items], idx) => {
+      Object.entries(grouped).forEach(([key, items], idx) => {
+        const sectionTitle = displayNames[key];
         const section = document.createElement('div');
         section.className = 'offer-section';
 
@@ -80,7 +74,6 @@ window.addEventListener('DOMContentLoaded', () => {
         container.appendChild(section);
       });
 
-      // افتح أول قسم تلقائيًا
       const firstList = document.querySelector('.offer-list');
       if(firstList) {
         firstList.classList.add('show');
@@ -89,7 +82,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch(err => {
-      showDebug("⚠️ خطأ في جلب البيانات: " + err.message);
       container.innerHTML = "<p>تعذر تحميل المنتجات. حاول لاحقًا.</p>";
     });
 });
