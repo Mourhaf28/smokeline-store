@@ -583,12 +583,22 @@ button[type="submit"]:hover {
   .offer-list.show{ display:flex; }
   @media (max-width:640px){ .offer-item{ padding:12px; } }
 </style>
-
+<script src="/js/loadOffers.js"></script>
 <script>
-(function(){
-  // Sections and products (نقلت العناصر كما وردت في العرض)
+  let offerPrices = [];
+
+  // جلب الأسعار من العرض المطلوب (offer1)
+  fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
+    .then(res => res.json())
+    .then(data => {
+      offerPrices = data.filter(item => item.offer === "offer1");
+      renderSections(); // استدعِ بناء الصفحة بعد جلب الأسعار
+    });
+</script>
+<script>
+function renderSections() {
   const sections = [
-    {
+  {
       title: "مارلبورو",
       items: [
         { name: "بوكس كوفي كريم (.. بيج.. ارومي..)", price: "150" },
@@ -721,6 +731,7 @@ button[type="submit"]:hover {
     }
   ];
 
+
   const container = document.getElementById('offer1-sections');
 
   function openOrder(name, price){
@@ -728,49 +739,51 @@ button[type="submit"]:hover {
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
-  sections.forEach((sec, idx) => {
-    const secWrap = document.createElement('div');
-    secWrap.className = 'offer-section';
+  function renderSections() {
+    sections.forEach((sec, idx) => {
+      const secWrap = document.createElement('div');
+      secWrap.className = 'offer-section';
 
-    const head = document.createElement('div');
-    head.className = 'sec-head';
-    head.innerHTML = `<div class="sec-title">${sec.title}</div><div class="sec-toggle" aria-hidden="true">+</div>`;
+      const head = document.createElement('div');
+      head.className = 'sec-head';
+      head.innerHTML = `<div class="sec-title">${sec.title}</div><div class="sec-toggle" aria-hidden="true">+</div>`;
 
-    const list = document.createElement('div');
-    list.className = 'offer-list';
-    list.id = 'offer-list-' + idx;
+      const list = document.createElement('div');
+      list.className = 'offer-list';
+      list.id = 'offer-list-' + idx;
 
-    sec.items.forEach(it=>{
-      const row = document.createElement('div');
-      row.className = 'offer-item';
-      row.tabIndex = 0;
-      const t = document.createElement('div'); t.className='title'; t.textContent = it.name;
-      const p = document.createElement('div'); p.className='price'; p.textContent = it.price + ' AED';
-      row.appendChild(t); row.appendChild(p);
-      row.addEventListener('click', ()=> openOrder(it.name, it.price));
-      row.addEventListener('keydown', (e)=> { if(e.key==='Enter' || e.key===' ') openOrder(it.name, it.price); });
-      list.appendChild(row);
+      sec.items.forEach(it => {
+        const row = document.createElement('div');
+        row.className = 'offer-item';
+        row.tabIndex = 0;
+        const t = document.createElement('div'); t.className = 'title'; t.textContent = it.name;
+        const p = document.createElement('div'); p.className = 'price'; p.textContent = it.price + ' AED';
+        row.appendChild(t); row.appendChild(p);
+        row.addEventListener('click', () => openOrder(it.name, it.price));
+        row.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') openOrder(it.name, it.price);
+        });
+        list.appendChild(row);
+      });
+
+      head.addEventListener('click', () => {
+        const open = list.classList.toggle('show');
+        head.querySelector('.sec-toggle').textContent = open ? '−' : '+';
+      });
+
+      secWrap.appendChild(head);
+      secWrap.appendChild(list);
+      container.appendChild(secWrap);
     });
 
-    head.addEventListener('click', ()=>{
-      const open = list.classList.toggle('show');
-      head.querySelector('.sec-toggle').textContent = open ? '−' : '+';
-    });
-
-    secWrap.appendChild(head);
-    secWrap.appendChild(list);
-    container.appendChild(secWrap);
-  });
-
-  // افتح أول قسم تلقائياً
-  const firstList = document.querySelector('.offer-list');
-  if(firstList) {
-    firstList.classList.add('show');
-    const firstToggle = document.querySelector('.sec-head .sec-toggle');
-    if(firstToggle) firstToggle.textContent = '−';
+    // افتح أول قسم تلقائياً
+    const firstList = document.querySelector('.offer-list');
+    if (firstList) {
+      firstList.classList.add('show');
+      const firstToggle = document.querySelector('.sec-head .sec-toggle');
+      if (firstToggle) firstToggle.textContent = '−';
+    }
   }
-
-})();
 </script>
 <!-- END: عرض رقم 1 -->
   <section id="rating-section">
