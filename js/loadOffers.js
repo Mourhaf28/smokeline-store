@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const offerCode = "offer2"; // ← تأكد إن اسم العرض مطابق للجدول
+  const offerCode = "offer2"; // ← تأكد أن اسم العرض مطابق للجدول
 
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) return;
@@ -13,10 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function openOrder(name, price){
     const label = `${name} — ${price} AED لكل 5 بوكس`;
-    const phone = "971XXXXXXXXX"; // ← رقمك بصيغة دولية بدون +
-    const message = `مرحبا، أود طلب المنتج التالي:\n${label}`;
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.location.href = url;
+    window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
   fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
