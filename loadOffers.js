@@ -1,7 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  // ← غيّر هذا الكود حسب العرض المطلوب (مثلاً "offer1", "offer2", ...)
-  const offerCode = "offer1";
-
+  const offerCode = "offer2";
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) {
     console.error(`❌ العنصر #${offerCode}-sections غير موجود`);
