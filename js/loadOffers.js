@@ -8,7 +8,8 @@ window.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
+  fetch("
+https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZI4ANN5db6BySGBKMaQxsiGafYnQ7Q/exec")
     .then(res => {
       if (!res.ok) throw new Error("فشل الاتصال بالخادم");
       return res.json();
