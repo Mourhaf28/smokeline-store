@@ -11,6 +11,20 @@ window.addEventListener('DOMContentLoaded', () => {
   fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
     .then(res => res.json())
     .then(data => {
+      // عرض أسماء الأعمدة المقروءة فعليًا
+const keys = Object.keys(data[0]);
+const debugKeys = document.createElement('div');
+debugKeys.textContent = "🧩 الأعمدة المقروءة: " + keys.join(", ");
+debugKeys.style = "background:#222;color:#0f0;padding:6px;margin:6px;border:1px solid #444;font-size:14px";
+document.body.appendChild(debugKeys);
+
+// عرض أول 5 منتجات للتأكد من قراءة title
+data.slice(0, 5).forEach((item, i) => {
+  const debug = document.createElement('div');
+  debug.textContent = `🔍 المنتج ${i + 1}: ${item.name} | القسم: ${item.title}`;
+  debug.style = "background:#222;color:#eee;padding:6px;margin:6px;border:1px solid #444;font-size:14px";
+  document.body.appendChild(debug);
+});
       const offerItems = data.filter(item => item.offer?.trim() === offerCode);
       if (offerItems.length === 0) {
         container.innerHTML = "<p>لا توجد منتجات لهذا العرض.</p>";
