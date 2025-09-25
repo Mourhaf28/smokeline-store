@@ -1,6 +1,7 @@
-<script>
 window.addEventListener('DOMContentLoaded', () => {
-  const offerCode = "offer1"; // ← غيّر حسب العرض المطلوب
+  // ← غيّر هذا الكود حسب العرض المطلوب (مثلاً "offer1", "offer2", ...)
+  const offerCode = "offer1";
+
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) {
     console.error(`❌ العنصر #${offerCode}-sections غير موجود`);
@@ -69,4 +70,3 @@ window.addEventListener('DOMContentLoaded', () => {
       container.innerHTML = "<p>تعذر تحميل المنتجات. حاول لاحقًا.</p>";
     });
 });
-</script>
