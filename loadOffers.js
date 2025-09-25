@@ -1,3 +1,4 @@
+alert("✅ السكربت بدأ التنفيذ");
 window.addEventListener('DOMContentLoaded', () => {
   const offerCode = "offer2"; // ← غيّر حسب العرض المطلوب
 
