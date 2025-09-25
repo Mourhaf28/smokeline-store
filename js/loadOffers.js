@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
+  fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
     .then(res => res.json())
     .then(data => {
       showDebug("✅ تم جلب البيانات من Google Sheets");
