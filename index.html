@@ -721,6 +721,7 @@ button[type="submit"]:hover {
     }
   ];
 
+function buildOfferSections() {
   const container = document.getElementById('offer1-sections');
 
   function openOrder(name, price){
@@ -769,9 +770,24 @@ button[type="submit"]:hover {
     const firstToggle = document.querySelector('.sec-head .sec-toggle');
     if(firstToggle) firstToggle.textContent = '−';
   }
+}
+  fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
+  .then(res => res.json())
+  .then(data => {
+    const offerPrices = data.filter(item => item.offer === "offer1");
 
-})();
-</script>
+    sections.forEach(section => {
+      section.items.forEach(item => {
+        const match = offerPrices.find(p =>
+          p.name.includes(item.name) || item.name.includes(p.name)
+        );
+        item.price = match ? match.price : "--";
+      });
+    });
+
+    buildOfferSections(); // ← استدعاء البناء بعد التحديث
+  });
+  
 <!-- END: عرض رقم 1 -->
   <section id="rating-section">
   <h2>قيّم SmokeLine</h2>
