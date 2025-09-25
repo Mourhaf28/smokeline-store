@@ -9,7 +9,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error("فشل الاتصال بالخادم");
+      return res.json();
+    })
     .then(data => {
       const offerItems = data.filter(item => item.offer?.trim() === offerCode);
       if (offerItems.length === 0) {
@@ -40,7 +43,7 @@ window.addEventListener('DOMContentLoaded', () => {
         list.className = 'offer-list';
         list.id = `${offerCode}-list-${idx}`;
 
-        items.forEach((item, i) => {
+        items.forEach((item) => {
           const row = document.createElement('div');
           row.className = 'offer-item';
           row.tabIndex = 0;
@@ -80,7 +83,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if(firstToggle) firstToggle.textContent = '−';
       }
     })
-    .catch(err => {
-      container.innerHTML = "<p>تعذر تحميل المنتجات. حاول لاحقًا.</p>";
+    .catch(() => {
+      container.innerHTML = "<p>تعذر تحميل المنتجات. يرجى المحاولة لاحقًا.</p>";
     });
 });
