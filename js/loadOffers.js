@@ -1,13 +1,8 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const offerCode = "offer2";
+  const offerCode = "offer2"; // ← تأكد إن اسم العرض مطابق للجدول
 
   const container = document.getElementById(`${offerCode}-sections`);
-  if (!container) {
-    showDebug(`❌ العنصر #${offerCode}-sections غير موجود`);
-    return;
-  }
-
-  showDebug("✅ السكربت بدأ التنفيذ");
+  if (!container) return;
 
   function showDebug(msg) {
     const box = document.createElement('div');
@@ -18,66 +13,83 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function openOrder(name, price){
     const label = `${name} — ${price} AED لكل 5 بوكس`;
-    window.location.href = 'order.html?product=' + encodeURIComponent(label);
+    const phone = "971XXXXXXXXX"; // ← رقمك بصيغة دولية بدون +
+    const message = `مرحبا، أود طلب المنتج التالي:\n${label}`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.location.href = url;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
+  fetch("https://script.google.com/macros/s/AKfycbz2lfAaBvhqqDEeFzy4k-Bx2boWO7xbAM1VMzlgdA9-Y6AgSPWjb7WcPcuiYoPq0dmn/exec")
     .then(res => res.json())
     .then(data => {
       showDebug("✅ تم جلب البيانات من Google Sheets");
 
       const offerItems = data.filter(item => item.offer === offerCode);
-      showDebug(`✅ عدد المنتجات: ${offerItems.length}`);
-
       if (offerItems.length === 0) {
         container.innerHTML = "<p>لا توجد منتجات لهذا العرض.</p>";
         return;
       }
 
-      const section = document.createElement('div');
-      section.className = 'offer-section';
+      // تقسيم حسب الأقسام
+      const grouped = {};
+      offerItems.forEach(item => {
+        const section = item.title || "بدون تصنيف";
+        if (!grouped[section]) grouped[section] = [];
+        grouped[section].push(item);
+      });
 
-      const head = document.createElement('div');
-      head.className = 'sec-head';
-      head.innerHTML = `<div class="sec-title">منتجات ${offerCode}</div><div class="sec-toggle" aria-hidden="true">+</div>`;
+      Object.entries(grouped).forEach(([sectionTitle, items], idx) => {
+        const section = document.createElement('div');
+        section.className = 'offer-section';
 
-      const list = document.createElement('div');
-      list.className = 'offer-list show';
-      list.id = `${offerCode}-list`;
+        const head = document.createElement('div');
+        head.className = 'sec-head';
+        head.innerHTML = `<div class="sec-title">${sectionTitle}</div><div class="sec-toggle" aria-hidden="true">+</div>`;
 
-      offerItems.forEach((item, idx) => {
-        showDebug(`🟢 ${item.name} ← ${item.price} AED`);
+        const list = document.createElement('div');
+        list.className = 'offer-list';
+        list.id = `${offerCode}-list-${idx}`;
 
-        const row = document.createElement('div');
-        row.className = 'offer-item';
-        row.tabIndex = 0;
+        items.forEach((item, i) => {
+          const row = document.createElement('div');
+          row.className = 'offer-item';
+          row.tabIndex = 0;
 
-        const t = document.createElement('div');
-        t.className = 'title';
-        t.textContent = item.name;
+          const t = document.createElement('div');
+          t.className = 'title';
+          t.textContent = item.name;
 
-        const p = document.createElement('div');
-        p.className = 'price';
-        p.textContent = item.price + ' AED';
+          const p = document.createElement('div');
+          p.className = 'price';
+          p.textContent = item.price + ' AED';
 
-        row.appendChild(t);
-        row.appendChild(p);
-        row.addEventListener('click', () => openOrder(item.name, item.price));
-        row.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') openOrder(item.name, item.price);
+          row.appendChild(t);
+          row.appendChild(p);
+          row.addEventListener('click', () => openOrder(item.name, item.price));
+          row.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') openOrder(item.name, item.price);
+          });
+
+          list.appendChild(row);
         });
 
-        list.appendChild(row);
+        head.addEventListener('click', () => {
+          const open = list.classList.toggle('show');
+          head.querySelector('.sec-toggle').textContent = open ? '−' : '+';
+        });
+
+        section.appendChild(head);
+        section.appendChild(list);
+        container.appendChild(section);
       });
 
-      head.addEventListener('click', () => {
-        const open = list.classList.toggle('show');
-        head.querySelector('.sec-toggle').textContent = open ? '−' : '+';
-      });
-
-      section.appendChild(head);
-      section.appendChild(list);
-      container.appendChild(section);
+      // افتح أول قسم تلقائيًا
+      const firstList = document.querySelector('.offer-list');
+      if(firstList) {
+        firstList.classList.add('show');
+        const firstToggle = document.querySelector('.sec-head .sec-toggle');
+        if(firstToggle) firstToggle.textContent = '−';
+      }
     })
     .catch(err => {
       showDebug("⚠️ خطأ في جلب البيانات: " + err.message);
