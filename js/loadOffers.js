@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
+  fetch("https://script.google.com/macros/s/AKfycbygPdbO6-SI0Vl_WxxQ2BlyiDXDArU_m5udiGxNIWVB_cqLAlCGasEPBMqgvWaErw74/exec")
     .then(res => res.json())
     .then(data => {
       const offerItems = data.filter(item => item.offer?.trim() === offerCode);
