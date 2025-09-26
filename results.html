@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>نتائج البحث</title>
+  <title>🔎نتائج البحث انتظر قليلا🔍</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -44,6 +44,11 @@
 <body>
 
 <h1>نتائج البحث</h1>
+  <div style="text-align:center; margin-bottom:30px;">
+  <button onclick="goHome()" style="padding:10px 20px; font-size:16px; border-radius:6px; background-color:#e5c9a0; color:#000; border:none; cursor:pointer;">
+    ⬅️ الرجوع إلى الصفحة الرئيسية
+  </button>
+</div>
 <table id="results-table">
   <thead>
     <tr>
@@ -109,6 +114,10 @@ tableBody.appendChild(row);
       });
     });
 </script>
-
+<script>
+  function goHome() {
+    window.location.href = "index.html"; // غيّر الاسم إذا كانت صفحتك الرئيسية باسم مختلف
+  }
+</script>
 </body>
 </html>
