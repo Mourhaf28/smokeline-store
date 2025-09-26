@@ -736,9 +736,16 @@ button[type="submit"]:hover {
     <script src="js/loadoffer1.js"></script>
     <script>
   function toggleSearch() {
-    const box = document.getElementById("search-box");
-    box.style.display = box.style.display === "none" ? "block" : "none";
+  const box = document.getElementById("search-box");
+  const results = document.getElementById("search-results");
+  const isHidden = box.style.display === "none" || box.style.display === "";
+
+  box.style.display = isHidden ? "block" : "none";
+
+  if (!isHidden) {
+    results.innerHTML = ""; // إخفاء النتائج عند إغلاق مربع البحث
   }
+      }
 </script>
     <script src="js/loadAllOffers.js"></script>
 
