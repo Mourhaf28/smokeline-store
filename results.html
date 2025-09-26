@@ -94,13 +94,18 @@
 
       results.forEach(item => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item.name}</td>
-          <td>${item.price}</td>
-          <td>${item.offer}</td>
-          <td>${item.section}</td>
-        `;
-        tableBody.appendChild(row);
+row.style.cursor = "pointer";
+row.addEventListener("click", () => {
+  localStorage.setItem("selectedProduct", item.name);
+  window.location.href = "order.html";
+});
+row.innerHTML = `
+  <td>${item.name}</td>
+  <td>${item.price}</td>
+  <td>${item.offer}</td>
+  <td>${item.section}</td>
+`;
+tableBody.appendChild(row);
       });
     });
 </script>
