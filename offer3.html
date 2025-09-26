@@ -1,24 +1,32 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="utf-8" />
   <title>عرض رقم 3 — SmokeLine</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root{
-      --bg:#070707;
-      --card:#151515;
+      --bg:#0b0b0b;
+      --card:#161616;
       --muted:#e6dfc8;
       --gold:#d9b86a;
       --accent:#25D366;
+      --input-bg:#111;
     }
-    html,body{ height:100%; margin:0; padding:18px; background:linear-gradient(180deg,#060606,#111); color:var(--muted); font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-font-smoothing:antialiased; }
-    header{ display:flex; align-items:center; gap:12px; margin-bottom:14px; max-width:980px; margin-left:auto; margin-right:auto; }
-    a.back{ color:var(--muted); text-decoration:none; font-weight:700; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); background:transparent; }
+    body{
+      margin:0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(180deg,#070707,#121212);
+      color:var(--muted);
+      -webkit-font-smoothing:antialiased;
+      padding:18px;
+    }
+    header{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    a.back{ color:var(--muted); text-decoration:none; font-weight:700; border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px; background:transparent; }
     h1{ margin:0; color:var(--gold); font-size:20px; }
     p.lead{ margin:4px 0 0; color:#cfc6a3; font-size:13px; }
 
-    main.card{ max-width:980px; margin:12px auto 40px; background:var(--card); border-radius:12px; padding:14px; box-shadow:0 8px 20px rgba(0,0,0,.6); }
+    .card{ background:var(--card); border-radius:12px; padding:14px; box-shadow:0 8px 20px rgba(0,0,0,.6); max-width:980px; margin:12px auto 40px; }
     .offer-section { border-radius:10px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.04)); margin-bottom:10px; }
     .sec-head { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; background:rgba(0,0,0,0.06); }
     .sec-title { font-weight:800; color:#efe9d2; }
@@ -32,17 +40,18 @@
     .note{ color:#cfc6a3; font-size:13px; margin-top:8px; }
     @media (max-width:720px){
       body{ padding:12px; }
-      main.card{ padding:12px; margin:8px 6px 30px; }
+      .card{ padding:12px; margin:8px 6px 30px; }
       .offer-item .title{ font-size:14px; }
     }
   </style>
 </head>
 <body>
+
   <header>
     <a class="back" href="index.html" aria-label="العودة إلى المتجر">◀ المتجر</a>
     <div>
       <h1>عرض رقم 3</h1>
-      <p class="lead">كل منتج مذكور مع السعر لكل 5 بوكس. اضغط على المنتج لفتح نموذج الطلب.</p>
+      <p class="lead">كل منتج — السعر مذكور لكل 5 بوكس. اضغط على المنتج لفتح نموذج الطلب.</p>
     </div>
   </header>
 
@@ -50,6 +59,8 @@
     <div id="offer3-sections" style="display:flex;flex-direction:column;gap:10px;"></div>
     <p class="note">اضغط للطلب الآن وابدأ رحلتك مع SmokeLine. التوصيل داخل الإمارات خلال 24 ساعة.</p>
   </main>
-<script src="js/loadoffer3.js"></script>
+
+  <script src="js/loadoffer3.js"></script>
+
 </body>
 </html>
