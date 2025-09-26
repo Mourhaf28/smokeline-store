@@ -20,12 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }));
     });
 
-  // تفعيل البحث عند الكتابة
-  searchInput.addEventListener('input', function(e) {
-    const query = e.target.value.trim().toLowerCase();
-    showSearchResults(query);
-  });
-
   // دالة عرض النتائج
   function showSearchResults(query) {
     resultsContainer.innerHTML = "";
