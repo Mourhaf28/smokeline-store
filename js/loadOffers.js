@@ -3,24 +3,39 @@ window.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) return;
 
+  function debug(msg) {
+    const box = document.createElement('div');
+    box.style = "background:#222;color:#0f0;padding:6px;margin:6px;border:1px solid #444;font-size:14px";
+    box.textContent = msg;
+    document.body.appendChild(box);
+  }
+
   function openOrder(name, price){
     const label = `${name} — ${price} AED لكل 5 بوكس`;
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
   }
 
-  fetch("
-https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZI4ANN5db6BySGBKMaQxsiGafYnQ7Q/exec")
-    .then(res => {
-      if (!res.ok) throw new Error("فشل الاتصال بالخادم");
-      return res.json();
-    })
+  fetch("https://script.google.com/macros/s/AKfycbyOcb7ygB_v1ZvK0HF5wwpBiGXYdtri_rHRYo_1UTQwyKyAh0NhDkNNMVrW6VCBD8cB/exec")
+    .then(res => res.json())
     .then(data => {
       const offerItems = data.filter(item => item.offer?.trim() === offerCode);
+      debug(`📦 عدد المنتجات لهذا العرض: ${offerItems.length}`);
+
       if (offerItems.length === 0) {
         container.innerHTML = "<p>لا توجد منتجات لهذا العرض.</p>";
         return;
       }
 
+      // عرض أسماء الأعمدة المقروءة فعليًا
+      const keys = Object.keys(offerItems[0]);
+      debug("🧩 الأعمدة المقروءة: " + keys.join(", "));
+
+      // عرض أول 5 منتجات لهذا العرض
+      offerItems.slice(0, 5).forEach((item, i) => {
+        debug(`🔍 المنتج ${i + 1}: ${item.name} | القسم: ${item.title}`);
+      });
+
+      // تصنيف حسب القسم مع توحيد الكتابة
       const grouped = {};
       const displayNames = {};
       offerItems.forEach(item => {
@@ -33,6 +48,8 @@ https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZ
 
       Object.entries(grouped).forEach(([key, items], idx) => {
         const sectionTitle = displayNames[key];
+        debug(`📂 قسم: ${sectionTitle} | عدد المنتجات: ${items.length}`);
+
         const section = document.createElement('div');
         section.className = 'offer-section';
 
@@ -44,7 +61,7 @@ https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZ
         list.className = 'offer-list';
         list.id = `${offerCode}-list-${idx}`;
 
-        items.forEach((item) => {
+        items.forEach((item, i) => {
           const row = document.createElement('div');
           row.className = 'offer-item';
           row.tabIndex = 0;
@@ -84,7 +101,8 @@ https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZ
         if(firstToggle) firstToggle.textContent = '−';
       }
     })
-    .catch(() => {
-      container.innerHTML = "<p>تعذر تحميل المنتجات. يرجى المحاولة لاحقًا.</p>";
+    .catch(err => {
+      debug("⚠️ خطأ في جلب البيانات: " + err.message);
+      container.innerHTML = "<p>تعذر تحميل المنتجات. حاول لاحقًا.</p>";
     });
 });
