@@ -39,7 +39,7 @@
     <form id="orderForm" novalidate>
       <label for="product">المنتج</label>
       <input type="text" id="product" name="product" placeholder="اكتب اسم المنتج أو اتركه افتراضي" />
-
+<input type="text" id="product-name" name="product-name" readonly style="width:100%; padding:10px; font-size:16px;">
       <div class="row">
         <div class="col">
           <label for="name">الاسم الكامل <span aria-hidden="true">*</span></label>
@@ -245,6 +245,12 @@
       updateFallback();
 
     })();
+  </script>
+  <script>
+  const selected = localStorage.getItem("selectedProduct");
+  if (selected) {
+    document.getElementById("product-name").value = selected;
+  }
   </script>
 </body>
 </html>
