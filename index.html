@@ -320,9 +320,11 @@ button[type="submit"]:hover {
   <button onclick="toggleAbout()">🧭 من نحن</button>
   <button onclick="toggleSearch()">🔍 بحث</button>
 </div>
-  <div id="search-box" style="display:none; text-align:center; margin-bottom:20px;">
-  <input type="text" placeholder="اكتب اسم المنتج..." style="padding:8px 12px; font-size:14px; width:80%; max-width:300px; border-radius:6px; border:1px solid #ccc;">
-  </div>
+  <div id="search-box" style="text-align:center; margin-bottom:20px;">
+  <input type="text" placeholder="اكتب اسم المنتج أو السعر..." style="padding:8px 12px; font-size:14px; width:80%; max-width:300px; border-radius:6px; border:1px solid #ccc;">
+</div>
+
+  <div id="search-results" style="margin-top:20px;"></div>
 
 <!-- قسم من نحن -->
 <section id="about-section" style="display:none; background-color:#1a1a1a; padding:30px 20px; text-align:right;">
@@ -725,5 +727,6 @@ button[type="submit"]:hover {
     box.style.display = box.style.display === "none" ? "block" : "none";
   }
 </script>
+    <script src="js/loadAllOffers.js"></script>
 </body>
 </html>
