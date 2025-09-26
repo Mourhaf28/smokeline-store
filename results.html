@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>نتائج البحث</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background-color: #0b0b0b;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #e5c9a0;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #1a1a1a;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #333;
+      text-align: right;
+    }
+    th {
+      background-color: #2c2c2c;
+      color: #e5c9a0;
+    }
+    tr:hover {
+      background-color: #222;
+    }
+    .no-results {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 16px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<h1>نتائج البحث</h1>
+<table id="results-table">
+  <thead>
+    <tr>
+      <th>المنتج</th>
+      <th>السعر (AED)</th>
+      <th>العرض</th>
+      <th>القسم</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="no-results" id="no-results" style="display:none;">لا توجد نتائج مطابقة.</div>
+
+<script>
+  const query = localStorage.getItem("searchQuery")?.toLowerCase().trim() ?? "";
+  const dataURL = "https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZI4ANN5db6BySGBKMaQxsiGafYnQ7Q/exec";
+
+  fetch(dataURL)
+    .then(res => res.json())
+    .then(data => {
+      const allProducts = data.filter(item => {
+        const offer = item.offer?.trim();
+        return ["offer1", "offer2", "offer3", "offer4", "offer5", "offer6"].includes(offer);
+      }).map(item => ({
+        name: item.name?.trim() ?? "بدون اسم",
+        price: parseFloat(item.price) || 0,
+        offer: item.offer?.trim(),
+        section: item.title?.trim() ?? "بدون تصنيف"
+      }));
+
+      const isNumeric = !isNaN(query);
+      const qNum = parseFloat(query);
+
+      const results = allProducts.filter(item => {
+        const nameMatch = item.name.toLowerCase().includes(query);
+        const priceMatch = isNumeric && Math.abs(item.price - qNum) <= 20;
+        return nameMatch || priceMatch;
+      });
+
+      const tableBody = document.querySelector("#results-table tbody");
+      const noResults = document.getElementById("no-results");
+
+      if (results.length === 0) {
+        noResults.style.display = "block";
+        return;
+      }
+
+      results.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.price}</td>
+          <td>${item.offer}</td>
+          <td>${item.section}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    });
+</script>
+
+</body>
+</html>
