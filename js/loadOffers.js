@@ -75,12 +75,6 @@ window.addEventListener('DOMContentLoaded', () => {
         container.appendChild(section);
       });
 
-      const firstList = document.querySelector('.offer-list');
-      if(firstList) {
-        firstList.classList.add('show');
-        const firstToggle = document.querySelector('.sec-head .sec-toggle');
-        if(firstToggle) firstToggle.textContent = '−';
-      }
     })
     .catch(() => {
       container.innerHTML = "<p>تعذر تحميل المنتجات. حاول لاحقًا.</p>";
