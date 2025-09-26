@@ -3,6 +3,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById(`${offerCode}-sections`);
   if (!container) return;
 
+  container.innerHTML = '<div class="note">✨ نختار لك الأفضل من SmokeLine... انتظر لحظة واختر مايليق بذوقك❤️</div>';
+
   function openOrder(name, price){
     const label = `${name} — ${price} AED لكل 5 بوكس`;
     window.location.href = 'order.html?product=' + encodeURIComponent(label);
