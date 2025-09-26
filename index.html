@@ -741,5 +741,18 @@ button[type="submit"]:hover {
   }
 </script>
     <script src="js/loadAllOffers.js"></script>
+
+        <script>
+  function toggleAbout() {
+    const section = document.getElementById("about-section");
+    const isHidden = section.style.display === "none" || section.style.display === "";
+
+    section.style.display = isHidden ? "block" : "none";
+
+    if (isHidden) {
+      window.scrollTo({ top: section.offsetTop, behavior: 'smooth' });
+    }
+  }
+    </script>
 </body>
 </html>
