@@ -10,7 +10,7 @@
       font-family: sans-serif;
       padding: 20px;
     }
-    button, input {
+    button, input, select {
       padding: 10px;
       margin: 5px;
       border: none;
@@ -51,10 +51,21 @@
     <p id="summary" style="margin-top:10px;"></p>
   </div>
 
-  <!-- ✅ عبارة ترحيبية + بحث -->
+  <!-- ✅ عبارة ترحيبية + بحث + فلترة حسب العرض -->
   <div class="section">
     <h2>🛒 ابحث عن تشكيلتك الخاصة</h2>
-    <input type="text" id="search-input" placeholder="اكتب اسم المنتج..." oninput="searchProducts(this.value)">
+    <input type="text" id="search-input" placeholder="اكتب اسم المنتج..." oninput="searchProducts()">
+
+    <label>فلترة حسب العرض:</label>
+    <select id="offer-filter" onchange="searchProducts()">
+      <option value="">كل العروض</option>
+      <option value="offer1">offer1</option>
+      <option value="offer2">offer2</option>
+      <option value="offer3">offer3</option>
+      <option value="offer4">offer4</option>
+      <option value="offer5">offer5</option>
+      <option value="offer6">offer6</option>
+    </select>
   </div>
 
   <!-- ✅ جدول النتائج -->
@@ -95,12 +106,24 @@
           offer: row.offer,
           title: row.title
         }));
-        renderProductTable(products);
+        searchProducts();
       })
       .catch(err => {
         console.error("فشل تحميل المنتجات:", err);
         alert("تعذر تحميل المنتجات، حاول لاحقًا.");
       });
+
+    function searchProducts() {
+      const query = document.getElementById("search-input").value.toLowerCase();
+      const offerValue = document.getElementById("offer-filter").value.toLowerCase();
+
+      let filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      if (offerValue) {
+        filtered = filtered.filter(p => p.offer && p.offer.trim().toLowerCase() === offerValue);
+      }
+
+      renderProductTable(filtered);
+    }
 
     function renderProductTable(list) {
       const table = document.getElementById("product-table");
@@ -120,11 +143,6 @@
         `;
         table.appendChild(row);
       });
-    }
-
-    function searchProducts(query) {
-      const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
-      renderProductTable(filtered);
     }
 
     function addProduct(index, quantity) {
