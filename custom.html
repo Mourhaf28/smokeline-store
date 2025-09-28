@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تشكيلتك الخاصة</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    button, select {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      background-color: #e5c9a0;
+      color: #000;
+      cursor: pointer;
+    }
+    .product {
+      border-bottom: 1px solid #444;
+      padding: 10px;
+    }
+    #progress-bar {
+      height: 20px;
+      background: #e5c9a0;
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎯 اختر تشكيلتك الخاصة</h2>
+
+  <label>فلترة حسب القسم:</label>
+  <select onchange="filterByTitle(this.value)">
+    <option value="">كل الأقسام</option>
+    <option value="tobacco">Tobacco</option>
+    <option value="accessories">Accessories</option>
+    <option value="other">Other</option>
+  </select>
+
+  <div id="product-list"></div>
+
+  <hr>
+  <h3>المنتجات المختارة:</h3>
+  <div id="selected-list"></div>
+
+  <p id="summary"></p>
+
+  <label>شريط التوصيل المجاني:</label>
+  <div style="background:#333; border-radius:6px; overflow:hidden;">
+    <div id="progress-bar"></div>
+  </div>
+
+  <button onclick="submitCustomOrder()">طلب التشكيلة</button>
+
+  <script>
+    let products = [];
+    let selected = [];
+
+    const sheetURL = "https://script.google.com/macros/s/AKfycb.../exec"; // ← ضع رابط Apps Script الخاص بك هنا
+
+    fetch(sheetURL)
+      .then(res => res.json())
+      .then(data => {
+        products = data.map(row => ({
+          name: row.name,
+          price: parseFloat(row.price),
+          offer: row.offer,
+          title: row.title
+        }));
+        renderProductList(products);
+      })
+      .catch(err => {
+        console.error("فشل تحميل المنتجات:", err);
+        alert("تعذر تحميل المنتجات، حاول لاحقًا.");
+      });
+
+    function renderProductList(list) {
+      const container = document.getElementById("product-list");
+      container.innerHTML = "";
+      list.forEach((p, i) => {
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <strong>${p.name}</strong> — ${p.price} درهم
+          ${p.offer ? `<span style="color:#e5c9a0;"> (${p.offer})</span>` : ""}
+          <button onclick="addProduct(${i})">➕</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function filterByTitle(title) {
+      const filtered = title ? products.filter(p => p.title === title) : products;
+      renderProductList(filtered);
+    }
+
+    function addProduct(index) {
+      if (selected.length >= 5) return alert("أقصى عدد هو 5 كروز");
+      selected.push(products[index]);
+      updateSummary();
+    }
+
+    function removeProduct(index) {
+      selected.splice(index, 1);
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const list = document.getElementById("selected-list");
+      list.innerHTML = "";
+      selected.forEach((p, i) => {
+        const item = document.createElement("div");
+        item.innerHTML = `${p.name} — ${p.price} درهم <button onclick="removeProduct(${i})">❌</button>`;
+        list.appendChild(item);
+      });
+
+      const total = selected.reduce((sum, p) => sum + p.price, 0);
+      let delivery = 25;
+      if (selected.length === 3) delivery = 15;
+      if (selected.length === 4) delivery = 10;
+      if (selected.length === 5) delivery = 0;
+
+      document.getElementById("summary").textContent =
+        `عدد الكروزات: ${selected.length} — المجموع: ${total} درهم + توصيل ${delivery === 0 ? "مجاني" : delivery + " درهم"}`;
+
+      const progress = Math.min((selected.length / 5) * 100, 100);
+      document.getElementById("progress-bar").style.width = `${progress}%`;
+    }
+
+    function submitCustomOrder() {
+      const names = selected.map(p => p.name).join(", ");
+      localStorage.setItem("selectedProduct", `تشكيلة خاصة: ${names}`);
+      window.location.href = "order.html";
+    }
+  </script>
+
+</body>
+</html>
