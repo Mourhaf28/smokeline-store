@@ -10,7 +10,7 @@
       font-family: sans-serif;
       padding: 20px;
     }
-    button, select {
+    button, input {
       padding: 10px;
       margin: 5px;
       border: none;
@@ -19,9 +19,15 @@
       color: #000;
       cursor: pointer;
     }
-    .product {
-      border-bottom: 1px solid #444;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
       padding: 10px;
+      border-bottom: 1px solid #444;
+      text-align: center;
     }
     #progress-bar {
       height: 20px;
@@ -45,19 +51,26 @@
     <p id="summary" style="margin-top:10px;"></p>
   </div>
 
-  <!-- ✅ السؤال التفاعلي -->
+  <!-- ✅ عبارة ترحيبية + بحث -->
   <div class="section">
-    <h2>🛒 ماذا تريد أن تضع في سلتك؟</h2>
-    <label>اختر القسم:</label>
-    <select id="title-filter" onchange="filterByTitle(this.value)">
-      <option value="">كل الأقسام</option>
-    </select>
+    <h2>🛒 ابحث عن تشكيلتك الخاصة</h2>
+    <input type="text" id="search-input" placeholder="اكتب اسم المنتج..." oninput="searchProducts(this.value)">
   </div>
 
-  <!-- ✅ عرض المنتجات حسب القسم -->
+  <!-- ✅ جدول النتائج -->
   <div class="section">
-    <h3>المنتجات المتاحة:</h3>
-    <div id="product-list"></div>
+    <table>
+      <thead>
+        <tr style="background:#222;">
+          <th>المنتج</th>
+          <th>سعر 5 كروزات</th>
+          <th>سعر الكروز الواحد</th>
+          <th>العرض</th>
+          <th>إضافة</th>
+        </tr>
+      </thead>
+      <tbody id="product-table"></tbody>
+    </table>
   </div>
 
   <!-- ✅ السلة التفاعلية -->
@@ -71,7 +84,7 @@
     let products = [];
     let selected = [];
 
-    const sheetURL = "https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZI4ANN5db6BySGBKMaQxsiGafYnQ7Q/exec"; // ← غيّر الرابط لرابطك الحقيقي
+    const sheetURL = "https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZI4ANN5db6BySGBKMaQxsiGafYnQ7Q/exec"; // ← ضع رابط Apps Script الخاص بك هنا
 
     fetch(sheetURL)
       .then(res => res.json())
@@ -82,46 +95,36 @@
           offer: row.offer,
           title: row.title
         }));
-
-        // استخراج القيم الفريدة من title
-        const uniqueTitles = [...new Set(products.map(p => p.title).filter(Boolean))];
-        const select = document.getElementById("title-filter");
-        uniqueTitles.forEach(title => {
-          const option = document.createElement("option");
-          option.value = title;
-          option.textContent = title;
-          select.appendChild(option);
-        });
-
-        renderProductList(products);
+        renderProductTable(products);
       })
       .catch(err => {
         console.error("فشل تحميل المنتجات:", err);
         alert("تعذر تحميل المنتجات، حاول لاحقًا.");
       });
 
-    function renderProductList(list) {
-      const container = document.getElementById("product-list");
-      container.innerHTML = "";
+    function renderProductTable(list) {
+      const table = document.getElementById("product-table");
+      table.innerHTML = "";
       list.forEach((p, i) => {
-        const pricePerUnit = Math.round(p.price / 5);
-        const item = document.createElement("div");
-        item.className = "product";
-        item.innerHTML = `
-          <strong>${p.name}</strong> — ${p.price} درهم / 5 كروز
-          <br><span style="color:#ccc;">(${pricePerUnit} درهم للكروز الواحد)</span>
-          ${p.offer ? `<br><span style="color:#e5c9a0;">${p.offer}</span>` : ""}
-          <br>
-          <button onclick="addProduct(i, 1)">➕ إضافة كروز</button>
-          <button onclick="addProduct(i, 5)">➕ إضافة 5 كروزات</button>
+        const unitPrice = Math.round(p.price / 5);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.price} درهم</td>
+          <td>${unitPrice} درهم</td>
+          <td>${p.offer || ""}</td>
+          <td>
+            <button onclick="addProduct(i, 1)">➕ كروز</button>
+            <button onclick="addProduct(i, 5)">➕ 5 كروزات</button>
+          </td>
         `;
-        container.appendChild(item);
+        table.appendChild(row);
       });
     }
 
-    function filterByTitle(title) {
-      const filtered = title ? products.filter(p => p.title === title) : products;
-      renderProductList(filtered);
+    function searchProducts(query) {
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+      renderProductTable(filtered);
     }
 
     function addProduct(index, quantity) {
@@ -176,4 +179,4 @@
   </script>
 
 </body>
-</html>
+      </html>
