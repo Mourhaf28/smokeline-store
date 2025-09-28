@@ -35,13 +35,10 @@
 
   <h2>🎯 اختر تشكيلتك الخاصة</h2>
 
-  <label>فلترة حسب القسم:</label>
-  <select onchange="filterByTitle(this.value)">
-    <option value="">كل الأقسام</option>
-    <option value="tobacco">Tobacco</option>
-    <option value="accessories">Accessories</option>
-    <option value="other">Other</option>
-  </select>
+<label>فلترة حسب القسم:</label>
+<select id="title-filter" onchange="filterByTitle(this.value)">
+  <option value="">كل الأقسام</option>
+</select>
 
   <div id="product-list"></div>
 
@@ -65,20 +62,33 @@
     const sheetURL = "https://script.google.com/macros/s/AKfycbwFvP8QP9vdwpyL_Toy6CSwyefmy_A3Fx05CKoyZI4ANN5db6BySGBKMaQxsiGafYnQ7Q/exec"; // ← ضع رابط Apps Script الخاص بك هنا
 
     fetch(sheetURL)
-      .then(res => res.json())
-      .then(data => {
-        products = data.map(row => ({
-          name: row.name,
-          price: parseFloat(row.price),
-          offer: row.offer,
-          title: row.title
-        }));
-        renderProductList(products);
-      })
-      .catch(err => {
-        console.error("فشل تحميل المنتجات:", err);
-        alert("تعذر تحميل المنتجات، حاول لاحقًا.");
-      });
+  .then(res => res.json())
+  .then(data => {
+    products = data.map(row => ({
+      name: row.name,
+      price: parseFloat(row.price),
+      offer: row.offer,
+      title: row.title
+    }));
+
+    // استخراج القيم الفريدة من title
+    const uniqueTitles = [...new Set(products.map(p => p.title).filter(Boolean))];
+
+    // بناء قائمة الفلترة
+    const select = document.getElementById("title-filter");
+    uniqueTitles.forEach(title => {
+      const option = document.createElement("option");
+      option.value = title;
+      option.textContent = title;
+      select.appendChild(option);
+    });
+
+    renderProductList(products);
+  })
+  .catch(err => {
+    console.error("فشل تحميل المنتجات:", err);
+    alert("تعذر تحميل المنتجات، حاول لاحقًا.");
+  });
 
     function renderProductList(list) {
       const container = document.getElementById("product-list");
