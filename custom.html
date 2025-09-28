@@ -137,23 +137,28 @@
           <td>${unitPrice} درهم</td>
           <td>${p.offer || ""}</td>
           <td>
-            <button onclick="addProduct(i, 1)">➕ كروز</button>
-            <button onclick="addProduct(i, 5)">➕ 5 كروزات</button>
+            <button onclick="addProductByName('${p.name}', 1)">➕ كروز</button>
+<button onclick="addProductByName('${p.name}', 5)">➕ 5 كروزات</button>
           </td>
         `;
         table.appendChild(row);
       });
     }
 
-    function addProduct(index, quantity) {
-      selected.push({
-        name: products[index].name,
-        price: products[index].price,
-        offer: products[index].offer,
-        quantity: quantity
-      });
-      updateSummary();
-    }
+    function addProductByName(name, quantity) {
+  const product = products.find(p => p.name === name);
+  if (!product) return;
+
+  selected.push({
+    name: product.name,
+    price: product.price,
+    offer: product.offer,
+    quantity: quantity
+  });
+
+  updateSummary();
+}
+
 
     function removeProduct(index) {
       selected.splice(index, 1);
