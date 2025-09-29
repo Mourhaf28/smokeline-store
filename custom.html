@@ -196,9 +196,8 @@
 
     function submitCustomOrder() {
       const names = selected.map(p => `${p.name} (${p.quantity})`).join(", ");
-      localStorage.setItem("selectedProduct", `تشكيلة خاصة: ${names}`);
-window.location.href = "order.html";
-    }
+      localStorage.setItem("customBasket", JSON.stringify(selected));
+window.location.href = "custom-order.html";
   </script>
 
 </body>
