@@ -168,6 +168,8 @@
       const myNumber = "963969948355"; // ← ضع رقمك الإماراتي هنا بدون +
       window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
     }
+    setTimeout(() => alert("✅ تم إرسال الطلب!"), 1000);
+    localStorage.removeItem("customBasket");
   </script>
 
 </body>
