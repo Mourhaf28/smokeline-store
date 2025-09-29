@@ -139,7 +139,7 @@
       const region = document.getElementById("region").value.trim();
       const notes = document.getElementById("notes").value.trim();
 
-      if (!phone.startsWith("+971")) {
+      if (!phone.startsWith("05")) {
         alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
         return;
       }
@@ -168,8 +168,9 @@
       const myNumber = "963960048355"; // ← ضع رقمك الإماراتي هنا بدون +
       window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
     }
-    setTimeout(() => alert("✅ تم إرسال الطلب!"), 1000);
     localStorage.removeItem("customBasket");
+    
+    setTimeout(() => alert("✅ تم إرسال الطلب!"), 1000);
   </script>
 
 </body>
