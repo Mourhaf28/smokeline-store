@@ -9,37 +9,80 @@
       color: #fff;
       font-family: sans-serif;
       padding: 20px;
+      font-size: 18px;
+      line-height: 1.6;
     }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
     input, select, textarea, button {
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
       width: 100%;
       border: none;
       border-radius: 6px;
       background-color: #e5c9a0;
       color: #000;
-    
-  font-size: 18px; /* أو أي حجم يناسبك */
-
-table, th, td, h2, h3, p {
-  font-size: 18px;
-}   
+      font-size: 20px;
     }
+
+    button {
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #d4b07e;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      font-size: 18px;
     }
+
     th, td {
-      padding: 10px;
+      padding: 12px;
       border-bottom: 1px solid #444;
       text-align: center;
     }
+
     .section {
       margin-bottom: 40px;
     }
+
     #region-group {
       display: none;
+    }
+
+    #review-box {
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      display: none;
+    }
+
+    #review-box pre {
+      white-space: pre-wrap;
+      color: #e5c9a0;
+      font-size: 18px;
+    }
+
+    .review-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -51,7 +94,7 @@ table, th, td, h2, h3, p {
 
   <div class="section">
     <h3>📝 نموذج الطلب</h3>
-    <form onsubmit="submitOrder(event)">
+    <form onsubmit="prepareReview(event)">
       <label>الاسم الكامل:</label>
       <input type="text" id="customer-name" required>
 
@@ -78,8 +121,17 @@ table, th, td, h2, h3, p {
       <label>ملاحظات إضافية (اختياري):</label>
       <textarea id="notes" rows="3" placeholder="أي تفاصيل إضافية..."></textarea>
 
-      <button type="submit">📨 إرسال الطلب عبر واتساب</button>
+      <button type="submit">📨 مراجعة الطلب</button>
     </form>
+  </div>
+
+  <div id="review-box">
+    <h3>📋 مراجعة الطلب قبل الإرسال</h3>
+    <pre id="review-content"></pre>
+    <div class="review-actions">
+      <button onclick="sendOrder()">✅ تأكيد الطلب</button>
+      <button onclick="editOrder()">✏️ تعديل الطلب</button>
+    </div>
   </div>
 
   <script>
@@ -135,7 +187,9 @@ table, th, td, h2, h3, p {
       document.getElementById("region-group").style.display = emirate ? "block" : "none";
     }
 
-    function submitOrder(e) {
+    let finalMessage = "";
+
+    function prepareReview(e) {
       e.preventDefault();
 
       const name = document.getElementById("customer-name").value.trim();
@@ -169,13 +223,25 @@ table, th, td, h2, h3, p {
 
       message += `\n📦 عدد الكروزات: ${totalCarts}\n💰 المجموع: ${totalPrice} درهم\n🚚 التوصيل: ${delivery === 0 ? "مجاني" : delivery + " درهم"}`;
 
-      const encoded = encodeURIComponent(message);
-      const myNumber = "963960048355"; // ← ضع رقمك الإماراتي هنا بدون +
+      finalMessage = message;
+      document.getElementById("review-content").textContent = message;
+      document.getElementById("review-box").style.display = "block";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+
+    function sendOrder() {
+      const encoded = encodeURIComponent(finalMessage);
+      const myNumber = "963960048355";
       window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
     }
+
+    function editOrder() {
+      document.getElementById("review-box").style.display = "none";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     localStorage.removeItem("customBasket");
-    
-     </script>
+  </script>
 
 </body>
 </html>
