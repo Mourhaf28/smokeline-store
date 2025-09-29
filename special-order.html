@@ -85,22 +85,26 @@
   </form>
 
   <script>
+    // قراءة بيانات العرض من الرابط
     const params = new URLSearchParams(window.location.search);
-    const name = params.get("name");
-    const price = params.get("price");
-    const quantity = params.get("quantity");
-    const points = params.get("points");
+    const name = params.get("name") || "";
+    const price = params.get("price") || "";
+    const quantity = params.get("quantity") || "";
+    const points = params.get("points") || "0";
 
+    // تعبئة تفاصيل العرض
     document.getElementById("product-name").textContent = name;
     document.getElementById("product-price").textContent = price + " درهم";
     document.getElementById("product-quantity").textContent = quantity + " كروز";
     document.getElementById("product-points").textContent = points + " نقطة";
 
+    // إظهار حقل المنطقة عند اختيار الإمارة
     function showRegion() {
       const emirate = document.getElementById("emirate").value;
       document.getElementById("region-group").style.display = emirate ? "block" : "none";
     }
 
+    // إرسال الطلب إلى واتساب
     function submitOrder(e) {
       e.preventDefault();
 
