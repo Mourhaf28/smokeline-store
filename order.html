@@ -247,6 +247,7 @@
     })();
   </script>
   <script>
+    localStorage.removeItem("selectedProduct");
   const selected = localStorage.getItem("selectedProduct");
   if (selected) {
     document.getElementById("product-name").value = selected;
