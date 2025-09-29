@@ -165,7 +165,7 @@
       message += `\n📦 عدد الكروزات: ${totalCarts}\n💰 المجموع: ${totalPrice} درهم\n🚚 التوصيل: ${delivery === 0 ? "مجاني" : delivery + " درهم"}`;
 
       const encoded = encodeURIComponent(message);
-      const myNumber = "963969948355"; // ← ضع رقمك الإماراتي هنا بدون +
+      const myNumber = "963960048355"; // ← ضع رقمك الإماراتي هنا بدون +
       window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
     }
     setTimeout(() => alert("✅ تم إرسال الطلب!"), 1000);
