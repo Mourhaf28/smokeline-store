@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>طلب التشكيلة الخاصة</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    input, select, textarea, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      background-color: #e5c9a0;
+      color: #000;
+      font-size: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #444;
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    #region-group {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📦 تشكيلتك الخاصة</h2>
+  <div id="basket-view"></div>
+  <p id="summary"></p>
+
+  <div class="section">
+    <h3>📝 نموذج الطلب</h3>
+    <form onsubmit="submitOrder(event)">
+      <label>الاسم الكامل:</label>
+      <input type="text" id="customer-name" required>
+
+      <label>رقم واتساب إماراتي:</label>
+      <input type="tel" id="customer-phone" placeholder="+971..." required>
+
+      <label>الإمارة:</label>
+      <select id="emirate" onchange="showRegion()" required>
+        <option value="">اختر الإمارة</option>
+        <option value="دبي">دبي</option>
+        <option value="أبوظبي">أبوظبي</option>
+        <option value="الشارقة">الشارقة</option>
+        <option value="عجمان">عجمان</option>
+        <option value="رأس الخيمة">رأس الخيمة</option>
+        <option value="أم القيوين">أم القيوين</option>
+        <option value="الفجيرة">الفجيرة</option>
+      </select>
+
+      <div id="region-group">
+        <label>المنطقة:</label>
+        <input type="text" id="region" required>
+      </div>
+
+      <label>ملاحظات إضافية (اختياري):</label>
+      <textarea id="notes" rows="3" placeholder="أي تفاصيل إضافية..."></textarea>
+
+      <button type="submit">📨 إرسال الطلب عبر واتساب</button>
+    </form>
+  </div>
+
+  <script>
+    const basket = JSON.parse(localStorage.getItem("customBasket") || "[]");
+    const container = document.getElementById("basket-view");
+    let totalCarts = 0;
+    let totalPrice = 0;
+
+    if (basket.length === 0) {
+      container.innerHTML = "<p>لا توجد تشكيلات محفوظة.</p>";
+    } else {
+      const table = document.createElement("table");
+      table.innerHTML = `
+        <thead>
+          <tr style="background:#222;">
+            <th>المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+      const tbody = table.querySelector("tbody");
+
+      basket.forEach(p => {
+        const unitPrice = Math.round(p.price / 5);
+        const itemTotal = p.quantity === 5 ? p.price : unitPrice * p.quantity;
+        totalCarts += p.quantity;
+        totalPrice += itemTotal;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.quantity} كروز</td>
+          <td>${itemTotal} درهم</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      container.appendChild(table);
+
+      let delivery = 25;
+      if (totalCarts === 3) delivery = 15;
+      if (totalCarts === 4) delivery = 10;
+      if (totalCarts >= 5) delivery = 0;
+
+      document.getElementById("summary").textContent =
+        `عدد الكروزات: ${totalCarts} — المجموع: ${totalPrice} درهم + توصيل ${delivery === 0 ? "مجاني" : delivery + " درهم"}`;
+    }
+
+    function showRegion() {
+      const emirate = document.getElementById("emirate").value;
+      document.getElementById("region-group").style.display = emirate ? "block" : "none";
+    }
+
+    function submitOrder(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("customer-name").value.trim();
+      const phone = document.getElementById("customer-phone").value.trim();
+      const emirate = document.getElementById("emirate").value;
+      const region = document.getElementById("region").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+
+      if (!phone.startsWith("+971")) {
+        alert("يرجى إدخال رقم إماراتي يبدأ بـ +971");
+        return;
+      }
+
+      let message = `📦 طلب جديد من ${name}\n`;
+      message += `📱 رقم الزبون: ${phone}\n`;
+      message += `🏙️ الإمارة: ${emirate}\n`;
+      message += `📍 المنطقة: ${region}\n`;
+      if (notes) message += `📝 ملاحظات: ${notes}\n`;
+      message += `\n🛒 التشكيلة:\n`;
+
+      basket.forEach(p => {
+        const unitPrice = Math.round(p.price / 5);
+        const itemTotal = p.quantity === 5 ? p.price : unitPrice * p.quantity;
+        message += `- ${p.name} × ${p.quantity} كروز = ${itemTotal} درهم\n`;
+      });
+
+      let delivery = 25;
+      if (totalCarts === 3) delivery = 15;
+      if (totalCarts === 4) delivery = 10;
+      if (totalCarts >= 5) delivery = 0;
+
+      message += `\n📦 عدد الكروزات: ${totalCarts}\n💰 المجموع: ${totalPrice} درهم\n🚚 التوصيل: ${delivery === 0 ? "مجاني" : delivery + " درهم"}`;
+
+      const encoded = encodeURIComponent(message);
+      const myNumber = "963969948355"; // ← ضع رقمك الإماراتي هنا بدون +
+      window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
+    }
+  </script>
+
+</body>
+</html>
