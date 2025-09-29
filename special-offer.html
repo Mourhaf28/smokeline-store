@@ -76,58 +76,56 @@
   <p id="no-offers" style="display:none;">🚫 لا توجد عروض خاصة متاحة حاليًا — انتظروا قريبًا 🔄</p>
 
   <script>
-    const sheetURL = "https://script.google.com/macros/s/AKfycbwtdr53zRWnwOBstOkdUaOwJEB7lgqmYeDI8lh_f4ZPJmKhEt2iBsRjbRh81mDp5Or-Qw/exec"; // ← ضع رابط Apps Script هنا
-    const container = document.getElementById("offers-container");
-    const noOffers = document.getElementById("no-offers");
+  const sheetURL = "https://script.google.com/macros/s/AKfycbwtdr53zRWnwOBstOkdUaOwJEB7lgqmYeDI8lh_f4ZPJmKhEt2iBsRjbRh81mDp5Or-Qw/exec";
+  const container = document.getElementById("offers-container");
+  const noOffers = document.getElementById("no-offers");
 
-    fetch(sheetURL)
-      .then(res => res.json())
-      .then(data => {
-        const now = new Date();
-        const activeOffers = data.filter(o => new Date(o.expires_at) > now);
+  fetch(sheetURL)
+    .then(res => res.json())
+    .then(data => {
+      const now = new Date();
+      const activeOffers = data.filter(o => new Date(o.expires_at) > now);
 
-        if (activeOffers.length === 0) {
-          noOffers.style.display = "block";
-          return;
-        }
-
-        activeOffers.forEach((offer, index) => {
-          const box = document.createElement("div");
-          box.className = "offer-box";
-
-          const expires = new Date(offer.expires_at);
-          const timeLeft = Math.max(0, expires - now);
-          const hours = Math.floor(timeLeft / 1000 / 60 / 60);
-          const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
-          const seconds = Math.floor((timeLeft / 1000) % 60);
-
-          box.innerHTML = `
-            <h3>${offer.name}</h3>
-            <p>السعر: ${offer.price} درهم</p>
-            <p>الكمية: ${offer.quantity} كروز</p>
-            <p>العرض: ${offer.offer}</p>
-            <p>ينتهي خلال: ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية</p>
-            <p>🎯 نقاط الولاء: ${offer.loyalty_points}</p>
-            <button onclick="claimOffer(${index})">🛒 طلب العرض</button>
-          `;
-          container.appendChild(box);
-        });
-
-        window.activeOffers = activeOffers;
-      })
-      .catch(err => {
-        console.error("فشل تحميل العروض:", err);
+      if (activeOffers.length === 0) {
         noOffers.style.display = "block";
+        return;
+      }
+
+      activeOffers.forEach((offer, index) => {
+        const box = document.createElement("div");
+        box.className = "offer-box";
+
+        const expires = new Date(offer.expires_at);
+        const timeLeft = Math.max(0, expires - now);
+        const hours = Math.floor(timeLeft / 1000 / 60 / 60);
+        const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
+        const seconds = Math.floor((timeLeft / 1000) % 60);
+
+        box.innerHTML = `
+          <h3>${offer.name}</h3>
+          <p>السعر: ${offer.price} درهم</p>
+          <p>الكمية: ${offer.quantity} كروز</p>
+          <p>العرض: ${offer.offer}</p>
+          <p>ينتهي خلال: ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية</p>
+          <p>🎯 نقاط الولاء: ${offer.loyalty_points}</p>
+          <button onclick="goToOrder(${index})">🛒 طلب العرض</button>
+        `;
+        container.appendChild(box);
       });
 
-    function claimOffer(index) {
-      const offer = activeOffers[index];
-      const points = parseInt(offer.loyalty_points || "0");
-      let current = parseInt(localStorage.getItem("loyaltyPoints") || "0");
-      localStorage.setItem("loyaltyPoints", current + points);
-      alert(`✅ تم إضافة ${points} نقطة ولاء لحسابك!`);
-    }
-  </script>
+      window.activeOffers = activeOffers;
+    })
+    .catch(err => {
+      console.error("فشل تحميل العروض:", err);
+      noOffers.style.display = "block";
+    });
 
+  // ✅ الدالة الجديدة لفتح النموذج
+  function goToOrder(index) {
+    const offer = activeOffers[index];
+    const url = `special-order.html?name=${encodeURIComponent(offer.name)}&price=${offer.price}&quantity=${offer.quantity}&points=${offer.loyalty_points}`;
+    window.location.href = url;
+  }
+</script>
 </body>
 </html>
