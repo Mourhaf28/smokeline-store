@@ -106,37 +106,31 @@
 
     // إرسال الطلب إلى واتساب وحفظ النقاط
     function submitOrder(e) {
-      e.preventDefault();
+  e.preventDefault();
 
-      const customerName = document.getElementById("customer-name").value.trim();
-      const phone = document.getElementById("customer-phone").value.trim();
-      const emirate = document.getElementById("emirate").value;
-      const region = document.getElementById("region").value.trim();
+  const customerName = document.getElementById("customer-name").value.trim();
+  const phone = document.getElementById("customer-phone").value.trim();
+  const emirate = document.getElementById("emirate").value;
+  const region = document.getElementById("region").value.trim();
 
-      if (!phone.startsWith("05")) {
-        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-        return;
-      }
+  if (!phone.startsWith("05")) {
+    alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+    return;
+  }
 
-      // حفظ النقاط في Google Sheet
-      fetch("https://script.google.com/macros/s/AKfycby62ahFxkL0N4GYhEJZzuOC7Yk-3XdKYqi6KanLqyhj4uOjDzYZecaJx4UAF4tT6Cs93A/exec",
-            {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: customerName,
-          phone: phone,
-          points: points,
-          source: `عرض خاص: ${name}`
-        })
-      })
-      .then(res => res.text())
-      .then(txt => console.log("رد السكربت:", txt))
-      .catch(err => console.error("خطأ بالحفظ:", err));
+  const query = new URLSearchParams({
+    name: customerName,
+    phone: phone,
+    points: points,
+    source: `عرض خاص: ${name}`
+  }).toString();
 
-      // تجهيز رسالة واتساب
+  fetch(`https://script.google.com/macros/s/AKfycby62ahFxkL0N4GYhEJZzuOC7Yk-3XdKYqi6KanLqyhj4uOjDzYZecaJx4UAF4tT6Cs93A/exec?${query}`)
+    .then(res => res.text())
+    .then(txt => {
+      document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
+
+      // بعد نجاح الحفظ، افتح واتساب
       let message = `🛍️ طلب عرض خاص\n`;
       message += `👤 الاسم: ${customerName}\n`;
       message += `📱 الرقم: ${phone}\n`;
@@ -148,9 +142,13 @@
       message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
 
       const encoded = encodeURIComponent(message);
-      const myNumber = "963960048355"; // ← رقمك الإماراتي بدون +
+      const myNumber = "963960048355";
       window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
-    }
+    })
+    .catch(err => {
+      document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
+    });
+}
   </script>
 
 </body>
