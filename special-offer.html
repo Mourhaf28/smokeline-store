@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🎁 عرض خاص</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #e5c9a0; }
+      to { text-shadow: 0 0 20px #fff; }
+    }
+
+    .offer-box {
+      background: #222;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #444;
+    }
+
+    .offer-box h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #e5c9a0;
+    }
+
+    .offer-box p {
+      margin: 5px 0;
+    }
+
+    .offer-box button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #e5c9a0;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #no-offers {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 20px;
+      color: #e5c9a0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎁 عرض خاص</h2>
+  <div id="offers-container"></div>
+  <p id="no-offers" style="display:none;">🚫 لا توجد عروض خاصة متاحة حاليًا — انتظروا قريبًا 🔄</p>
+
+  <script>
+    const sheetURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // ← ضع رابط Apps Script هنا
+    const container = document.getElementById("offers-container");
+    const noOffers = document.getElementById("no-offers");
+
+    fetch(sheetURL)
+      .then(res => res.json())
+      .then(data => {
+        const now = new Date();
+        const activeOffers = data.filter(o => new Date(o.expires_at) > now);
+
+        if (activeOffers.length === 0) {
+          noOffers.style.display = "block";
+          return;
+        }
+
+        activeOffers.forEach((offer, index) => {
+          const box = document.createElement("div");
+          box.className = "offer-box";
+
+          const expires = new Date(offer.expires_at);
+          const timeLeft = Math.max(0, expires - now);
+          const hours = Math.floor(timeLeft / 1000 / 60 / 60);
+          const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
+          const seconds = Math.floor((timeLeft / 1000) % 60);
+
+          box.innerHTML = `
+            <h3>${offer.name}</h3>
+            <p>السعر: ${offer.price} درهم</p>
+            <p>الكمية: ${offer.quantity} كروز</p>
+            <p>العرض: ${offer.offer}</p>
+            <p>ينتهي خلال: ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية</p>
+            <p>🎯 نقاط الولاء: ${offer.loyalty_points}</p>
+            <button onclick="claimOffer(${index})">🛒 طلب العرض</button>
+          `;
+          container.appendChild(box);
+        });
+
+        window.activeOffers = activeOffers;
+      })
+      .catch(err => {
+        console.error("فشل تحميل العروض:", err);
+        noOffers.style.display = "block";
+      });
+
+    function claimOffer(index) {
+      const offer = activeOffers[index];
+      const points = parseInt(offer.loyalty_points || "0");
+      let current = parseInt(localStorage.getItem("loyaltyPoints") || "0");
+      localStorage.setItem("loyaltyPoints", current + points);
+      alert(`✅ تم إضافة ${points} نقطة ولاء لحسابك!`);
+    }
+  </script>
+
+</body>
+</html>
