@@ -104,7 +104,7 @@
       document.getElementById("region-group").style.display = emirate ? "block" : "none";
     }
 
-    // إرسال الطلب إلى واتساب
+    // إرسال الطلب إلى واتساب وحفظ النقاط
     function submitOrder(e) {
       e.preventDefault();
 
@@ -117,21 +117,25 @@
         alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
         return;
       }
-      // حفظ النقاط في Google Sheet
-fetch("https://script.google.com/macros/s/AKfycbxYQ4kiHL-FgSylVydTQBsRY8zsx51-OhkaAcKzRdlrmrI2l4R2MuIoSKWhye4FVZ9m6g/exec", 
-      {
-  method: "POST",
-  body: JSON.stringify({
-    name: customerName,
-    phone: phone,
-    points: points,
-    source: `عرض خاص: ${name}`
-  }),
-  headers: {
-    "Content-Type": "application/json"
-  }
-});
 
+      // حفظ النقاط في Google Sheet
+      fetch("https://script.google.com/macros/s/AKfycbxYQ4kiHL-FgSylVydTQBsRY8zsx51-OhkaAcKzRdlrmrI2l4R2MuIoSKWhye4FVZ9m6g/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: customerName,
+          phone: phone,
+          points: points,
+          source: `عرض خاص: ${name}`
+        })
+      })
+      .then(res => res.text())
+      .then(txt => console.log("رد السكربت:", txt))
+      .catch(err => console.error("خطأ بالحفظ:", err));
+
+      // تجهيز رسالة واتساب
       let message = `🛍️ طلب عرض خاص\n`;
       message += `👤 الاسم: ${customerName}\n`;
       message += `📱 الرقم: ${phone}\n`;
