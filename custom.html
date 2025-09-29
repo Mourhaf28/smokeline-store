@@ -196,8 +196,8 @@
 
     function submitCustomOrder() {
       const names = selected.map(p => `${p.name} (${p.quantity})`).join(", ");
-      sessionStorage.setItem("selectedProduct", `تشكيلة خاصة: ${names}`);
-      window.location.href = "order.html";
+      localStorage.setItem("selectedProduct", `تشكيلة خاصة: ${names}`);
+window.location.href = "order.html";
     }
   </script>
 
