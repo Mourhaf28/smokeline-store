@@ -118,6 +118,22 @@
     return;
   }
 
+  // تجهيز رسالة واتساب
+  let message = `🛍️ طلب عرض خاص\n`;
+  message += `👤 الاسم: ${customerName}\n`;
+  message += `📱 الرقم: ${phone}\n`;
+  message += `🏙️ الإمارة: ${emirate}\n`;
+  message += `📍 المنطقة: ${region}\n`;
+  message += `\n📦 المنتج: ${name}\n`;
+  message += `📦 الكمية: ${quantity} كروز\n`;
+  message += `💰 السعر: ${price} درهم\n`;
+  message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
+
+  const encoded = encodeURIComponent(message);
+  const myNumber = "963960048355";
+  window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
+
+  // حفظ النقاط بعد فتح واتساب
   const query = new URLSearchParams({
     name: customerName,
     phone: phone,
@@ -129,21 +145,6 @@
     .then(res => res.text())
     .then(txt => {
       document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
-
-      // بعد نجاح الحفظ، افتح واتساب
-      let message = `🛍️ طلب عرض خاص\n`;
-      message += `👤 الاسم: ${customerName}\n`;
-      message += `📱 الرقم: ${phone}\n`;
-      message += `🏙️ الإمارة: ${emirate}\n`;
-      message += `📍 المنطقة: ${region}\n`;
-      message += `\n📦 المنتج: ${name}\n`;
-      message += `📦 الكمية: ${quantity} كروز\n`;
-      message += `💰 السعر: ${price} درهم\n`;
-      message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
-
-      const encoded = encodeURIComponent(message);
-      const myNumber = "963960048355";
-      window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
     })
     .catch(err => {
       document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
