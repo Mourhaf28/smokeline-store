@@ -133,129 +133,93 @@
   <input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10" autocomplete="off">
   <button onclick="checkPoints()">عرض الرصيد</button>
   <p id="points-result"></p>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get("name") || "";
+  const price = params.get("price") || "";
+  const quantity = params.get("quantity") || "";
+  const points = params.get("points") || "0";
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get("name") || "";
-    const price = params.get("price") || "";
-    const quantity = params.get("quantity") || "";
-    const points = params.get("points") || "0";
+  document.getElementById("product-name").textContent = name;
+  document.getElementById("product-price").textContent = price + " درهم";
+  document.getElementById("product-quantity").textContent = quantity + " كروز";
+  document.getElementById("product-points").textContent = points + " نقطة";
 
-    document.getElementById("product-name").textContent = name;
-    document.getElementById("product-price").textContent = price + " درهم";
-    document.getElementById("product-quantity").textContent = quantity + " كروز";
-    document.getElementById("product-points").textContent = points + " نقطة";
+  function showRegion() {
+    const emirate = document.getElementById("emirate").value;
+    document.getElementById("region-group").style.display = emirate ? "block" : "none";
+  }
 
-    function showRegion() {
-      const emirate = document.getElementById("emirate").value;
-      document.getElementById("region-group").style.display = emirate ? "block" : "none";
+  function submitOrder(e) {
+    e.preventDefault();
+
+    const customerName = document.getElementById("customer-name").value.trim();
+    const phone = document.getElementById("customer-phone").value.trim();
+    const formattedPhone = "'" + phone;
+    const emirate = document.getElementById("emirate").value;
+    const region = document.getElementById("region").value.trim();
+
+    if (!phone.startsWith("05")) {
+      alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+      return;
     }
 
-    function submitOrder(e) {
-      e.preventDefault();
+    document.getElementById("save-status").textContent = "📡 جاري حفظ النقاط...";
 
-      const customerName = document.getElementById("customer-name").value.trim();
-      const phone = document.getElementById("customer-phone").value.trim();
-      const formattedPhone = "'" + phone;
-      const emirate = document.getElementById("emirate").value;
-      const region = document.getElementById("region").value.trim();
+    let message = `🛍️ طلب عرض خاص\n`;
+    message += `👤 الاسم: ${customerName}\n`;
+    message += `📱 الرقم: ${phone}\n`;
+    message += `🏙️ الإمارة: ${emirate}\n`;
+    message += `📍 المنطقة: ${region}\n`;
+    message += `\n📦 المنتج: ${name}\n`;
+    message += `📦 الكمية: ${quantity} كروز\n`;
+    message += `💰 السعر: ${price} درهم\n`;
+    message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
 
-      if (!phone.startsWith("05")) {
-        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-        return;
-      }
+    const encoded = encodeURIComponent(message);
+    const myNumber = "963960048355";
+    window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
 
-      document.getElementById("save-status").textContent = "📡 جاري حفظ النقاط...";
+    const query = new URLSearchParams({
+      name: customerName,
+      phone: formattedPhone,
+      points: points,
+      source: `عرض خاص: ${name}`
+    }).toString();
 
-      let message = `🛍️ طلب عرض خاص\n`;
-      message += `👤 الاسم: ${customerName}\n`;
-      message += `📱 الرقم: ${phone}\n`;
-      message += `🏙️ الإمارة: ${emirate}\n`;
-      message += `📍 المنطقة: ${region}\n`;
-      message += `\n📦 المنتج: ${name}\n`;
-      message += `📦 الكمية: ${quantity} كروز\n`;
-      message += `💰 السعر: ${price} درهم\n`;
-      message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
+    fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
+      .then(res => res.text())
+      .then(txt => {
+        document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
+      })
+      .catch(err => {
+        document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
+      });
+  }
 
-      const encoded = encodeURIComponent(message);
-      const myNumber = "963960048355";
-      window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
+  function checkPoints() {
+    const phone = document.getElementById("check-phone").value.trim();
 
-      const query = new URLSearchParams({
-  name: customerName,
-  phone: formattedPhone,
-  points: points,
-  source: `عرض خاص: ${name}`
-}).toString();
-      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
-        .then(res => res.text())
-        .then(txt => {
-          document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
-        })
-        .catch(err => {
-          document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
-        });
+    if (!phone.startsWith("05")) {
+      alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+      return;
     }
 
-    function checkPoints() {
-      const phone = document.getElementById("check-phone").value.trim();
+    const query = new URLSearchParams({
+      phone: phone,
+      check: "true"
+    }).toString();
 
-      if (!phone.startsWith("05")) {
-        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-        return;
-      }
+    fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
+      .then(res => res.text())
+      .then(txt => {
+        document.getElementById("points-result").textContent = txt;
+      })
+      .catch(err => {
+        document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
+      });
+  }
+</script>
 
-      const query = new URLSearchParams({
-        phone: phone,
-        check: "true"
-      }).toString();
-
-      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
-        .then(res => res.text())
-        .then(txt => {
-          document.getElementById("points-result").textContent = txt;
-        })
-        
-        .catch(err => {
-          document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
-        });
-    }
-
-    function showRedeemOptions() {
-      const phone = document.getElementById("redeem-phone").value.trim();
-      if (!phone.startsWith("05")) {
-        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-        return;
-      }
-
-      const query = new URLSearchParams({
-        phone: phone,
-        check: "true"
-      }).toString();
-
-    function redeemPoints(phone)
-      {
-        if (!document.getElementById("reward-choice")) {
-  alert("يرجى اختيار نوع الاستبدال أولاً");
-  return;
-        }
-      const reward = document.getElementById("reward-choice").value;
-      const query = new URLSearchParams({
-        phone: phone,
-        redeem: "true",
-        reward: reward
-      }).toString();
-
-      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
-        .then(res => res.text())
-        .then(txt => {
-          document.getElementById("redeem-result").textContent = txt;
-          document.getElementById("redeem-options").innerHTML = "";
-        })
-        .catch(err => {
-          document.getElementById("redeem-result").textContent = "❌ خطأ: " + err.message;
-        });
-    }
-  </script>
 </body>
 </html>
