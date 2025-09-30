@@ -3,46 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <title>طلب العرض الخاص</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #111;
+      background: #0f0f0f;
       color: #fff;
-      font-family: sans-serif;
+      font-family: 'Cairo', sans-serif;
       padding: 20px;
-      font-size: 18px;
-      line-height: 1.6;
+      font-size: 20px;
+      line-height: 1.7;
+    }
+
+    h2, h3 {
+      font-size: 22px;
+      color: #e5c9a0;
     }
 
     .box {
-      background: #222;
+      background: #1c1c1c;
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-bottom: 30px;
+      border: 1px solid #333;
     }
 
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
+      font-weight: bold;
     }
 
     input, select, textarea, button {
-      padding: 12px;
-      margin-top: 5px;
+      padding: 14px;
+      margin-top: 8px;
       width: 100%;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       background-color: #e5c9a0;
       color: #000;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     button {
       cursor: pointer;
       margin-top: 20px;
+      background-color: #d4af37;
+      color: #000;
+      font-weight: bold;
     }
 
     #region-group {
       display: none;
+    }
+
+    #save-status, #points-result, #redeem-result {
+      margin-top: 20px;
+      color: #e5c9a0;
+      font-weight: bold;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #444;
+      margin: 40px 0 20px;
     }
   </style>
 </head>
@@ -62,7 +85,7 @@
     <input type="text" id="customer-name" required>
 
     <label>رقم واتساب إماراتي:</label>
-    <input type="tel" id="customer-phone" placeholder="05..." required>
+    <input type="tel" id="customer-phone" placeholder="05..." maxlength="10" autocomplete="off" required>
 
     <label>الإمارة:</label>
     <select id="emirate" onchange="showRegion()" required>
@@ -83,156 +106,100 @@
 
     <button type="submit">📨 تأكيد الطلب عبر واتساب</button>
   </form>
-<hr>
-<h3>📊 عرض رصيدي</h3>
-<input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي">
-<button onclick="checkPoints()">عرض الرصيد</button>
-<p id="points-result"></p>
+
+  <p id="save-status"></p>
+
   <hr>
-<h3>🎁 استبدال الرصيد</h3>
-<input type="tel" id="redeem-phone" placeholder="أدخل رقمك الإماراتي">
-<button onclick="showRedeemOptions()">استبدال الرصيد</button>
-<div id="redeem-options" style="margin-top:15px;"></div>
-<p id="redeem-result"></p>
+  <h3>📊 عرض رصيدي</h3>
+  <input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10">
+  <button onclick="checkPoints()">عرض الرصيد</button>
+  <p id="points-result"></p>
+
+  <hr>
+  <h3>🎁 استبدال الرصيد</h3>
+  <input type="tel" id="redeem-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10">
+  <button onclick="showRedeemOptions()">استبدال الرصيد</button>
+  <div id="redeem-options" style="margin-top:15px;"></div>
+  <p id="redeem-result"></p>
+
   <script>
-    // قراءة بيانات العرض من الرابط
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name") || "";
     const price = params.get("price") || "";
     const quantity = params.get("quantity") || "";
     const points = params.get("points") || "0";
 
-    // تعبئة تفاصيل العرض
     document.getElementById("product-name").textContent = name;
     document.getElementById("product-price").textContent = price + " درهم";
     document.getElementById("product-quantity").textContent = quantity + " كروز";
     document.getElementById("product-points").textContent = points + " نقطة";
 
-    // إظهار حقل المنطقة عند اختيار الإمارة
     function showRegion() {
       const emirate = document.getElementById("emirate").value;
       document.getElementById("region-group").style.display = emirate ? "block" : "none";
     }
 
-    // إرسال الطلب إلى واتساب وحفظ النقاط
     function submitOrder(e) {
-  e.preventDefault();
+      e.preventDefault();
 
-  const customerName = document.getElementById("customer-name").value.trim();
-  const phone = document.getElementById("customer-phone").value.trim();
-  const emirate = document.getElementById("emirate").value;
-  const region = document.getElementById("region").value.trim();
+      const customerName = document.getElementById("customer-name").value.trim();
+      const phone = document.getElementById("customer-phone").value.trim();
+      const emirate = document.getElementById("emirate").value;
+      const region = document.getElementById("region").value.trim();
 
-  if (!phone.startsWith("05")) {
-    alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-    return;
-  }
+      if (!phone.startsWith("05")) {
+        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+        return;
+      }
 
-  // تجهيز رسالة واتساب
-  let message = `🛍️ طلب عرض خاص\n`;
-  message += `👤 الاسم: ${customerName}\n`;
-  message += `📱 الرقم: ${phone}\n`;
-  message += `🏙️ الإمارة: ${emirate}\n`;
-  message += `📍 المنطقة: ${region}\n`;
-  message += `\n📦 المنتج: ${name}\n`;
-  message += `📦 الكمية: ${quantity} كروز\n`;
-  message += `💰 السعر: ${price} درهم\n`;
-  message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
+      let message = `🛍️ طلب عرض خاص\n`;
+      message += `👤 الاسم: ${customerName}\n`;
+      message += `📱 الرقم: ${phone}\n`;
+      message += `🏙️ الإمارة: ${emirate}\n`;
+      message += `📍 المنطقة: ${region}\n`;
+      message += `\n📦 المنتج: ${name}\n`;
+      message += `📦 الكمية: ${quantity} كروز\n`;
+      message += `💰 السعر: ${price} درهم\n`;
+      message += `🎯 نقاط الولاء المكتسبة: ${points}\n`;
 
-  const encoded = encodeURIComponent(message);
-  const myNumber = "963960048355";
-  window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
+      const encoded = encodeURIComponent(message);
+      const myNumber = "963960048355";
+      window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
 
-  // حفظ النقاط بعد فتح واتساب
-  const query = new URLSearchParams({
-    name: customerName,
-    phone: phone,
-    points: points,
-    source: `عرض خاص: ${name}`
-  }).toString();
+      const query = new URLSearchParams({
+        name: customerName,
+        phone: phone,
+        points: points,
+        source: `عرض خاص: ${name}`
+      }).toString();
 
-  fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
-    .then(res => res.text())
-    .then(txt => {
-      document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
-    })
-    .catch(err => {
-      document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
-    });
-}
+      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+        .then(res => res.text())
+        .then(txt => {
+          document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
+        })
+        .catch(err => {
+          document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
+        });
+    }
+
     function checkPoints() {
-  const phone = document.getElementById("check-phone").value.trim();
+      const phone = document.getElementById("check-phone").value.trim();
 
-  if (!phone.startsWith("05")) {
-    alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-    return;
-  }
+      if (!phone.startsWith("05")) {
+        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+        return;
+      }
 
-  const query = new URLSearchParams({
-    phone: phone,
-    check: "true"
-  }).toString();
+      const query = new URLSearchParams({
+        phone: phone,
+        check: "true"
+      }).toString();
 
-  fetch(`https://script.google.com/macros/s/AKfycby62ahFxkL0N4GYhEJZzuOC7Yk-3XdKYqi6KanLqyhj4uOjDzYZecaJx4UAF4tT6Cs93A/exec?${query}`)
-    .then(res => res.text())
-    .then(txt => {
-      document.getElementById("points-result").textContent = txt;
-    })
-    .catch(err => {
-      document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
-    });
-                                                }
-    function showRedeemOptions() {
-  const phone = document.getElementById("redeem-phone").value.trim();
-  if (!phone.startsWith("05")) {
-    alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
-    return;
-  }
-
-  const query = new URLSearchParams({
-    phone: phone,
-    check: "true"
-  }).toString();
-
-  fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
-    .then(res => res.text())
-    .then(txt => {
-      const points = parseInt(txt.replace(/\D/g, ""));
-      let html = `<p>رصيدك الحالي: ${points} نقطة</p>`;
-      html += `<label>اختر نوع الاستبدال:</label><select id="reward-choice">`;
-
-      if (points >= 1) html += `<option value="خصم">خصم يعادل عدد النقاط</option>`;
-      if (points >= 15) html += `<option value="هدية رمزية">هدية رمزية (15 نقطة)</option>`;
-      if (points >= 25) html += `<option value="كروز مجاني">كروز مجاني من اختيارك (25 نقطة)</option>`;
-      if (points >= 75) html += `<option value="طلب مجاني">طلب مجاني (5 كروز) (75 نقطة)</option>`;
-
-      html += `</select><button onclick="redeemPoints('${phone}')">تأكيد الاستبدال</button>`;
-      document.getElementById("redeem-options").innerHTML = html;
-    })
-    .catch(err => {
-      document.getElementById("redeem-options").textContent = "❌ خطأ: " + err.message;
-    });
-}
-
-function redeemPoints(phone) {
-  const reward = document.getElementById("reward-choice").value;
-  const query = new URLSearchParams({
-    phone: phone,
-    redeem: "true",
-    reward: reward
-  }).toString();
-
-  fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
-    .then(res => res.text())
-    .then(txt => {
-      document.getElementById("redeem-result").textContent = txt;
-      document.getElementById("redeem-options").innerHTML = "";
-    })
-    .catch(err => {
-      document.getElementById("redeem-result").textContent = "❌ خطأ: " + err.message;
-    });
-        }
-  </script>
-
-</body>
-</html>
+      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+        .then(res => res.text())
+        .then(txt => {
+          document.getElementById("points-result").textContent = txt;
+        })
+        .catch(err => {
+          document.get
