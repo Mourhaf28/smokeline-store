@@ -133,6 +133,16 @@
   <input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10" autocomplete="off">
   <button onclick="checkPoints()">عرض الرصيد</button>
   <p id="points-result"></p>
+  <hr>
+<h3>🎁 استبدال النقاط</h3>
+<button onclick="toggleRedeemOptions()">استبدال النقاط</button>
+
+<div id="redeem-options" style="display:none; margin-top:20px;">
+  <button onclick="redeem(1)">1️⃣ خصم يعادل نقاطك</button>
+  <button onclick="redeem(2)">2️⃣ 15 نقطة = هدية رمزية</button>
+  <button onclick="redeem(3)">3️⃣ 30 نقطة = كروز مجاني</button>
+  <button onclick="redeem(4)">4️⃣ 50 نقطة = 5 كروز مجانية</button>
+</div>
 <script>
   const params = new URLSearchParams(window.location.search);
   const name = params.get("name") || "";
@@ -218,6 +228,39 @@
       .catch(err => {
         document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
       });
+  }
+  function toggleRedeemOptions() {
+  const box = document.getElementById("redeem-options");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function redeem(option) {
+  const phone = document.getElementById("check-phone").value.trim();
+  if (!phone.startsWith("05")) {
+    alert("يرجى إدخال رقم إماراتي صحيح في خانة عرض الرصيد");
+    return;
+  }
+
+  let message = `🎁 طلب استبدال نقاط\n📱 الرقم: ${phone}\n`;
+
+  switch(option) {
+    case 1:
+      message += `✅ أريد استبدال نقاطي بخصم يعادلها`;
+      break;
+    case 2:
+      message += `✅ أريد استبدال 15 نقطة بهدية رمزية مع الطلب الجديد`;
+      break;
+    case 3:
+      message += `✅ أريد استبدال 30 نقطة بكروز مجاني مع الطلب الجديد`;
+      break;
+    case 4:
+      message += `✅ أريد استبدال 50 نقطة بـ 5 كروز مجانية`;
+      break;
+  }
+
+  const encoded = encodeURIComponent(message);
+  const myNumber = "963960048355";
+  window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
   }
 </script>
 
