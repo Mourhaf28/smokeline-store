@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>طلب العرض الخاص</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
       background: #0f0f0f;
       color: #fff;
       font-family: 'Cairo', sans-serif;
-      padding: 20px;
-      font-size: 20px;
-      line-height: 1.7;
+      padding: 25px;
+      font-size: 24px;
+      line-height: 1.8;
     }
 
     h2, h3 {
-      font-size: 22px;
+      font-size: 32px;
       color: #e5c9a0;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
     .box {
@@ -25,31 +27,42 @@
       border-radius: 10px;
       margin-bottom: 30px;
       border: 1px solid #333;
+      box-shadow: 0 0 10px rgba(229, 201, 160, 0.2);
     }
 
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 20px;
       font-weight: bold;
     }
 
     input, select, textarea, button {
-      padding: 14px;
-      margin-top: 8px;
+      padding: 16px;
+      margin-top: 10px;
       width: 100%;
       border: none;
       border-radius: 8px;
       background-color: #e5c9a0;
       color: #000;
-      font-size: 20px;
+      font-size: 22px;
+      transition: box-shadow 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      box-shadow: 0 0 5px #d4af37;
+      outline: none;
     }
 
     button {
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 25px;
       background-color: #d4af37;
       color: #000;
       font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #f0d88a;
     }
 
     #region-group {
@@ -57,15 +70,16 @@
     }
 
     #save-status, #points-result, #redeem-result {
-      margin-top: 20px;
+      margin-top: 25px;
       color: #e5c9a0;
       font-weight: bold;
+      text-align: center;
     }
 
     hr {
       border: none;
       border-top: 1px solid #444;
-      margin: 40px 0 20px;
+      margin: 50px 0 30px;
     }
   </style>
 </head>
@@ -111,13 +125,13 @@
 
   <hr>
   <h3>📊 عرض رصيدي</h3>
-  <input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10">
+  <input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10" autocomplete="off">
   <button onclick="checkPoints()">عرض الرصيد</button>
   <p id="points-result"></p>
 
   <hr>
   <h3>🎁 استبدال الرصيد</h3>
-  <input type="tel" id="redeem-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10">
+  <input type="tel" id="redeem-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10" autocomplete="off">
   <button onclick="showRedeemOptions()">استبدال الرصيد</button>
   <div id="redeem-options" style="margin-top:15px;"></div>
   <p id="redeem-result"></p>
@@ -151,6 +165,8 @@
         alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
         return;
       }
+
+      document.getElementById("save-status").textContent = "📡 جاري حفظ النقاط...";
 
       let message = `🛍️ طلب عرض خاص\n`;
       message += `👤 الاسم: ${customerName}\n`;
@@ -202,4 +218,63 @@
           document.getElementById("points-result").textContent = txt;
         })
         .catch(err => {
-          document.get
+          document.getElementById("points-result").textContent = "❌ خطأ
+            })
+        .catch(err => {
+          document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
+        });
+    }
+
+    function showRedeemOptions() {
+      const phone = document.getElementById("redeem-phone").value.trim();
+      if (!phone.startsWith("05")) {
+        alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+        return;
+      }
+
+      const query = new URLSearchParams({
+        phone: phone,
+        check: "true"
+      }).toString();
+
+      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+        .then(res => res.text())
+        .then(txt => {
+          const points = parseInt(txt.replace(/\D/g, ""));
+          let html = `<p>رصيدك الحالي: ${points} نقطة</p>`;
+          html += `<label>اختر نوع الاستبدال:</label><select id="reward-choice">`;
+
+          if (points >= 1) html += `<option value="خصم">خصم يعادل عدد النقاط</option>`;
+          if (points >= 15) html += `<option value="هدية رمزية">هدية رمزية (15 نقطة)</option>`;
+          if (points >= 25) html += `<option value="كروز مجاني">كروز مجاني من اختيارك (25 نقطة)</option>`;
+          if (points >= 75) html += `<option value="طلب مجاني">طلب مجاني (5 كروز) (75 نقطة)</option>`;
+
+          html += `</select><button onclick="redeemPoints('${phone}')">تأكيد الاستبدال</button>`;
+          document.getElementById("redeem-options").innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById("redeem-options").textContent = "❌ خطأ: " + err.message;
+        });
+    }
+
+    function redeemPoints(phone) {
+      const reward = document.getElementById("reward-choice").value;
+      const query = new URLSearchParams({
+        phone: phone,
+        redeem: "true",
+        reward: reward
+      }).toString();
+
+      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+        .then(res => res.text())
+        .then(txt => {
+          document.getElementById("redeem-result").textContent = txt;
+          document.getElementById("redeem-options").innerHTML = "";
+        })
+        .catch(err => {
+          document.getElementById("redeem-result").textContent = "❌ خطأ: " + err.message;
+        });
+    }
+  </script>
+</body>
+</html>
