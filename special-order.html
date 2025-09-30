@@ -277,7 +277,7 @@
         reward: reward
       }).toString();
 
-      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           document.getElementById("redeem-result").textContent = txt;
