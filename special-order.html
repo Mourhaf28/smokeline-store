@@ -141,7 +141,7 @@
     source: `عرض خاص: ${name}`
   }).toString();
 
-  fetch(`https://script.google.com/macros/s/AKfycby62ahFxkL0N4GYhEJZzuOC7Yk-3XdKYqi6KanLqyhj4uOjDzYZecaJx4UAF4tT6Cs93A/exec?${query}`)
+  fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
     .then(res => res.text())
     .then(txt => {
       document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
