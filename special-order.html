@@ -158,6 +158,7 @@
 
       const customerName = document.getElementById("customer-name").value.trim();
       const phone = document.getElementById("customer-phone").value.trim();
+      const formattedPhone = "'" + phone;
       const emirate = document.getElementById("emirate").value;
       const region = document.getElementById("region").value.trim();
 
@@ -183,12 +184,11 @@
       window.open(`https://wa.me/${myNumber}?text=${encoded}`, "_blank");
 
       const query = new URLSearchParams({
-        name: customerName,
-        phone: phone,
-        points: points,
-        source: `عرض خاص: ${name}`
-      }).toString();
-
+  name: customerName,
+  phone: formattedPhone,
+  points: points,
+  source: `عرض خاص: ${name}`
+}).toString();
       fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
