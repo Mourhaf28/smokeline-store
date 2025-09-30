@@ -83,7 +83,17 @@
 
     <button type="submit">📨 تأكيد الطلب عبر واتساب</button>
   </form>
-
+<hr>
+<h3>📊 عرض رصيدي</h3>
+<input type="tel" id="check-phone" placeholder="أدخل رقمك الإماراتي">
+<button onclick="checkPoints()">عرض الرصيد</button>
+<p id="points-result"></p>
+  <hr>
+<h3>🎁 استبدال الرصيد</h3>
+<input type="tel" id="redeem-phone" placeholder="أدخل رقمك الإماراتي">
+<button onclick="showRedeemOptions()">استبدال الرصيد</button>
+<div id="redeem-options" style="margin-top:15px;"></div>
+<p id="redeem-result"></p>
   <script>
     // قراءة بيانات العرض من الرابط
     const params = new URLSearchParams(window.location.search);
@@ -150,6 +160,78 @@
       document.getElementById("save-status").textContent = "❌ خطأ بالحفظ: " + err.message;
     });
 }
+    function checkPoints() {
+  const phone = document.getElementById("check-phone").value.trim();
+
+  if (!phone.startsWith("05")) {
+    alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+    return;
+  }
+
+  const query = new URLSearchParams({
+    phone: phone,
+    check: "true"
+  }).toString();
+
+  fetch(`https://script.google.com/macros/s/AKfycby62ahFxkL0N4GYhEJZzuOC7Yk-3XdKYqi6KanLqyhj4uOjDzYZecaJx4UAF4tT6Cs93A/exec?${query}`)
+    .then(res => res.text())
+    .then(txt => {
+      document.getElementById("points-result").textContent = txt;
+    })
+    .catch(err => {
+      document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
+    });
+                                                }
+    function showRedeemOptions() {
+  const phone = document.getElementById("redeem-phone").value.trim();
+  if (!phone.startsWith("05")) {
+    alert("يرجى إدخال رقم إماراتي يبدأ بـ 05");
+    return;
+  }
+
+  const query = new URLSearchParams({
+    phone: phone,
+    check: "true"
+  }).toString();
+
+  fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+    .then(res => res.text())
+    .then(txt => {
+      const points = parseInt(txt.replace(/\D/g, ""));
+      let html = `<p>رصيدك الحالي: ${points} نقطة</p>`;
+      html += `<label>اختر نوع الاستبدال:</label><select id="reward-choice">`;
+
+      if (points >= 1) html += `<option value="خصم">خصم يعادل عدد النقاط</option>`;
+      if (points >= 15) html += `<option value="هدية رمزية">هدية رمزية (15 نقطة)</option>`;
+      if (points >= 25) html += `<option value="كروز مجاني">كروز مجاني من اختيارك (25 نقطة)</option>`;
+      if (points >= 75) html += `<option value="طلب مجاني">طلب مجاني (5 كروز) (75 نقطة)</option>`;
+
+      html += `</select><button onclick="redeemPoints('${phone}')">تأكيد الاستبدال</button>`;
+      document.getElementById("redeem-options").innerHTML = html;
+    })
+    .catch(err => {
+      document.getElementById("redeem-options").textContent = "❌ خطأ: " + err.message;
+    });
+}
+
+function redeemPoints(phone) {
+  const reward = document.getElementById("reward-choice").value;
+  const query = new URLSearchParams({
+    phone: phone,
+    redeem: "true",
+    reward: reward
+  }).toString();
+
+  fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+    .then(res => res.text())
+    .then(txt => {
+      document.getElementById("redeem-result").textContent = txt;
+      document.getElementById("redeem-options").innerHTML = "";
+    })
+    .catch(err => {
+      document.getElementById("redeem-result").textContent = "❌ خطأ: " + err.message;
+    });
+        }
   </script>
 
 </body>
