@@ -217,9 +217,7 @@
         .then(txt => {
           document.getElementById("points-result").textContent = txt;
         })
-        .catch(err => {
-          document.getElementById("points-result").textContent = "❌ خطأ
-            })
+        
         .catch(err => {
           document.getElementById("points-result").textContent = "❌ خطأ: " + err.message;
         });
@@ -241,6 +239,10 @@
         .then(res => res.text())
         .then(txt => {
           const points = parseInt(txt.replace(/\D/g, ""));
+          if (isNaN(points)) {
+  document.getElementById("redeem-options").textContent = "❌ لم يتم العثور على رصيد صالح.";
+  return;
+    }
           let html = `<p>رصيدك الحالي: ${points} نقطة</p>`;
           html += `<label>اختر نوع الاستبدال:</label><select id="reward-choice">`;
 
@@ -257,7 +259,12 @@
         });
     }
 
-    function redeemPoints(phone) {
+    function redeemPoints(phone)
+      {
+        if (!document.getElementById("reward-choice")) {
+  alert("يرجى اختيار نوع الاستبدال أولاً");
+  return;
+        }
       const reward = document.getElementById("reward-choice").value;
       const query = new URLSearchParams({
         phone: phone,
