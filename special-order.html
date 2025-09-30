@@ -134,13 +134,6 @@
   <button onclick="checkPoints()">عرض الرصيد</button>
   <p id="points-result"></p>
 
-  <hr>
-  <h3>🎁 استبدال الرصيد</h3>
-  <input type="tel" id="redeem-phone" placeholder="أدخل رقمك الإماراتي" maxlength="10" autocomplete="off">
-  <button onclick="showRedeemOptions()">استبدال الرصيد</button>
-  <div id="redeem-options" style="margin-top:15px;"></div>
-  <p id="redeem-result"></p>
-
   <script>
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name") || "";
@@ -239,30 +232,6 @@
         phone: phone,
         check: "true"
       }).toString();
-
-      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
-        .then(res => res.text())
-        .then(txt => {
-          const points = parseInt(txt.replace(/\D/g, ""));
-          if (isNaN(points)) {
-  document.getElementById("redeem-options").textContent = "❌ لم يتم العثور على رصيد صالح.";
-  return;
-    }
-          let html = `<p>رصيدك الحالي: ${points} نقطة</p>`;
-          html += `<label>اختر نوع الاستبدال:</label><select id="reward-choice">`;
-
-          if (points >= 1) html += `<option value="خصم">خصم يعادل عدد النقاط</option>`;
-          if (points >= 15) html += `<option value="هدية رمزية">هدية رمزية (15 نقطة)</option>`;
-          if (points >= 25) html += `<option value="كروز مجاني">كروز مجاني من اختيارك (25 نقطة)</option>`;
-          if (points >= 75) html += `<option value="طلب مجاني">طلب مجاني (5 كروز) (75 نقطة)</option>`;
-
-          html += `</select><button onclick="redeemPoints('${phone}')">تأكيد الاستبدال</button>`;
-          document.getElementById("redeem-options").innerHTML = html;
-        })
-        .catch(err => {
-          document.getElementById("redeem-options").textContent = "❌ خطأ: " + err.message;
-        });
-    }
 
     function redeemPoints(phone)
       {
