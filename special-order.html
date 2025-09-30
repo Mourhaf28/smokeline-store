@@ -194,7 +194,7 @@
   points: points,
   source: `عرض خاص: ${name}`
 }).toString();
-      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
@@ -217,7 +217,7 @@
         check: "true"
       }).toString();
 
-      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           document.getElementById("points-result").textContent = txt;
@@ -240,7 +240,7 @@
         check: "true"
       }).toString();
 
-      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           const points = parseInt(txt.replace(/\D/g, ""));
@@ -277,7 +277,7 @@
         reward: reward
       }).toString();
 
-      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbxk5bUqYkEV_oqqcQXsZ04ID7WEWSBwwHaWn9ambLNVvWbxFp2a6QwZw0ogiJ6WIDJ6Fg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           document.getElementById("redeem-result").textContent = txt;
