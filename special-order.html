@@ -194,7 +194,7 @@
   points: points,
   source: `عرض خاص: ${name}`
 }).toString();
-      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
@@ -217,7 +217,7 @@
         check: "true"
       }).toString();
 
-      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           document.getElementById("points-result").textContent = txt;
@@ -240,7 +240,7 @@
         check: "true"
       }).toString();
 
-      fetch(`https://script.google.com/macros/s/AKfycby_lJ6JAqPEhi1ucJbT9FNg-0SGPirTtmb3CS53RqxoosbG8W0dm6tgYaDD6Ouj96nwfA/exec?${query}`)
+      fetch(`https://script.google.com/macros/s/AKfycbyd0q6g3Z6xBuINknxTCa69aCGylVVuOcG0sO4Ea7wlHtMTdujNjSdGAdXLkb10NM9sqg/exec?${query}`)
         .then(res => res.text())
         .then(txt => {
           const points = parseInt(txt.replace(/\D/g, ""));
