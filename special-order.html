@@ -187,7 +187,7 @@
       source: `عرض خاص: ${name}`
     }).toString();
 
-    fetch(`https://script.google.com/macros/s/AKfycbw1aYCB6c1B9MCnzi96bVkL6wimKYXdqzysk5D-yzvAfr0S7Oz3zuQ1EkEL110dSxwapg/exec?${query}`)
+    fetch(`https://script.google.com/macros/s/AKfycbzsQz-REmVLY7e7ul-fqYqTghwUq0AqsjR2yQVEBBTI9Xof91y8_6GjXQBpJoXZM95DbA/exec?${query}`)
       .then(res => res.text())
       .then(txt => {
         document.getElementById("save-status").textContent = "📌 رد السكربت: " + txt;
@@ -210,7 +210,7 @@
       check: "true"
     }).toString();
 
-    fetch(`https://script.google.com/macros/s/AKfycbw1aYCB6c1B9MCnzi96bVkL6wimKYXdqzysk5D-yzvAfr0S7Oz3zuQ1EkEL110dSxwapg/exec?${query}`)
+    fetch(`https://script.google.com/macros/s/AKfycbzsQz-REmVLY7e7ul-fqYqTghwUq0AqsjR2yQVEBBTI9Xof91y8_6GjXQBpJoXZM95DbA/exec?${query}`)
       .then(res => res.text())
       .then(txt => {
         document.getElementById("points-result").textContent = txt;
