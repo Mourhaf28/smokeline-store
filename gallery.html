@@ -20,17 +20,15 @@
 
     .back-button {
       position: fixed;
-      top: 20px;
-      left: 20px;
-      background-color: #e5c9a0;
-      color: #000;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      color: #e5c9a0;
+      background: none;
       border: none;
-      padding: 10px 15px;
-      border-radius: 6px;
-      font-weight: bold;
       cursor: pointer;
-      text-decoration: none;
       z-index: 1000;
+      text-decoration: none;
     }
 
     /* سلايدر */
@@ -38,7 +36,7 @@
       width: 100%;
       overflow: hidden;
       position: relative;
-      max-height: 400px;
+      height: 200px; /* نصف الحجم السابق */
     }
 
     #slide {
@@ -50,15 +48,15 @@
 
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 20px;
-      padding: 40px;
+      padding: 30px;
       justify-items: center;
     }
 
     .gallery-grid img {
       width: 100%;
-      max-width: 200px;
+      max-width: 180px;
       border-radius: 10px;
       box-shadow: 0 0 10px #e5c9a0;
       cursor: pointer;
@@ -92,7 +90,7 @@
 <body>
 
   <!-- زر الرجوع -->
-  <a href="index.html" class="back-button">⬅️ رجوع</a>
+  <a href="index.html" class="back-button">←</a>
 
   <header>
     <h2>📸 صور من منتجاتنا</h2>
@@ -160,4 +158,4 @@
   </script>
 
 </body>
-  </html>
+</html>
