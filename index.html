@@ -274,15 +274,19 @@ button[type="submit"]:hover {
   padding: 14px 0;
   overflow: hidden;
   position: relative;
-  white-space: nowrap;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   z-index: 999;
 }
 
-.scrolling-text {
-  display: inline-block;
-  padding-left: 100%;
+.scrolling-wrapper {
+  display: flex;
+  width: max-content;
   animation: scrollText 20s linear infinite;
+}
+
+.scrolling-text {
+  white-space: nowrap;
+  padding-right: 100px; /* مسافة بين التكرارات */
 }
 
 @keyframes scrollText {
@@ -290,7 +294,7 @@ button[type="submit"]:hover {
     transform: translateX(0%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
@@ -298,7 +302,7 @@ button[type="submit"]:hover {
   0% { background-color: #d4af37; }
   50% { background-color: #f5e28c; }
   100% { background-color: #d4af37; }
-  }
+}
   </style>
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -317,9 +321,14 @@ button[type="submit"]:hover {
     <h1>SmokeLine Store</h1>
     <p>الدخان ليس عادة، بل طقس فاخر يعكس هويتك</p>
     <!-- 🔔 شريط إعلاني متحرك -->
-<div class="announcement-bar">
-  <div class="scrolling-text">
-    📢 جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف — جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف — جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف —
+<<div class="announcement-bar">
+  <div class="scrolling-wrapper">
+    <div class="scrolling-text">
+      📢 جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف — جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف — جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف —
+    </div>
+    <div class="scrolling-text">
+      📢 جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف — جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف — جميع الأسعار بالدرهم الإماراتي وتشمل 5 بوكس لكل صنف —
+    </div>
   </div>
 </div>
   </header>
