@@ -361,34 +361,9 @@ button[type="submit"]:hover {
 </div>
   <h2 style="color:#e5c9a0; text-align:center; margin-top:50px;">📸 صور من منتجاتنا</h2>
 
-<div id="gallery" style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin-top:30px;"></div>
-
-<script>
-  const username = "Mourhaf28";
-  const repo = "smokeline-store";
-  const branch = "main";
-  const folder = "images";
-
-  const gallery = document.getElementById("gallery");
-
-  fetch(`https://api.github.com/repos/${username}/${repo}/contents/${folder}?ref=${branch}`)
-    .then(response => response.json())
-    .then(files => {
-      files.forEach(file => {
-        if (file.type === "file" && /\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-          const img = document.createElement("img");
-          img.src = file.download_url;
-          img.alt = file.name;
-          img.style = "width:200px; border-radius:10px; box-shadow:0 0 10px #e5c9a0; margin:10px;";
-          gallery.appendChild(img);
-        }
-      });
-    })
-    .catch(error => {
-      console.error("فشل تحميل الصور:", error);
-      gallery.innerHTML = "<p style='color:red;'>تعذر تحميل الصور حاليًا.</p>";
-    });
-</script>
+<a href="#gallery-section" style="color:#e5c9a0; text-decoration:none; font-weight:bold;">
+  📸 صور من منتجاتنا
+</a>
 <div style="display: flex; gap: 10px; margin-top: 20px;">
   <button onclick="window.location.href='custom.html'" style="padding:12px 24px; font-size:16px; background-color:#e5c9a0; color:#000; border:none; border-radius:8px;">
     🎯 اختر تشكيلتك الخاصة
@@ -410,7 +385,41 @@ button[type="submit"]:hover {
 </div>
 
   <div id="search-results" style="margin-top:20px;"></div>
+<!-- قسم الصور -->
+<section id="gallery-section" style="padding-top:80px;">
 
+  <h2 style="color:#e5c9a0; text-align:center; margin-top:50px;">📸 صور من منتجاتنا</h2>
+
+  <div id="gallery" style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin-top:30px;"></div>
+
+  <script>
+    const username = "Mourhaf28";
+    const repo = "smokeline-store";
+    const branch = "main";
+    const folder = "images";
+
+    const gallery = document.getElementById("gallery");
+
+    fetch(`https://api.github.com/repos/${username}/${repo}/contents/${folder}?ref=${branch}`)
+      .then(response => response.json())
+      .then(files => {
+        files.forEach(file => {
+          if (file.type === "file" && /\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
+            const img = document.createElement("img");
+            img.src = file.download_url;
+            img.alt = file.name;
+            img.style = "width:200px; border-radius:10px; box-shadow:0 0 10px #e5c9a0; margin:10px;";
+            gallery.appendChild(img);
+          }
+        });
+      })
+      .catch(error => {
+        console.error("فشل تحميل الصور:", error);
+        gallery.innerHTML = "<p style='color:red;'>تعذر تحميل الصور حاليًا.</p>";
+      });
+  </script>
+
+</section>
 <!-- قسم من نحن -->
 <section id="about-section" style="display:none; background-color:#1a1a1a; padding:30px 20px; text-align:right;">
   <div class="about-content">
