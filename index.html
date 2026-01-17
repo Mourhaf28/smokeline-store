@@ -83,6 +83,7 @@ button:hover {
   transition: transform 2s ease-out;
   background: #222;
   box-shadow: 0 0 20px #e0c080;
+  overflow: hidden;
 }
 
 .pointer {
@@ -116,21 +117,26 @@ button:hover {
   position: absolute;
   width: 100%;
   height: 100%;
-  transform: rotate(-30deg); /* لتعويض أول زاوية */
+  transform: rotate(-30deg);
+  pointer-events: none;
 }
 
 .label {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: rotate(calc(60deg * var(--i))) translateY(-130px) rotate(calc(-60deg * var(--i)));
+  transform: rotate(calc(60deg * var(--i))) translateY(-110px) rotate(calc(-60deg * var(--i)));
   transform-origin: center;
   color: #fff;
   font-size: 14px;
   font-weight: bold;
   text-align: center;
   width: 80px;
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 1px 1px 2px #000;
+}
 
 #luck-result {
   margin-top: 12px;
@@ -628,8 +634,7 @@ button[type="submit"]:hover {
     </div>
   </section>
 
-  <section class="card">
-  <section class="card">
+<section>
   <h2>🎲 لعبة الحظ</h2>
   <p>كل طلب يحمل فرصة واحدة. اضغط على العجلة لتكشف النتيجة:</p>
 
@@ -637,12 +642,12 @@ button[type="submit"]:hover {
     <div class="wheel" id="wheel" onclick="spinWheel()">
       <div class="pointer"></div>
       <div class="labels">
-  <div class="label" style="--i:0">خصم 5٪</div>
-  <div class="label" style="--i:1">هدية مع الطلب</div>
-  <div class="label" style="--i:2">فرصة قادمة</div>
-  <div class="label" style="--i:3">خصم 10٪</div>
-  <div class="label" style="--i:4">فرصة قادمة</div>
-  <div class="label" style="--i:5">5 نقاط ولاء</div>
+        <div class="label" style="--i:0">خصم 5٪</div>
+        <div class="label" style="--i:1">هدية مع الطلب</div>
+        <div class="label" style="--i:2">فرصة قادمة</div>
+        <div class="label" style="--i:3">خصم 10٪</div>
+        <div class="label" style="--i:4">فرصة قادمة</div>
+        <div class="label" style="--i:5">5 نقاط ولاء</div>
       </div>
       <div class="center">فرصتك الذهبية</div>
     </div>
@@ -653,7 +658,7 @@ button[type="submit"]:hover {
       🛍️ طلب سريع عبر واتساب
     </a>
   </div>
-  </section>
+</section>
 <!-- START: عرض رقم 1 (مرتّب حسب الأقسام، قابل للطَي) -->
 <section class="card" id="offer-1" style="margin-top:22px;">
   <h2 style="color:var(--gold);margin-bottom:8px;">عرض رقم 1 — قائمة المنتجات</h2>
