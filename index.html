@@ -852,6 +852,11 @@ button[type="submit"]:hover {
       window.location.href = "results.html";
     }
   }
+      if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("Service Worker مسجل"))
+    .catch(err => console.error("فشل التسجيل:", err));
+}
 </script>
 </body>
 </html>
